@@ -1,0 +1,708 @@
+{
+  "id": "s05",
+  "number": 5,
+  "title": "Human Factors: Automation, Trust and Reliance",
+  "subtitle": "The classic literature that HAI builds on",
+  "overview": "Long before chatbots, pilots, plant operators and clinicians worked alongside automation, and human factors researchers documented how people over-rely and under-rely on it. This stage covers that classic work: the ironies and levels of automation, trust, judgment biases and automation bias, algorithm aversion, and people's social responses to computers. Nearly every modern HAI study of AI assistance borrows these concepts, so read each paper asking how it applies to the LLM assistants from Stage 4.",
+  "modules": [
+    {
+      "id": "s05m01",
+      "title": "Ironies and levels of automation",
+      "goal": "Explain why automating a task can make the human's remaining job harder, and describe automation in terms of stages and levels.",
+      "guide": "Start with Bainbridge's short, famous paper; its arguments apply almost word for word to AI assistants. Parasuraman and Riley then give a vocabulary for how people use automation badly. Parasuraman, Sheridan and Wickens provide a framework for describing any automated system: which stage of information processing it automates, and how much. Endsley's situation awareness paper is optional but widely cited. Key terms: operator (the person working with the automated system); vigilance (sustained attention to rare events); misuse (relying on automation when you shouldn't); disuse (ignoring automation that would help); level of automation (how much of a function the machine does, from none to all); situation awareness (knowing what is going on, what it means and what will happen next).",
+      "resources": [
+        {
+          "id": "s05m01r01",
+          "kind": "paper",
+          "title": "Ironies of automation",
+          "authors": "Lisanne Bainbridge",
+          "year": 1983,
+          "venue": "Automatica",
+          "url": "https://doi.org/10.1016/0005-1098(83)90046-8",
+          "minutes": 25,
+          "why": "The founding statement of why automation does not simply remove human error; it changes the human's job, often for the worse. Constantly cited in AI-assistance research.",
+          "focus": "The whole paper is short. Note each 'irony' and the proposed remedies.",
+          "optional": false
+        },
+        {
+          "id": "s05m01r02",
+          "kind": "paper",
+          "title": "Humans and Automation: Use, Misuse, Disuse, Abuse",
+          "authors": "Raja Parasuraman, Victor Riley",
+          "year": 1997,
+          "venue": "Human Factors",
+          "url": "https://doi.org/10.1518/001872097778543886",
+          "minutes": 50,
+          "why": "Defines the four ways people relate to automation; 'misuse' (over-reliance) and 'disuse' (under-reliance) are standard terms in HAI.",
+          "focus": "Definitions of the four categories, the sections on trust and on false alarms, and the recommendations.",
+          "optional": false
+        },
+        {
+          "id": "s05m01r03",
+          "kind": "paper",
+          "title": "A model for types and levels of human interaction with automation",
+          "authors": "Raja Parasuraman, Thomas B. Sheridan, Christopher D. Wickens",
+          "year": 2000,
+          "venue": "IEEE Transactions on Systems, Man, and Cybernetics, Part A",
+          "url": "https://doi.org/10.1109/3468.844354",
+          "minutes": 40,
+          "why": "The standard framework for describing what an automated system does (four stages) and how much (levels). It is often used to classify AI decision aids.",
+          "focus": "The four-stage model figure, the table of levels of automation, and the evaluation criteria (workload, situation awareness, complacency, skill degradation).",
+          "optional": false
+        },
+        {
+          "id": "s05m01r04",
+          "kind": "paper",
+          "title": "Toward a Theory of Situation Awareness in Dynamic Systems",
+          "authors": "Mica R. Endsley",
+          "year": 1995,
+          "venue": "Human Factors",
+          "url": "https://doi.org/10.1518/001872095779049543",
+          "minutes": 50,
+          "why": "Situation awareness is the concept behind worries that AI assistance leaves users 'out of the loop'.",
+          "focus": "The definition and the three levels of situation awareness; skim the rest.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What is the central irony Bainbridge describes?",
+          "choices": [
+            "Automation always increases the operator's workload during normal operation",
+            "Automation takes over the routine work but leaves the operator to monitor it and to step in during rare, difficult situations, for which their skills have faded",
+            "Operators refuse to use automation that works well",
+            "Automated systems never fail, so operators become bored"
+          ],
+          "answer": 1,
+          "explain": "Bainbridge points out that the designer automates what is easy to automate, leaving the human the hardest part (handling abnormal events) while removing the practice that keeps their skills sharp.",
+          "ref": "s05m01r01"
+        },
+        {
+          "q": "What does Bainbridge say about asking humans to monitor a highly reliable automated system?",
+          "choices": [
+            "Humans are excellent monitors if paid well",
+            "Monitoring is the easiest task to give a person",
+            "People are poor at sustaining attention for long periods on something that rarely goes wrong",
+            "Monitoring should be done only by the system's designers"
+          ],
+          "answer": 2,
+          "explain": "Bainbridge draws on vigilance research: humans cannot keep effective watch for very long on a system where abnormal events are rare. The same problem arises when users are asked to 'check the AI's output'.",
+          "ref": "s05m01r01"
+        },
+        {
+          "q": "A clinician learns to ignore a sepsis alarm that fires many times a day, mostly falsely, and then misses a real case. In Parasuraman and Riley's terms, this is:",
+          "choices": [
+            "Disuse",
+            "Misuse",
+            "Abuse",
+            "Appropriate use"
+          ],
+          "answer": 0,
+          "explain": "Disuse is the neglect or underuse of automation; Parasuraman and Riley identify frequent false alarms as a common cause. Misuse would be the opposite: over-relying on it.",
+          "ref": "s05m01r02"
+        },
+        {
+          "q": "Parasuraman and Riley define 'automation abuse' as:",
+          "choices": [
+            "Users deliberately breaking automated systems",
+            "Users trusting automation too much",
+            "Automation that has been hacked",
+            "Designers and managers automating functions without regard for the consequences for human performance"
+          ],
+          "answer": 3,
+          "explain": "Abuse is a design and management failure: the operator's role becomes whatever is left over after automation, which can in turn promote misuse and disuse.",
+          "ref": "s05m01r02"
+        },
+        {
+          "q": "Why do Parasuraman and Riley say alarms often fire falsely?",
+          "choices": [
+            "Sensors are always cheap and noisy",
+            "Thresholds are set without considering the base rate of the condition, so when the condition is rare, most alarms are false even for a sensitive detector",
+            "Operators reset them too often",
+            "Alarms are tested only in simulators"
+          ],
+          "answer": 1,
+          "explain": "The abstract notes that false alarms commonly arise because the base rate of the event is ignored when trading off false alarms against misses.",
+          "ref": "s05m01r02"
+        },
+        {
+          "q": "In Parasuraman, Sheridan and Wickens's four-stage model, a lane-keeping system that physically steers the car automates which stage?",
+          "choices": [
+            "Information acquisition",
+            "Information analysis",
+            "Decision and action selection",
+            "Action implementation"
+          ],
+          "answer": 3,
+          "explain": "The four stages are information acquisition, information analysis, decision and action selection, and action implementation. Executing the steering itself is action implementation.",
+          "ref": "s05m01r03"
+        },
+        {
+          "q": "What is a key point of the Parasuraman, Sheridan and Wickens model?",
+          "choices": [
+            "A system can have different levels of automation at each of the four stages, so it is not simply 'high' or 'low' automation",
+            "Full automation is always the goal",
+            "Levels of automation apply only to aviation",
+            "Only the decision stage should ever be automated"
+          ],
+          "answer": 0,
+          "explain": "The authors describe automation as a profile across stages, and recommend choosing levels by evaluating human performance consequences such as workload, situation awareness, complacency and skill degradation.",
+          "ref": "s05m01r03"
+        }
+      ],
+      "exercise": "Pick an AI coding assistant or LLM agent you know. Classify its functions using Parasuraman, Sheridan and Wickens's four stages and estimate a level of automation for each. Then name one of Bainbridge's ironies likely to affect its users and propose a measure that would detect it in a study that follows users over several months."
+    },
+    {
+      "id": "s05m02",
+      "title": "Trust in automation and AI",
+      "goal": "Define trust, distinguish it from reliance, and explain what 'calibrated' or 'warranted' trust means.",
+      "guide": "Lee and See is the central paper; read it first and slowly. Mayer, Davis and Schoorman supply the classic model of interpersonal trust that Lee and See adapt. Hoff and Bashir organize later empirical findings into layers. Jacovi et al. bring these ideas to AI specifically. Key terms: trust (an attitude about whether an agent will help you, in a situation involving uncertainty and vulnerability); reliance (the behavior of actually depending on the agent); calibration (how well trust matches the system's real capability); trustworthiness (properties of the system that justify trust); warranted trust (trust that is caused by actual trustworthiness).",
+      "resources": [
+        {
+          "id": "s05m02r01",
+          "kind": "paper",
+          "title": "Trust in Automation: Designing for Appropriate Reliance",
+          "authors": "John D. Lee, Katrina A. See",
+          "year": 2004,
+          "venue": "Human Factors",
+          "url": "https://doi.org/10.1518/hfes.46.1.50_30392",
+          "minutes": 60,
+          "why": "The most cited paper on trust in automation, and the source of 'appropriate reliance' and 'trust calibration', two core HAI goals.",
+          "focus": "The definition of trust, the figure on calibration, resolution and specificity, the bases of trust (performance, process, purpose), and the design recommendations.",
+          "optional": false
+        },
+        {
+          "id": "s05m02r02",
+          "kind": "paper",
+          "title": "An Integrative Model of Organizational Trust",
+          "authors": "Roger C. Mayer, James H. Davis, F. David Schoorman",
+          "year": 1995,
+          "venue": "Academy of Management Review",
+          "url": "https://doi.org/10.5465/amr.1995.9508080335",
+          "minutes": 45,
+          "why": "The interpersonal trust model (ability, benevolence, integrity) that much of the trust-in-AI literature adapts.",
+          "focus": "The definition of trust, the three factors of trustworthiness, and the role of the trustor's propensity.",
+          "optional": false
+        },
+        {
+          "id": "s05m02r03",
+          "kind": "paper",
+          "title": "Trust in Automation: Integrating Empirical Evidence on Factors That Influence Trust",
+          "authors": "Kevin Anthony Hoff, Masooda Bashir",
+          "year": 2015,
+          "venue": "Human Factors",
+          "url": "https://doi.org/10.1177/0018720814547570",
+          "minutes": 45,
+          "why": "A systematic review that turns a decade of experiments into a three-layer model, useful for choosing variables in your own studies.",
+          "focus": "The three-layer model and its figure, and the design recommendations.",
+          "optional": false
+        },
+        {
+          "id": "s05m02r04",
+          "kind": "paper",
+          "title": "Formalizing Trust in Artificial Intelligence: Prerequisites, Causes and Goals of Human Trust in AI",
+          "authors": "Alon Jacovi, Ana Marasović, Tim Miller, Yoav Goldberg",
+          "year": 2021,
+          "venue": "ACM FAccT",
+          "url": "https://arxiv.org/abs/2010.07487",
+          "arxiv": "2010.07487",
+          "minutes": 40,
+          "why": "A careful attempt to define trust in AI, introducing 'contractual' and 'warranted' trust, which you will see in XAI and HAI evaluation papers.",
+          "focus": "Sections on the prerequisites of trust, contractual trust, warranted versus unwarranted trust, and intrinsic versus extrinsic causes.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "How do Lee and See define trust?",
+          "choices": [
+            "The percentage of time a person uses automation",
+            "The attitude that an agent will help achieve an individual's goals in a situation characterized by uncertainty and vulnerability",
+            "A belief that a machine is always correct",
+            "A measure of a system's reliability"
+          ],
+          "answer": 1,
+          "explain": "Lee and See define trust as an attitude, not a behavior and not a system property. This lets them separate trust from reliance, which is what people actually do.",
+          "ref": "s05m02r01"
+        },
+        {
+          "q": "In Lee and See's framework, what does good 'calibration' mean?",
+          "choices": [
+            "The user's trust matches the automation's actual capabilities",
+            "Trust is as high as possible",
+            "The automation adjusts its outputs to the user's mood",
+            "The user tests the system once before use"
+          ],
+          "answer": 0,
+          "explain": "Calibration is the correspondence between trust and capability. Overtrust leads to misuse and distrust to disuse, using Parasuraman and Riley's terms.",
+          "ref": "s05m02r01"
+        },
+        {
+          "q": "Why do Lee and See insist on separating trust from reliance?",
+          "choices": [
+            "They are always identical in experiments",
+            "Reliance cannot be measured",
+            "Trust guides reliance, but other factors such as workload, time pressure and self-confidence also affect whether people rely on automation",
+            "Reliance only applies to humans, not machines"
+          ],
+          "answer": 2,
+          "explain": "A person may distrust a system yet rely on it because they are overloaded, or trust it yet act manually. HAI studies therefore measure behavioral reliance separately from self-reported trust.",
+          "ref": "s05m02r01"
+        },
+        {
+          "q": "Mayer, Davis and Schoorman identify three factors of trustworthiness. Which set is it?",
+          "choices": [
+            "Speed, accuracy, cost",
+            "Familiarity, liking, similarity",
+            "Transparency, reliability, safety",
+            "Ability, benevolence, integrity"
+          ],
+          "answer": 3,
+          "explain": "Ability (competence in the domain), benevolence (wanting to do good for the trustor) and integrity (adhering to acceptable principles). Lee and See map these onto performance, purpose and process.",
+          "ref": "s05m02r02"
+        },
+        {
+          "q": "In Hoff and Bashir's model, a user trusts the same AI tool less when the decision is high-stakes. Which layer of trust is this?",
+          "choices": [
+            "Dispositional trust",
+            "Situational trust",
+            "Learned trust",
+            "Contractual trust"
+          ],
+          "answer": 1,
+          "explain": "Hoff and Bashir separate dispositional trust (the person's general tendency), situational trust (depends on the context, such as risk and workload) and learned trust (built from experience with the system).",
+          "ref": "s05m02r03"
+        },
+        {
+          "q": "According to Jacovi et al., when is a user's trust in an AI 'warranted'?",
+          "choices": [
+            "When the user reports high trust on a questionnaire",
+            "When the AI has been approved by a regulator",
+            "When the trust is caused by the AI actually being trustworthy with respect to the relevant contract",
+            "Whenever the AI is accurate on average"
+          ],
+          "answer": 2,
+          "explain": "Jacovi et al. define warranted trust by its cause: trust that arises from the model's real trustworthiness, rather than from irrelevant cues like a confident tone.",
+          "ref": "s05m02r04"
+        },
+        {
+          "q": "Jacovi et al. name two prerequisites for trust in AI. What are they?",
+          "choices": [
+            "The user is vulnerable to the AI's actions, and the user can anticipate the impact of the AI's decisions",
+            "The AI is open source, and the user is an expert",
+            "The AI explains itself, and the user agrees",
+            "The user has used the AI before, and it never erred"
+          ],
+          "answer": 0,
+          "explain": "The abstract states the model rests on the user's vulnerability and the ability to anticipate the impact of the model's decisions, echoing the vulnerability in Mayer et al.'s and Lee and See's definitions.",
+          "ref": "s05m02r04"
+        }
+      ],
+      "exercise": "Design a study that measures appropriate reliance on an AI advisor, not just self-reported trust. Specify the task, how you would vary the AI's accuracy across trials, a behavioral reliance measure, and how you would tell whether reliance is calibrated (tracks when the AI is right) rather than just high or low overall."
+    },
+    {
+      "id": "s05m03",
+      "title": "Heuristics, biases and automation bias",
+      "goal": "Explain the main judgment heuristics and describe automation bias, its two error types, and what makes it better or worse.",
+      "guide": "Tversky and Kahneman's 1974 paper is the foundation of the 'heuristics and biases' program; you will see its terms in every paper on human-AI decision making. Skitka, Mosier and Burdick provide the classic experiment on automation bias, and Goddard et al. review the evidence across fields, especially healthcare. Key terms: heuristic (a mental shortcut that is usually useful but causes systematic errors); anchoring (estimates pulled toward an initial number); base rate (how common something is in general); automation bias (using an automated cue as a substitute for careful checking); error of omission (missing a problem because the automation didn't flag it); error of commission (following an automated recommendation that is wrong).",
+      "resources": [
+        {
+          "id": "s05m03r01",
+          "kind": "paper",
+          "title": "Judgment under Uncertainty: Heuristics and Biases",
+          "authors": "Amos Tversky, Daniel Kahneman",
+          "year": 1974,
+          "venue": "Science",
+          "url": "https://doi.org/10.1126/science.185.4157.1124",
+          "minutes": 35,
+          "why": "Introduces representativeness, availability and anchoring: the vocabulary for how AI advice can bias human judgment.",
+          "focus": "Read all three heuristic sections and the examples in each.",
+          "optional": false
+        },
+        {
+          "id": "s05m03r02",
+          "kind": "paper",
+          "title": "Does automation bias decision-making?",
+          "authors": "Linda J. Skitka, Kathleen L. Mosier, Mark Burdick",
+          "year": 1999,
+          "venue": "International Journal of Human-Computer Studies",
+          "url": "https://doi.org/10.1006/ijhc.1999.0252",
+          "minutes": 40,
+          "why": "The classic experiment showing that a reliable but imperfect decision aid produces new kinds of errors.",
+          "focus": "Introduction (definitions of omission and commission errors), method and main results.",
+          "optional": false
+        },
+        {
+          "id": "s05m03r03",
+          "kind": "paper",
+          "title": "Automation bias: a systematic review of frequency, effect mediators, and mitigators",
+          "authors": "Kate Goddard, Abdul Roudsari, Jeremy C. Wyatt",
+          "year": 2012,
+          "venue": "Journal of the American Medical Informatics Association",
+          "url": "https://doi.org/10.1136/amiajnl-2011-000089",
+          "minutes": 35,
+          "why": "Collects what is known about when automation bias is stronger or weaker and what reduces it, directly relevant to clinical AI.",
+          "focus": "Abstract, the tables of mediators and mitigators, and the discussion.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Which three heuristics do Tversky and Kahneman describe?",
+          "choices": [
+            "Framing, loss aversion and endowment",
+            "Representativeness, availability, and adjustment and anchoring",
+            "Confirmation, hindsight and overconfidence",
+            "Recognition, fluency and affect"
+          ],
+          "answer": 1,
+          "explain": "The 1974 paper is organized around these three heuristics. Loss aversion and framing come from Kahneman and Tversky's later work.",
+          "ref": "s05m03r01"
+        },
+        {
+          "q": "In Tversky and Kahneman's experiment, a spun wheel produced a random number and people then estimated the percentage of African countries in the UN. Their estimates moved toward the random number. Which heuristic does this show?",
+          "choices": [
+            "Availability",
+            "Representativeness",
+            "Anchoring",
+            "Base-rate neglect"
+          ],
+          "answer": 2,
+          "explain": "Even an obviously arbitrary starting value acted as an anchor that people adjusted from insufficiently. An AI's suggestion shown before a person forms their own judgment can work the same way.",
+          "ref": "s05m03r01"
+        },
+        {
+          "q": "In Skitka et al.'s terms, an automated aid fails to flag an engine problem and the participant misses it, even though other instruments showed it. This is:",
+          "choices": [
+            "An error of omission",
+            "An error of commission",
+            "Disuse",
+            "A false alarm"
+          ],
+          "answer": 0,
+          "explain": "Omission errors are failures to notice problems the automation did not point out. Commission errors are following an automated directive that is wrong, despite contrary evidence.",
+          "ref": "s05m03r02"
+        },
+        {
+          "q": "What was the key comparison in Skitka et al. (1999)?",
+          "choices": [
+            "Pilots versus students on the same task",
+            "Two different automated aids",
+            "Participants with a reliable but imperfect automated aid versus participants without one, on events where the aid failed or was wrong",
+            "Paper checklists versus spoken checklists"
+          ],
+          "answer": 2,
+          "explain": "Participants with the aid made omission and commission errors, while those without it performed better on exactly those events. Having the aid changed how people monitored.",
+          "ref": "s05m03r02"
+        },
+        {
+          "q": "Goddard et al. list environmental factors that increase automation bias. Which is one?",
+          "choices": [
+            "High workload or time pressure",
+            "A well-lit room",
+            "Using a desktop instead of a laptop",
+            "Having more decision options"
+          ],
+          "answer": 0,
+          "explain": "The review names workload, task complexity and time constraints, which put pressure on cognitive resources, alongside user factors such as experience, trust and confidence.",
+          "ref": "s05m03r03"
+        },
+        {
+          "q": "Which mitigation of automation bias is reported in Goddard et al.'s review?",
+          "choices": [
+            "Hiding the system's confidence level",
+            "Removing training to avoid priming users",
+            "Training and emphasizing users' accountability, plus design choices such as showing updated confidence levels",
+            "Always presenting a single firm recommendation"
+          ],
+          "answer": 2,
+          "explain": "Goddard et al. list training, user accountability, the position of advice on screen, confidence levels and providing information rather than a recommendation as mitigators.",
+          "ref": "s05m03r03"
+        }
+      ],
+      "exercise": "Critique: Skitka et al. ran a laboratory flight-simulation task with student participants. List three threats to generalizing their findings to professional pilots or to clinicians using an AI diagnostic tool. Then propose a study design that addresses one of those threats while still allowing you to measure omission and commission errors."
+    },
+    {
+      "id": "s05m04",
+      "title": "Algorithm aversion and appreciation",
+      "goal": "Explain when people avoid algorithmic advice and when they prefer it, and how expectation-setting and control change acceptance.",
+      "guide": "Read Dietvorst et al. 2015 and Logg et al. 2019 as an apparent contradiction, then figure out why both can be true: look at what participants saw before deciding. Dietvorst et al. 2018 (optional) tests a remedy. Kocielnik et al. bring the question into a real HCI system. Key terms: algorithm aversion (avoiding an algorithm after seeing it make mistakes, even when it outperforms humans); algorithm appreciation (weighting advice more when told it comes from an algorithm); weight of advice (how far a person moves their estimate toward the advice, from 0 to 1); expectation setting (telling users in advance what an AI can and can't do).",
+      "resources": [
+        {
+          "id": "s05m04r01",
+          "kind": "paper",
+          "title": "Algorithm aversion: People erroneously avoid algorithms after seeing them err.",
+          "authors": "Berkeley J. Dietvorst, Joseph P. Simmons, Cade Massey",
+          "year": 2015,
+          "venue": "Journal of Experimental Psychology: General",
+          "url": "https://doi.org/10.1037/xge0000033",
+          "minutes": 40,
+          "why": "Coined 'algorithm aversion', one of the most cited findings in human-AI decision making.",
+          "focus": "Introduction, the design of Study 1 (the four conditions), and the general discussion.",
+          "optional": false
+        },
+        {
+          "id": "s05m04r02",
+          "kind": "paper",
+          "title": "Algorithm appreciation: People prefer algorithmic to human judgment",
+          "authors": "Jennifer M. Logg, Julia A. Minson, Don A. Moore",
+          "year": 2019,
+          "venue": "Organizational Behavior and Human Decision Processes",
+          "url": "https://doi.org/10.1016/j.obhdp.2018.12.005",
+          "minutes": 40,
+          "why": "The counterpoint to algorithm aversion, with a clear experimental paradigm (weight of advice) you can reuse.",
+          "focus": "Introduction, Experiment 1A, Experiments 3 and 4 (where appreciation fades), and the discussion.",
+          "optional": false
+        },
+        {
+          "id": "s05m04r03",
+          "kind": "paper",
+          "title": "Overcoming Algorithm Aversion: People Will Use Imperfect Algorithms If They Can (Even Slightly) Modify Them",
+          "authors": "Berkeley J. Dietvorst, Joseph P. Simmons, Cade Massey",
+          "year": 2018,
+          "venue": "Management Science",
+          "url": "https://doi.org/10.1287/mnsc.2016.2643",
+          "minutes": 35,
+          "why": "Shows that giving people a small amount of control increases their willingness to use an algorithm.",
+          "focus": "Introduction and Study 2 (sensitivity to how much modification is allowed).",
+          "optional": true
+        },
+        {
+          "id": "s05m04r04",
+          "kind": "paper",
+          "title": "Will You Accept an Imperfect AI?",
+          "authors": "Rafal Kocielnik, Saleema Amershi, Paul N. Bennett",
+          "year": 2019,
+          "venue": "CHI",
+          "url": "https://doi.org/10.1145/3290605.3300641",
+          "minutes": 35,
+          "why": "An HCI study showing that the type of errors an AI makes, and how users are prepared for them, shape acceptance as much as accuracy does.",
+          "focus": "The Scheduling Assistant setup, the two error-focus versions, and the three expectation-adjustment techniques.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What did Dietvorst et al. (2015) find?",
+          "choices": [
+            "People always prefer algorithms to humans",
+            "People are less likely to choose an algorithm after seeing it make errors, even when they have seen it outperform a human forecaster",
+            "People cannot tell algorithms and humans apart",
+            "Algorithms perform worse than people at forecasting"
+          ],
+          "answer": 1,
+          "explain": "Across several studies, seeing the algorithm perform, and therefore err, reduced choosing it, even though it beat the human forecasts. The word 'erroneously' in the title reflects that this choice cost participants money.",
+          "ref": "s05m04r01"
+        },
+        {
+          "q": "Which asymmetry is central to Dietvorst et al.'s explanation of algorithm aversion?",
+          "choices": [
+            "People lose confidence in an algorithm faster than in a human forecaster after seeing the same mistakes",
+            "People forgive algorithms faster than humans",
+            "People trust algorithms only when they are free",
+            "People never see their own mistakes"
+          ],
+          "answer": 0,
+          "explain": "The authors argue that people hold algorithms to a different standard and lose confidence in them more quickly after errors than they do in humans.",
+          "ref": "s05m04r01"
+        },
+        {
+          "q": "Logg et al. (2019) found 'algorithm appreciation'. Under which condition did it weaken?",
+          "choices": [
+            "When advice was shown on a phone",
+            "When the algorithm was described in detail",
+            "When people were paid",
+            "When people chose between an algorithm's estimate and their own (rather than another person's), and when participants were experienced forecasters"
+          ],
+          "answer": 3,
+          "explain": "Appreciation waned when the comparison was with one's own judgment (Experiment 3) and among professionals with forecasting expertise (Experiment 4), who relied less on the algorithm and were less accurate as a result.",
+          "ref": "s05m04r02"
+        },
+        {
+          "q": "How can Dietvorst et al.'s aversion and Logg et al.'s appreciation both be true?",
+          "choices": [
+            "One of the papers must be fraudulent",
+            "Logg et al. used only experts",
+            "Aversion appears after people see the algorithm err; Logg et al.'s participants mostly received advice without first watching the algorithm make mistakes",
+            "They studied different countries"
+          ],
+          "answer": 2,
+          "explain": "The key difference is the evidence participants had. Dietvorst's effect is triggered by observed errors, so it is not a general dislike of algorithms. Logg et al. measured initial reliance on advice.",
+          "ref": "s05m04r02"
+        },
+        {
+          "q": "In Dietvorst et al. (2018), what increased people's use of an imperfect algorithm?",
+          "choices": [
+            "Letting them modify its forecasts, even by a small, restricted amount",
+            "Hiding its errors",
+            "Describing it as artificial intelligence",
+            "Raising the payment for accuracy"
+          ],
+          "answer": 0,
+          "explain": "People were much more willing to use the algorithm when they could adjust its output, and this preference held even when allowed adjustments were tiny, suggesting a desire for some control rather than a lot.",
+          "ref": "s05m04r03"
+        },
+        {
+          "q": "Kocielnik et al. built two versions of a meeting-detection assistant with the same 50% accuracy. What differed, and what did it affect?",
+          "choices": [
+            "Their speed; it affected nothing",
+            "Their color scheme; it affected trust",
+            "Their training data; it affected accuracy",
+            "Whether they focused on avoiding false positives or false negatives; this led to very different perceived accuracy and acceptance"
+          ],
+          "answer": 3,
+          "explain": "Holding accuracy fixed, the type of error the system avoided changed how users perceived and accepted it. The paper also shows that expectation-adjustment techniques increased acceptance.",
+          "ref": "s05m04r04"
+        }
+      ],
+      "exercise": "Critique: in Dietvorst et al. (2015), participants who saw the algorithm's track record also earned money for accurate forecasts and, in some conditions, saw their own track record. What explanations other than 'people hold algorithms to a higher standard' could account for the drop in choosing the algorithm? Propose one additional condition that would rule out an alternative you named."
+    },
+    {
+      "id": "s05m05",
+      "title": "Social responses to machines",
+      "goal": "Explain why people treat computers as social actors, how this differs from believing they are human, and what drives anthropomorphism.",
+      "guide": "Nass, Steuer and Tauber's CHI paper launched the 'Computers Are Social Actors' (CASA) paradigm: take a social psychology finding, replace one person with a computer, and see if it still holds. Nass and Moon review the evidence and argue for 'mindlessness' as the explanation. Epley, Waytz and Cacioppo offer a psychological theory of when people anthropomorphize. Abercrombie et al. (optional) apply all of this to modern dialogue systems. Key terms: CASA (people apply social rules to computers); mindlessness (responding automatically to cues without reflecting); anthropomorphism (attributing human characteristics, like intentions or feelings, to non-human agents); effectance (the motivation to understand and predict one's environment).",
+      "resources": [
+        {
+          "id": "s05m05r01",
+          "kind": "paper",
+          "title": "Computers are social actors",
+          "authors": "Clifford Nass, Jonathan Steuer, Ellen R. Tauber",
+          "year": 1994,
+          "venue": "CHI",
+          "url": "https://doi.org/10.1145/191666.191703",
+          "minutes": 25,
+          "why": "The paper that founded the CASA paradigm, still the basis of much chatbot research.",
+          "focus": "The experimental paradigm and the politeness experiment; note participants' own accounts of their behavior.",
+          "optional": false
+        },
+        {
+          "id": "s05m05r02",
+          "kind": "paper",
+          "title": "Machines and Mindlessness: Social Responses to Computers",
+          "authors": "Clifford Nass, Youngme Moon",
+          "year": 2000,
+          "venue": "Journal of Social Issues",
+          "url": "https://doi.org/10.1111/0022-4537.00153",
+          "minutes": 40,
+          "why": "Summarizes a decade of CASA studies and explains why 'people think computers are human' is the wrong explanation.",
+          "focus": "The three sets of studies (social categories, overlearned behaviors, premature cognitive commitments) and the section ruling out alternative explanations.",
+          "optional": false
+        },
+        {
+          "id": "s05m05r03",
+          "kind": "paper",
+          "title": "On seeing human: A three-factor theory of anthropomorphism.",
+          "authors": "Nicholas Epley, Adam Waytz, John T. Cacioppo",
+          "year": 2007,
+          "venue": "Psychological Review",
+          "url": "https://doi.org/10.1037/0033-295X.114.4.864",
+          "minutes": 50,
+          "why": "The standard psychological theory of anthropomorphism, used to predict which users will humanize an AI and when.",
+          "focus": "The introduction and the sections presenting each of the three factors.",
+          "optional": false
+        },
+        {
+          "id": "s05m05r04",
+          "kind": "paper",
+          "title": "Mirages: On Anthropomorphism in Dialogue Systems",
+          "authors": "Gavin Abercrombie, Amanda Cercas Curry, Tanvi Dinkar, Verena Rieser, Zeerak Talat",
+          "year": 2023,
+          "venue": "EMNLP",
+          "url": "https://arxiv.org/abs/2305.09800",
+          "arxiv": "2305.09800",
+          "minutes": 30,
+          "why": "Brings the anthropomorphism literature to modern chatbots, listing the design and linguistic cues that make people personify them.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In the CASA politeness study, participants rated a computer's performance. When were their ratings more positive?",
+          "choices": [
+            "When the same computer asked for the evaluation, compared with a different computer or paper",
+            "When they rated it on paper",
+            "When they were told it was a human",
+            "When the room was empty"
+          ],
+          "answer": 0,
+          "explain": "People gave kinder evaluations 'to the computer's face', just as they are polite to a person asking about their own performance, even though nobody believed the computer had feelings.",
+          "ref": "s05m05r01"
+        },
+        {
+          "q": "In the CASA studies Nass and Moon review, how did participants' stated beliefs compare with their behavior?",
+          "choices": [
+            "They said they believed computers have feelings, and acted accordingly",
+            "They refused to interact with the computers",
+            "They said the experimenter told them to be polite",
+            "They agreed computers are not human and should not be treated as such, yet still responded to them socially"
+          ],
+          "answer": 3,
+          "explain": "Participants endorsed the view that computers are not people, yet behaved socially anyway. This gap between belief and behavior is the heart of the CASA result and the reason Nass and Moon reject conscious anthropomorphism as the explanation.",
+          "ref": "s05m05r02"
+        },
+        {
+          "q": "Nass and Moon explain social responses to computers through 'mindlessness'. Which explanation do they argue against?",
+          "choices": [
+            "That people respond automatically to social cues",
+            "That people consciously believe computers are human (anthropomorphism)",
+            "That overlearned behaviors are triggered by cues",
+            "That people use social categories as shortcuts"
+          ],
+          "answer": 1,
+          "explain": "Nass and Moon argue people know computers are not human; they respond mindlessly to cues like voice or language. They reject both anthropomorphism and deliberate social responses as explanations.",
+          "ref": "s05m05r02"
+        },
+        {
+          "q": "In Nass and Moon's review, viewers perceived content from a television labeled as a 'specialist' (for example, a news set) as better. This illustrates:",
+          "choices": [
+            "Gender stereotyping",
+            "Reciprocity",
+            "Premature cognitive commitment",
+            "Ethnic identification"
+          ],
+          "answer": 2,
+          "explain": "A label accepted without reflection shaped later judgments. In LLM terms, telling users an assistant is an 'expert' could have a similar effect.",
+          "ref": "s05m05r02"
+        },
+        {
+          "q": "In Epley et al.'s theory, a lonely user is more likely to anthropomorphize a chatbot. Which factor explains this?",
+          "choices": [
+            "Elicited agent knowledge",
+            "Effectance motivation",
+            "Sociality motivation",
+            "Mindlessness"
+          ],
+          "answer": 2,
+          "explain": "The three factors are elicited agent knowledge (using knowledge about humans as a template), effectance motivation (the need to understand and predict) and sociality motivation (the need for social connection). Loneliness raises sociality motivation.",
+          "ref": "s05m05r03"
+        },
+        {
+          "q": "According to Epley et al., why might an unpredictable AI system be anthropomorphized more than a predictable one?",
+          "choices": [
+            "Unpredictability raises effectance motivation, so people reach for human-like explanations to make sense of its behavior",
+            "Unpredictable systems are always more humanlike in appearance",
+            "People ignore unpredictable systems",
+            "Unpredictability lowers sociality motivation"
+          ],
+          "answer": 0,
+          "explain": "Effectance motivation is the drive to explain and predict an agent. When behavior is hard to predict, treating the agent as having human-like intentions is a ready way to make sense of it.",
+          "ref": "s05m05r03"
+        },
+        {
+          "q": "What do Abercrombie et al. recommend to dialogue system developers?",
+          "choices": [
+            "Make systems as humanlike as possible to build trust",
+            "Take care in design, development, release and description, paying attention to the linguistic cues that lead users to personify the system",
+            "Stop building dialogue systems",
+            "Use only voice interfaces"
+          ],
+          "answer": 1,
+          "explain": "Abercrombie et al. argue that anthropomorphism can lead to over-reliance and other harms, and that it is partly driven by design choices developers control.",
+          "ref": "s05m05r04"
+        }
+      ],
+      "exercise": "Design a CASA-style replication with a modern LLM chatbot: adapt the politeness study (or another Nass and Moon finding) to an open-ended chat. What changes now that the system produces fluent, human-like language? How would you tell a mindless social response apart from a deliberate one, and what control condition would you use?"
+    }
+  ]
+}

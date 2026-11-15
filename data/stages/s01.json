@@ -1,0 +1,536 @@
+{
+  "id": "s01",
+  "number": 1,
+  "title": "Orientation: What is Human-AI Interaction?",
+  "subtitle": "Founding visions, agents vs. direct manipulation, guidelines, ML as a design material",
+  "overview": "This stage maps the territory: where the idea of people working with intelligent machines came from, the long-running debate between automating for people and empowering them, and how today's Human-AI Interaction (HAI) field frames its core design problems. The path from here alternates between technical foundations (how machine learning and language models actually work) and human-centered research (how people perceive, use, trust, and are affected by AI), so each half informs the other. Stage 11 on research methods stands on its own and can be started at any time, alongside any other stage.",
+  "modules": [
+    {
+      "id": "s01m01",
+      "title": "Founding visions",
+      "goal": "Explain the difference between machines that imitate or replace human intelligence and machines that augment it, using Turing, Licklider, Engelbart, and ELIZA as reference points.",
+      "guide": "Start with Licklider, the shortest and most direct statement of the 'partnership' vision, then read Engelbart's introduction to see augmentation framed as a whole system of people, tools, and practices. Turing gives the contrasting framing: can a machine pass as human in conversation? Finish with Weizenbaum's ELIZA paper, which shows how little machinery it takes for people to believe a program understands them — a theme that returns with modern chatbots. Terms to watch: 'symbiosis' (two different organisms living in close, mutually beneficial association), 'augmentation' (increasing a person's capability rather than replacing them), and the 'imitation game' (Turing's test where an interrogator tries to tell a machine from a person by text alone).",
+      "resources": [
+        {
+          "id": "s01m01r01",
+          "kind": "paper",
+          "title": "Man-Computer Symbiosis",
+          "authors": "J. C. R. Licklider",
+          "year": 1960,
+          "venue": "IRE Transactions on Human Factors in Electronics",
+          "url": "https://doi.org/10.1109/THFE2.1960.4503259",
+          "listen": "https://groups.csail.mit.edu/medg/people/psz/Licklider.html",
+          "minutes": 35,
+          "why": "The founding statement of humans and computers as partners with complementary strengths — the intellectual ancestor of 'human-centered AI' and of most HAI design goals.",
+          "focus": "Read the whole thing; it is short. Pay attention to his account of how he actually spent his 'thinking' time and to his list of what humans versus computers should each do."
+        },
+        {
+          "id": "s01m01r02",
+          "kind": "paper",
+          "title": "Augmenting Human Intellect: A Conceptual Framework",
+          "authors": "Douglas C. Engelbart",
+          "year": 1962,
+          "venue": "SRI Summary Report AFOSR-3223",
+          "url": "https://www.dougengelbart.org/content/view/138",
+          "listen": "https://www.dougengelbart.org/content/view/138",
+          "minutes": 45,
+          "why": "Defines augmentation as improving the whole system of a person plus their language, artifacts, methods, and training — a framing HAI still uses when it studies tools in context rather than in isolation.",
+          "focus": "Read Section I (Introduction) and the opening of Section II, where the H-LAM/T system is defined. Skim the rest; the long hypothetical walkthrough is optional."
+        },
+        {
+          "id": "s01m01r03",
+          "kind": "paper",
+          "title": "Computing Machinery and Intelligence",
+          "authors": "A. M. Turing",
+          "year": 1950,
+          "venue": "Mind",
+          "url": "https://doi.org/10.1093/mind/LIX.236.433",
+          "minutes": 50,
+          "why": "Introduces the imitation game, which made 'behaving indistinguishably from a human' a benchmark for AI — a goal HAI researchers often question because it rewards deception over usefulness.",
+          "focus": "Read Sections 1–2 (the game), skim the objections in Section 6, and read Section 7 on 'learning machines', which anticipates machine learning."
+        },
+        {
+          "id": "s01m01r04",
+          "kind": "paper",
+          "title": "ELIZA—A Computer Program For the Study of Natural Language Communication Between Man and Machine",
+          "authors": "Joseph Weizenbaum",
+          "year": 1966,
+          "venue": "Communications of the ACM",
+          "url": "https://doi.org/10.1145/365153.365168",
+          "minutes": 30,
+          "why": "The first chatbot, and the first clear evidence that people readily attribute understanding to a simple program — the root of today's concerns about anthropomorphism and over-trust in conversational AI.",
+          "focus": "Read the introduction, the description of keywords and transformation rules, and the discussion at the end about the illusion of understanding. Skim the implementation details."
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In 'Man-Computer Symbiosis', what does Licklider report finding when he analyzed how he spent his own 'thinking' time?",
+          "choices": [
+            "Most of it went to creative insight that no machine could help with",
+            "Most of it went to clerical or mechanical work just to get into a position to think or decide",
+            "Most of it went to arguing with colleagues about which hypothesis to test",
+            "Roughly equal time went to formulating problems and solving them"
+          ],
+          "answer": 1,
+          "explain": "Licklider found that about 85% of his 'thinking' time was spent on essentially clerical activities — finding, plotting, and preparing information — which motivated his vision of computers handling routinizable work so people can focus on formulating goals and judging results.",
+          "ref": "s01m01r01"
+        },
+        {
+          "q": "Which division of labor best matches Licklider's vision of symbiosis?",
+          "choices": [
+            "Computers set the goals; humans carry out the detailed procedures",
+            "Humans and computers each do the whole task independently, and results are compared",
+            "Humans set goals, formulate hypotheses, and evaluate; computers do the routinizable work that prepares the way for decisions",
+            "Computers gradually take over all thinking, with humans as supervisors only during a short transition"
+          ],
+          "answer": 2,
+          "explain": "Licklider casts people as goal-setters and evaluators and computers as the partner that handles routinizable processing, so the pair outperforms either alone. He explicitly distinguishes this from 'mechanically extended man' and from full machine replacement.",
+          "ref": "s01m01r01"
+        },
+        {
+          "q": "Engelbart's 'H-LAM/T' names the system he wants to augment. What does it stand for?",
+          "choices": [
+            "Human using Language, Artifacts, Methodology, in which he is Trained",
+            "Human Learning And Machine Teaching",
+            "Hardware, Logic, Algorithms, Memory, and Terminals",
+            "Human-Level Artificial Mind Test"
+          ],
+          "answer": 0,
+          "explain": "Engelbart frames augmentation as improving a whole system: a human using language, artifacts, and methodology, in which he is trained. The point is that better tools alone are not enough; concepts, methods, and training co-evolve with them.",
+          "ref": "s01m01r02"
+        },
+        {
+          "q": "Why does Turing replace the question 'Can machines think?' with the imitation game?",
+          "choices": [
+            "Because he believed machines could already think and wanted a demonstration",
+            "Because the original question depends on vague meanings of 'machine' and 'think', so he substitutes a concrete, testable behavioral question",
+            "Because he wanted to measure how fast machines compute compared with people",
+            "Because the game shows that machines and humans think in the same way internally"
+          ],
+          "answer": 1,
+          "explain": "Turing argues that defining 'machine' and 'think' by ordinary usage would turn the question into an opinion poll, so he replaces it with a behavioral test. The test says nothing about internal mechanisms — a distractor that confuses behavior with process.",
+          "ref": "s01m01r03"
+        },
+        {
+          "q": "How does ELIZA produce its replies, according to Weizenbaum?",
+          "choices": [
+            "By looking up full answers in a large database of real therapy sessions",
+            "By building a model of the user's beliefs and reasoning about them",
+            "By learning from conversations with users which replies they like best",
+            "By scanning input for keywords and applying decomposition and reassembly rules from a script"
+          ],
+          "answer": 3,
+          "explain": "ELIZA matches keywords, decomposes the sentence by pattern, and reassembles a reply using rules in a script (the famous one, DOCTOR, imitates a Rogerian psychotherapist). It has no model of meaning and does not learn — which is why people's belief that it understood them was so striking.",
+          "ref": "s01m01r04"
+        },
+        {
+          "q": "A modern chatbot is rated highly 'understanding' by users even though it relies on surface patterns. Which founding source most directly anticipated this?",
+          "choices": [
+            "Weizenbaum's ELIZA paper, which observed how easily people attribute understanding to a simple program",
+            "Engelbart's framework, which predicted that language would be the main interface to computers",
+            "Licklider, who argued that computers would soon understand natural language better than people",
+            "Turing, who proved that passing the imitation game requires genuine understanding"
+          ],
+          "answer": 0,
+          "explain": "Weizenbaum emphasized how easy it is to create and maintain an illusion of understanding. Turing did not prove anything of the sort — he proposed a behavioral criterion and argued against objections.",
+          "ref": "s01m01r04"
+        }
+      ]
+    },
+    {
+      "id": "s01m02",
+      "title": "Agents vs. direct manipulation; mixed initiative",
+      "goal": "Explain the trade-off between delegating to an autonomous agent and acting through a direct-manipulation interface, and how mixed-initiative design tries to get the benefits of both.",
+      "guide": "Begin with Hutchins, Hollan & Norman to learn why direct manipulation (acting on visible objects with immediate feedback, like dragging a file) feels natural; their 'gulf of execution' (the gap between what you want and the actions the system offers) and 'gulf of evaluation' (the gap between the system's state and your ability to tell what happened) are vocabulary you will use for the rest of this path. Then read the Shneiderman & Maes debate, where each side argues for control versus delegation. Horvitz's mixed-initiative paper is the bridge: it treats when an assistant should act, ask, or stay quiet as a decision under uncertainty. Höök (optional) lists the usability problems intelligent interfaces must solve before they are worth deploying. Term: 'interface agent' means software that acts on the user's behalf, often proactively.",
+      "resources": [
+        {
+          "id": "s01m02r01",
+          "kind": "paper",
+          "title": "Direct Manipulation Interfaces",
+          "authors": "Edwin L. Hutchins, James D. Hollan, Donald A. Norman",
+          "year": 1985,
+          "venue": "Human–Computer Interaction",
+          "url": "https://doi.org/10.1207/s15327051hci0104_2",
+          "minutes": 60,
+          "why": "Gives the cognitive account of why directness matters; the gulfs of execution and evaluation are the standard lens for analyzing why AI systems can feel opaque or hard to steer.",
+          "focus": "Focus on the sections defining distance (semantic and articulatory) and engagement, and the gulfs of execution and evaluation. Skim the examples."
+        },
+        {
+          "id": "s01m02r02",
+          "kind": "paper",
+          "title": "Direct manipulation vs. interface agents",
+          "authors": "Ben Shneiderman, Pattie Maes",
+          "year": 1997,
+          "venue": "Interactions",
+          "url": "https://doi.org/10.1145/267505.267514",
+          "minutes": 30,
+          "why": "The classic debate on control versus delegation; almost every later argument about AI assistants, copilots, and autonomous agents restates one of these two positions.",
+          "focus": "Read both positions and note what each says about predictability, user control, and information overload."
+        },
+        {
+          "id": "s01m02r03",
+          "kind": "paper",
+          "title": "Principles of mixed-initiative user interfaces",
+          "authors": "Eric Horvitz",
+          "year": 1999,
+          "venue": "CHI '99",
+          "url": "https://doi.org/10.1145/302979.303030",
+          "minutes": 40,
+          "why": "Frames when an AI assistant should act, ask, or wait as an expected-utility decision under uncertainty about the user's goals — still the clearest model for designing proactive assistance.",
+          "focus": "Read the list of critical factors (principles) and the sections on the Lookout system and on action thresholds based on the probability of the user's goal."
+        },
+        {
+          "id": "s01m02r04",
+          "kind": "paper",
+          "title": "Steps to take before intelligent user interfaces become real",
+          "authors": "Kristina Höök",
+          "year": 2000,
+          "venue": "Interacting with Computers",
+          "url": "https://doi.org/10.1016/S0953-5438(99)00006-5",
+          "minutes": 35,
+          "why": "An early, sober critique arguing that intelligent interfaces fail more from usability and design problems (control, transparency, predictability, trust) than from weak AI.",
+          "focus": "Read the introduction and the sections listing the usability problems and proposed steps.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In Hutchins, Hollan & Norman's terms, a user cannot tell whether a smart-photo app actually applied the edit they requested. Which gulf is this?",
+          "choices": [
+            "The gulf of execution",
+            "The gulf of evaluation",
+            "Articulatory distance on the input side",
+            "Direct engagement"
+          ],
+          "answer": 1,
+          "explain": "The gulf of evaluation is the difficulty of perceiving and interpreting the system's state to tell whether your goal was met. The gulf of execution is the opposite direction: translating intentions into actions the system accepts.",
+          "ref": "s01m02r01"
+        },
+        {
+          "q": "According to Hutchins, Hollan & Norman, what two aspects together produce the feeling of 'directness'?",
+          "choices": [
+            "Speed and accuracy",
+            "Automation and personalization",
+            "Distance (between intentions and the interface's language) and engagement (the feeling of acting on the objects themselves)",
+            "Graphical output and keyboard input"
+          ],
+          "answer": 2,
+          "explain": "They decompose directness into distance — semantic and articulatory gaps between what you mean and how the interface lets you express it — and direct engagement, the sense of manipulating objects of interest rather than talking to an intermediary.",
+          "ref": "s01m02r01"
+        },
+        {
+          "q": "In the 1997 debate, which argument is characteristic of Maes's side?",
+          "choices": [
+            "Users should always see and control every action, so agents are inherently dangerous",
+            "Agents are unnecessary because visualization can solve any information problem",
+            "Interfaces should avoid learning from users to stay predictable",
+            "As information and tasks grow, people need software agents that can be delegated work and learn from the user's behavior"
+          ],
+          "answer": 3,
+          "explain": "Maes argues that information overload makes delegation to adaptive agents necessary. Shneiderman argues for comprehensible, predictable, controllable interfaces, often via visualization and direct manipulation.",
+          "ref": "s01m02r02"
+        },
+        {
+          "q": "In Horvitz's framework, an assistant is moderately but not highly confident that the user wants to schedule a meeting. What is the principled response?",
+          "choices": [
+            "Engage the user in a brief dialog to resolve the uncertainty, rather than acting automatically or doing nothing",
+            "Always act automatically, since undoing is cheap",
+            "Never act until the user explicitly invokes the feature",
+            "Act automatically but hide the action to avoid interrupting the user"
+          ],
+          "answer": 0,
+          "explain": "Horvitz uses probability thresholds weighed by costs and benefits: below one threshold do nothing, above a higher one act, and in between ask. 'Employing dialog to resolve key uncertainties' is one of his principles.",
+          "ref": "s01m02r03"
+        },
+        {
+          "q": "Why does Horvitz's Lookout system pay attention to when the user is likely to be ready for help?",
+          "choices": [
+            "Because the scheduling model is too slow to run immediately",
+            "Because the timing of a service relative to the user's attention affects its value; interrupting at the wrong moment is costly",
+            "Because users prefer that the assistant only act at night",
+            "Because legal requirements forbid immediate automated actions"
+          ],
+          "answer": 1,
+          "explain": "One of Horvitz's principles is to consider the status of the user's attention in the timing of services. Lookout models how long a user is likely to spend reading a message before offering help.",
+          "ref": "s01m02r03"
+        },
+        {
+          "q": "A team builds an autonomous email agent whose model is very accurate but whose actions users can't predict or override. Höök and Shneiderman would most likely say:",
+          "choices": [
+            "High accuracy fully resolves the problem, so no change is needed",
+            "The agent should be made more humanlike so users trust it",
+            "Lack of predictability and control is a usability problem that accuracy alone does not solve",
+            "The agent should stop learning so that it never changes"
+          ],
+          "answer": 2,
+          "explain": "Both argue that intelligent interfaces must address control, transparency, and predictability; a technically strong model can still fail people if they cannot understand or steer it.",
+          "ref": "s01m02r04"
+        }
+      ]
+    },
+    {
+      "id": "s01m03",
+      "title": "The modern field",
+      "goal": "Describe what makes AI-powered products distinctively hard to design and name the major frameworks and guideline sets the field uses to address that.",
+      "guide": "Read Amershi et al. first: their 18 guidelines are the most widely cited checklist in HAI, and they are organized by when they apply (initially, during interaction, when wrong, over time). Then read Yang et al., who explain why such guidelines are hard to apply: designers face uncertainty about what the AI can do and outputs that are complex and variable. Shneiderman's HCAI paper and Heer's 'agency plus automation' both argue against the assumption that more automation must mean less human control. Browse the PAIR Guidebook to see how these ideas turn into practical worksheets. Term: an 'AI-infused system' is any product where some behavior comes from a learned model rather than hand-written rules.",
+      "resources": [
+        {
+          "id": "s01m03r01",
+          "kind": "paper",
+          "title": "Guidelines for Human-AI Interaction",
+          "authors": "Saleema Amershi, Dan Weld, Mihaela Vorvoreanu, Adam Fourney, Besmira Nushi, Penny Collisson, et al.",
+          "year": 2019,
+          "venue": "CHI 2019",
+          "url": "https://doi.org/10.1145/3290605.3300233",
+          "minutes": 50,
+          "why": "The field's reference set of design guidelines, synthesized from two decades of recommendations and tested with practitioners; you will see it cited in nearly every HAI paper.",
+          "focus": "Read the guideline table carefully and the description of how the guidelines were validated. Skim the per-guideline evaluation results."
+        },
+        {
+          "id": "s01m03r02",
+          "kind": "paper",
+          "title": "Re-examining Whether, Why, and How Human-AI Interaction Is Uniquely Difficult to Design",
+          "authors": "Qian Yang, Aaron Steinfeld, Carolyn Rosé, John Zimmerman",
+          "year": 2020,
+          "venue": "CHI 2020",
+          "url": "https://doi.org/10.1145/3313831.3376301",
+          "minutes": 45,
+          "why": "Gives a precise account of why AI breaks ordinary UX methods, organized around two sources of difficulty, and a framework for deciding which design methods fit which kinds of systems.",
+          "focus": "Focus on the two root causes and the levels-of-complexity framework. Skim the literature synthesis."
+        },
+        {
+          "id": "s01m03r03",
+          "kind": "paper",
+          "title": "Human-Centered Artificial Intelligence: Reliable, Safe & Trustworthy",
+          "authors": "Ben Shneiderman",
+          "year": 2020,
+          "venue": "International Journal of Human–Computer Interaction",
+          "url": "https://arxiv.org/abs/2002.04087",
+          "arxiv": "2002.04087",
+          "minutes": 45,
+          "why": "Proposes the two-dimensional HCAI framework, arguing that systems can offer high automation and high human control at the same time — a widely used counterpoint to one-dimensional 'levels of automation'.",
+          "focus": "Read the introduction and the section presenting the two-dimensional framework and its quadrants. Skim the examples."
+        },
+        {
+          "id": "s01m03r04",
+          "kind": "paper",
+          "title": "Agency plus automation: Designing artificial intelligence into interactive systems",
+          "authors": "Jeffrey Heer",
+          "year": 2019,
+          "venue": "PNAS",
+          "url": "https://doi.org/10.1073/pnas.1807184115",
+          "minutes": 40,
+          "why": "Shows through concrete systems (data wrangling, visualization, translation) how AI can augment people while preserving their agency, using shared representations that both the person and the model can act on.",
+          "focus": "Read the introduction and the three case studies; note the role of shared representations in each.",
+          "listen": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6369770/"
+        },
+        {
+          "id": "s01m03r05",
+          "kind": "book",
+          "title": "People + AI Guidebook",
+          "authors": "Google PAIR",
+          "year": 2019,
+          "venue": "pair.withgoogle.com",
+          "url": "https://pair.withgoogle.com/guidebook",
+          "minutes": 45,
+          "why": "A widely used practitioner guide that turns HAI research into design patterns and worksheets; useful for seeing what industry treats as best practice.",
+          "focus": "Skim the chapter list, then read the chapters on mental models and on explainability and trust.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "How are Amershi et al.'s 18 Guidelines for Human-AI Interaction organized?",
+          "choices": [
+            "By type of machine learning algorithm",
+            "By industry (health, finance, retail, education)",
+            "By user expertise level, from novice to expert",
+            "By when they apply: initially, during interaction, when the system is wrong, and over time"
+          ],
+          "answer": 3,
+          "explain": "The guidelines are grouped into four phases of interaction. For example, 'Make clear what the system can do' applies initially and 'Support efficient correction' applies when the system is wrong.",
+          "ref": "s01m03r01"
+        },
+        {
+          "q": "A writing assistant sometimes rewrites whole paragraphs when the user wanted one word fixed. Which Amershi et al. guideline speaks most directly to this?",
+          "choices": [
+            "Scope services when in doubt",
+            "Match relevant social norms",
+            "Notify users about changes",
+            "Provide global controls"
+          ],
+          "answer": 0,
+          "explain": "'Scope services when in doubt' recommends engaging in disambiguation or gracefully degrading the service when the system is uncertain of the user's goals, rather than taking large actions. The other guidelines are real but address different problems.",
+          "ref": "s01m03r01"
+        },
+        {
+          "q": "Yang et al. (2020) trace the distinctive difficulty of designing human-AI interaction to two sources. Which pair?",
+          "choices": [
+            "High computing costs and slow inference",
+            "Uncertainty about the system's capabilities and the complexity of its outputs",
+            "A shortage of training data and a shortage of designers",
+            "Legal liability and privacy regulation"
+          ],
+          "answer": 1,
+          "explain": "They identify capability uncertainty and output complexity as the root causes, and use them to define levels of design complexity — the simplest being systems with known capabilities and few possible outputs, the hardest being evolving systems with open-ended outputs.",
+          "ref": "s01m03r02"
+        },
+        {
+          "q": "What is the core claim of Shneiderman's two-dimensional HCAI framework?",
+          "choices": [
+            "Automation and human control are opposite ends of a single scale, so designers must choose a point",
+            "Full automation is always the goal; human control is a temporary safety measure",
+            "High levels of human control and high levels of computer automation can be achieved together",
+            "Human control matters only for low-stakes applications"
+          ],
+          "answer": 2,
+          "explain": "Shneiderman separates automation and human control into two independent axes and argues for designs in the high-high quadrant. The first distractor is the one-dimensional 'levels of automation' view he argues against.",
+          "ref": "s01m03r03"
+        },
+        {
+          "q": "In Heer's 'agency plus automation', what design strategy lets AI help without taking over?",
+          "choices": [
+            "Hiding model suggestions until the user asks for an explanation",
+            "Using shared representations that both the person and the model can inspect and edit, so suggestions are proposals the person can accept, adjust, or reject",
+            "Replacing the user's work with fully automated pipelines that are audited afterwards",
+            "Limiting AI to background tasks the user never sees"
+          ],
+          "answer": 1,
+          "explain": "Across his case studies (data wrangling, visualization recommendation, and translation), Heer pairs automated suggestions with representations the person can act on directly, keeping the person in charge.",
+          "ref": "s01m03r04"
+        },
+        {
+          "q": "A team is choosing design methods for an assistant whose capabilities keep changing as it learns from users and whose outputs are open-ended text. Using Yang et al., what should they expect?",
+          "choices": [
+            "Standard prototyping methods will work fine, because the interface is just a text box",
+            "The system is at the simplest complexity level, so only usability testing is needed",
+            "Uncertainty disappears once the model is trained, so design can wait until then",
+            "It sits at the hardest level of design complexity, where conventional prototyping and sketching methods fall short"
+          ],
+          "answer": 3,
+          "explain": "Evolving capabilities plus complex outputs place the system at the top of Yang et al.'s framework, where designers cannot easily anticipate behavior with conventional methods like wireframes or Wizard-of-Oz prototypes.",
+          "ref": "s01m03r02"
+        }
+      ]
+    },
+    {
+      "id": "s01m04",
+      "title": "Designing with ML as a material",
+      "goal": "Explain why designers struggle to work with machine learning and what 'interactive machine learning' changes about the relationship between people and models.",
+      "guide": "Read Dove et al. and Yang et al. (2018) as a pair: the first documents the problems UX practitioners report when working with ML, the second studies experienced designers who manage to work with it well. Then switch to interactive machine learning (IML), where the user directly trains or corrects a model in a fast loop. Fails & Olsen is the short original paper; Amershi et al. (2014) is the essential review and its key lesson is that people are not just label-providing 'oracles'. Terms: a 'model' is the learned function that maps inputs to outputs; 'training' means adjusting the model using examples; a 'label' is the correct answer attached to a training example; a 'classifier' is a model that assigns inputs to categories.",
+      "resources": [
+        {
+          "id": "s01m04r01",
+          "kind": "paper",
+          "title": "UX Design Innovation: Challenges for Working with Machine Learning as a Design Material",
+          "authors": "Graham Dove, Kim Halskov, Jodi Forlizzi, John Zimmerman",
+          "year": 2017,
+          "venue": "CHI 2017",
+          "url": "https://doi.org/10.1145/3025453.3025739",
+          "minutes": 40,
+          "why": "Coined the framing of ML as a 'design material' and documented the practical barriers designers face — the starting point for a whole research line on AI design practice.",
+          "focus": "Read the introduction, the survey findings on challenges, and the discussion of opportunities for design."
+        },
+        {
+          "id": "s01m04r02",
+          "kind": "paper",
+          "title": "Investigating How Experienced UX Designers Effectively Work with Machine Learning",
+          "authors": "Qian Yang, Alex Scuito, John Zimmerman, Jodi Forlizzi, Aaron Steinfeld",
+          "year": 2018,
+          "venue": "DIS 2018",
+          "url": "https://doi.org/10.1145/3196709.3196730",
+          "minutes": 40,
+          "why": "Studies designers who have succeeded with ML, revealing that they rely on practical, example-based understanding and close collaboration with data scientists rather than deep technical expertise.",
+          "focus": "Read the method briefly, then focus on the findings and implications for design education and tools."
+        },
+        {
+          "id": "s01m04r03",
+          "kind": "paper",
+          "title": "Interactive machine learning",
+          "authors": "Jerry Alan Fails, Dan R. Olsen Jr.",
+          "year": 2003,
+          "venue": "IUI 2003",
+          "url": "https://doi.org/10.1145/604045.604056",
+          "minutes": 25,
+          "why": "Introduced the term 'interactive machine learning': a person trains a classifier by giving examples, seeing results immediately, and correcting them — the template for many end-user ML tools.",
+          "focus": "Read about the Crayons system and why the authors care about very fast training. Skim the feature details."
+        },
+        {
+          "id": "s01m04r04",
+          "kind": "paper",
+          "title": "Power to the People: The Role of Humans in Interactive Machine Learning",
+          "authors": "Saleema Amershi, Maya Cakmak, W. Bradley Knox, Todd Kulesza",
+          "year": 2014,
+          "venue": "AI Magazine",
+          "url": "https://doi.org/10.1609/aimag.v35i4.2513",
+          "minutes": 45,
+          "why": "The standard review of IML; its case studies show that treating people as passive label-providers leads to poor experiences and worse models, and it sets out a research agenda.",
+          "focus": "Read the introduction and the case studies on how people behave when teaching machines; skim the closing agenda."
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What is the main point of treating machine learning as a 'design material' in Dove et al.?",
+          "choices": [
+            "Designers should write ML code themselves instead of working with engineers",
+            "Designers need to understand ML's capabilities and limits the way they understand other materials, so they can shape products around it from the start",
+            "ML should be treated as a finished component that is added after the UX is complete",
+            "ML is mainly useful for generating visual design assets"
+          ],
+          "answer": 1,
+          "explain": "Dove et al. report that UX practitioners struggle to understand ML and to use it purposefully in design; treating it as a design material means grasping its properties well enough to innovate with it from the start, not bolting it on afterwards.",
+          "ref": "s01m04r01"
+        },
+        {
+          "q": "According to Yang et al. (2018), how did experienced UX designers who worked effectively with ML tend to understand it?",
+          "choices": [
+            "Through formal training in the mathematics of optimization",
+            "By avoiding ML and using rule-based systems instead",
+            "Through practical, example-based understanding built up from experience and collaboration with data scientists",
+            "By relying entirely on vendor documentation"
+          ],
+          "answer": 2,
+          "explain": "The study found effective designers built a working, 'designerly' understanding of ML through experience and collaboration rather than technical depth — which suggests tools and education should support that kind of understanding.",
+          "ref": "s01m04r02"
+        },
+        {
+          "q": "Why did Fails & Olsen's Crayons system emphasize very fast model training?",
+          "choices": [
+            "So that the user could paint examples, immediately see the classifier's output, and correct it in a tight loop",
+            "So that the system could be trained once and then shipped without user involvement",
+            "Because the computers of the time could only handle tiny models",
+            "So that users would not notice the model was learning"
+          ],
+          "answer": 0,
+          "explain": "Interactive ML depends on a rapid train-feedback-correct cycle; the user's ability to see results and fix mistakes is what makes it interactive. They chose a fast-training algorithm specifically to support that loop.",
+          "ref": "s01m04r03"
+        },
+        {
+          "q": "A key lesson from Amershi et al.'s 'Power to the People' is that people in interactive ML:",
+          "choices": [
+            "Are best used as oracles who simply answer whatever label query the algorithm asks",
+            "Prefer systems that never ask them anything",
+            "Behave just like the idealized teachers assumed by learning algorithms",
+            "Are not merely oracles: they want to give richer input than labels, can find repeated questioning annoying, and teach in ways algorithms don't expect"
+          ],
+          "answer": 3,
+          "explain": "The case studies show people dislike being treated as label-providers, want more control and transparency, and give feedback in unexpected ways. Designing for how people actually teach improves both the experience and the model.",
+          "ref": "s01m04r04"
+        },
+        {
+          "q": "How does interactive machine learning differ from the traditional ML workflow, as described by Amershi et al. (2014)?",
+          "choices": [
+            "It uses no training data at all",
+            "Updates are rapid, focused, and incremental, with the user directly observing and steering the model, rather than long offline cycles run by ML experts",
+            "It is only possible with neural networks",
+            "It removes the need to evaluate the model"
+          ],
+          "answer": 1,
+          "explain": "In the traditional workflow, practitioners iterate slowly on data and features with long gaps between updates. IML shortens the loop so end users can see the effect of their input and adjust it immediately.",
+          "ref": "s01m04r04"
+        }
+      ],
+      "exercise": "Pick an AI feature you use (autocomplete, photo search, spam filtering). Sketch how it would change if it were redesigned as interactive machine learning: what would the user see, what input could they give besides labels, and how fast would the loop need to be? Name one guideline from Amershi et al. (2019) your redesign follows."
+    }
+  ]
+}

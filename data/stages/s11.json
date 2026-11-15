@@ -1,0 +1,761 @@
+{
+  "id": "s11",
+  "number": 11,
+  "title": "Doing HAI Research",
+  "subtitle": "Reading, experiments, statistics, qualitative methods, systems, your first study",
+  "overview": "This stage turns a reader into a researcher, and it can be started at any time alongside the others. It covers how to read papers efficiently and judge what kind of contribution they make, how to design and analyze experiments honestly, how qualitative and design research produce knowledge, how to evaluate systems you build, and finally how to plan a complete human-AI interaction study of your own. Every module ends with an exercise; the capstone pulls them together into a study plan you could hand to an advisor.",
+  "modules": [
+    {
+      "id": "s11m01",
+      "title": "Reading and thinking like a researcher",
+      "goal": "Read a paper in deliberate passes, classify what kind of contribution it makes, and explain how researchers choose problems worth working on.",
+      "guide": "Start with Keshav's three-pass method; it is short and you can apply it immediately to any paper in this app. Carey et al. add habits around reading goals, figures, and critical but fair judgment. Wobbrock & Kientz give you a vocabulary for what a paper contributes, which helps you decide what evidence it owes you: an empirical study owes you a sound method, a new system owes you evidence it works. End with Hamming's talk, which is about choosing important problems; the transcript and the 1995 video are different deliveries of the same talk. Key terms: a contribution is the new knowledge or capability a paper adds; a literature survey is a structured reading of many papers to map a field; related work is the part of a paper that positions it against prior research.",
+      "resources": [
+        {
+          "id": "s11m01r01",
+          "kind": "paper",
+          "title": "How to read a paper",
+          "authors": "Keshav",
+          "year": 2007,
+          "venue": "ACM SIGCOMM Computer Communication Review",
+          "url": "https://doi.org/10.1145/1273445.1273458",
+          "listen": "https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf",
+          "minutes": 15,
+          "why": "A practical, widely assigned method for reading papers in passes, plus how to use it for a literature survey. It will save you hours per week for the rest of your research life.",
+          "focus": "Read the whole thing; it is two pages. Then use it on the next paper you open.",
+          "optional": false
+        },
+        {
+          "id": "s11m01r02",
+          "kind": "paper",
+          "title": "Ten simple rules for reading a scientific paper",
+          "authors": "Carey, Steiner, Petri",
+          "year": 2020,
+          "venue": "PLOS Computational Biology",
+          "url": "https://doi.org/10.1371/journal.pcbi.1008032",
+          "minutes": 20,
+          "why": "Complements Keshav with habits for students: set a reading goal, figure out the author's goal, unpack figures, and be both critical and kind.",
+          "focus": "Read all ten rules; pay special attention to the rules on figures and on being critical.",
+          "optional": false
+        },
+        {
+          "id": "s11m01r03",
+          "kind": "paper",
+          "title": "Research contributions in human-computer interaction",
+          "authors": "Wobbrock, Kientz",
+          "year": 2016,
+          "venue": "Interactions",
+          "url": "https://doi.org/10.1145/2907069",
+          "minutes": 15,
+          "why": "Defines the main types of HCI research contribution. Knowing the type tells you how to evaluate a paper and how to frame your own.",
+          "focus": "Learn the seven contribution types and the example of how each is evaluated.",
+          "optional": false
+        },
+        {
+          "id": "s11m01r04",
+          "kind": "essay",
+          "title": "You and Your Research",
+          "authors": "Hamming (transcribed by Kaiser)",
+          "year": 1986,
+          "venue": "Bell Communications Research Colloquium transcript",
+          "url": "https://www.cs.virginia.edu/~robins/YouAndYourResearch.html",
+          "listen": "https://www.cs.virginia.edu/~robins/YouAndYourResearch.html",
+          "minutes": 50,
+          "why": "A classic talk by a Bell Labs scientist on why some researchers do important work: choosing important problems, courage, working with the door open, and selling your results.",
+          "focus": "Read the talk; the question-and-answer section at the end is optional.",
+          "optional": false
+        },
+        {
+          "id": "s11m01r05",
+          "kind": "video",
+          "title": "Hamming, \"You and Your Research\" (June 6, 1995)",
+          "authors": "Hamming",
+          "year": 1995,
+          "venue": "YouTube",
+          "url": "https://www.youtube.com/watch?v=a1zDuOPkMSw",
+          "youtube": "a1zDuOPkMSw",
+          "minutes": 70,
+          "why": "A later recorded delivery of the same talk, if you prefer to listen to Hamming himself.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In Keshav's method, what does the first pass consist of?",
+          "choices": [
+            "Reading every section carefully and checking the math",
+            "A five-to-ten-minute scan of the title, abstract, introduction, headings and conclusions, and a glance at the references",
+            "Re-implementing the paper from scratch",
+            "Reading only the figures"
+          ],
+          "answer": 1,
+          "explain": "Keshav's first pass is a quick bird's-eye scan of about five to ten minutes, after which you decide whether to read further. The second pass (up to an hour) grasps the content; the third pass goes into depth.",
+          "ref": "s11m01r01"
+        },
+        {
+          "q": "After a first pass, Keshav says you should be able to answer 'the five Cs'. Which of these is NOT one of them?",
+          "choices": [
+            "Category",
+            "Correctness",
+            "Contributions",
+            "Complexity"
+          ],
+          "answer": 3,
+          "explain": "The five Cs are Category, Context, Correctness, Contributions and Clarity. Complexity is not one of them.",
+          "ref": "s11m01r01"
+        },
+        {
+          "q": "According to Keshav, what is the key to the third pass?",
+          "choices": [
+            "Attempting to virtually re-implement the paper, making the same assumptions as the authors",
+            "Reading the paper aloud to a colleague",
+            "Counting citations to judge importance",
+            "Skipping straight to the conclusion"
+          ],
+          "answer": 0,
+          "explain": "The third pass tries to recreate the work under the authors' assumptions. Comparing your reconstruction with the paper reveals both its innovations and its hidden failings and assumptions.",
+          "ref": "s11m01r01"
+        },
+        {
+          "q": "Carey et al.'s first rule is to do what before reading?",
+          "choices": [
+            "Read the paper's reviews",
+            "Email the authors",
+            "Pick your reading goal",
+            "Memorize the abstract"
+          ],
+          "answer": 2,
+          "explain": "Rule 1 is to pick your reading goal, since reading for general awareness, for a specific method, or for review calls for different depth. Later rules include understanding the author's goal, unpacking figures, and being both critical and kind.",
+          "ref": "s11m01r02"
+        },
+        {
+          "q": "In Wobbrock & Kientz's framework, a paper that introduces and validates a new questionnaire for measuring trust in AI makes mainly what type of contribution?",
+          "choices": [
+            "Artifact",
+            "Methodological",
+            "Opinion",
+            "Survey"
+          ],
+          "answer": 1,
+          "explain": "A new or improved way of doing research or measuring something is a methodological contribution. An artifact contribution is a new system or technique; a survey contribution reviews a body of work; an opinion contribution argues a position.",
+          "ref": "s11m01r03"
+        },
+        {
+          "q": "A paper presents a new LLM-powered writing interface and shows several example uses. In Wobbrock & Kientz's terms, what is its primary contribution type?",
+          "choices": [
+            "Theoretical",
+            "Dataset",
+            "Artifact",
+            "Empirical"
+          ],
+          "answer": 2,
+          "explain": "New systems, tools and interaction techniques are artifact contributions. An empirical contribution is new knowledge from studies of people; many papers combine types, but naming the primary one tells reviewers what evidence to expect.",
+          "ref": "s11m01r03"
+        },
+        {
+          "q": "What does Hamming observe about people who work with their office door closed?",
+          "choices": [
+            "They do more important work in the long run",
+            "They are less productive day to day",
+            "They have more collaborators",
+            "They get more done in the short term but over years often end up working on slightly the wrong problems"
+          ],
+          "answer": 3,
+          "explain": "Hamming says closed-door workers are more productive today and tomorrow, but those who work with the door open tend to ultimately do important things, because contact with others tells them which problems matter.",
+          "ref": "s11m01r04"
+        }
+      ],
+      "exercise": "Take one HAI paper you have already read in this app (for example, Bansal et al. on complementarity, or Bastani et al. on learning). (1) Do a strict first pass and write the five Cs in one line each. (2) Name its primary and secondary contribution types in Wobbrock & Kientz's terms and say what evidence each type owes the reader. (3) Unpack its most important figure following Carey et al.: what is on each axis, what comparison it makes, and what it does not show. (4) Write three questions you would ask the authors. (5) Following Hamming, write down three problems you think are important in HAI right now, and for each, one reason it is not yet being attacked."
+    },
+    {
+      "id": "s11m02",
+      "title": "Experiments and statistics",
+      "goal": "Explain effect size, statistical power, the limits of p-values, preregistration, and the main data-quality risks of crowdsourced studies.",
+      "guide": "Read Cohen's short power primer first; it introduces the numbers you will see in every power analysis. Then Kaptein & Robertson diagnose common statistical problems in CHI papers, and Dragicevic proposes reporting estimates with confidence intervals instead of relying on 'significant / not significant'. Cockburn, Gutwin & Dix explain why preregistration matters, and Kittur, Chi & Suh show how crowdsourced studies, which most HAI experiments now are, can be designed to resist low-effort answers. Key terms: an effect size measures how big a difference is, for example Cohen's d, the difference in means divided by the standard deviation; statistical power is the probability that a study detects an effect of a given size if it really exists; a p-value is the probability of data at least as extreme as yours if the null hypothesis were true, which is not the probability that the null hypothesis is true; a confidence interval is a range of plausible values for an effect; between-subjects means each participant sees one condition, while within-subjects means each participant sees all conditions.",
+      "resources": [
+        {
+          "id": "s11m02r01",
+          "kind": "paper",
+          "title": "A power primer",
+          "authors": "Cohen",
+          "year": 1992,
+          "venue": "Psychological Bulletin",
+          "url": "https://doi.org/10.1037/0033-2909.112.1.155",
+          "minutes": 20,
+          "why": "The classic short introduction to power analysis and the small, medium and large effect-size conventions that HCI papers still cite.",
+          "focus": "Read the explanation of the four quantities in power analysis (significance level, power, effect size, sample size) and the table of sample sizes.",
+          "optional": false
+        },
+        {
+          "id": "s11m02r02",
+          "kind": "paper",
+          "title": "Rethinking statistical analysis methods for CHI",
+          "authors": "Kaptein, Robertson",
+          "year": 2012,
+          "venue": "CHI 2012",
+          "url": "https://doi.org/10.1145/2207676.2208557",
+          "minutes": 35,
+          "why": "A widely cited critique of how CHI papers use significance testing, identifying three recurring problems and arguing that researchers should focus on the size and practical importance of effects.",
+          "focus": "Read the three problems and the worked example using CHI data; skim the Bayesian discussion.",
+          "optional": false
+        },
+        {
+          "id": "s11m02r03",
+          "kind": "paper",
+          "title": "Fair Statistical Communication in HCI",
+          "authors": "Dragicevic",
+          "year": 2016,
+          "venue": "Modern Statistical Methods for HCI (Springer HCI Series)",
+          "url": "https://doi.org/10.1007/978-3-319-26633-6_13",
+          "minutes": 45,
+          "why": "Makes the case for estimation (effect sizes with confidence intervals) and honest, nuanced reporting over dichotomous significance claims; a good model for writing up your own results.",
+          "focus": "Read the arguments against dichotomous thinking and the guidance on reporting and plotting confidence intervals.",
+          "optional": false
+        },
+        {
+          "id": "s11m02r04",
+          "kind": "paper",
+          "title": "HARK No More: On the Preregistration of CHI Experiments",
+          "authors": "Cockburn, Gutwin, Dix",
+          "year": 2018,
+          "venue": "CHI 2018",
+          "url": "https://doi.org/10.1145/3173574.3173715",
+          "minutes": 35,
+          "why": "Explains publication bias, HARKing and the replication crisis in terms specific to HCI, and argues for preregistration and related reforms at CHI.",
+          "focus": "Read the sections on the problems (publication bias, HARKing, low replication) and on how preregistration addresses them.",
+          "optional": false
+        },
+        {
+          "id": "s11m02r05",
+          "kind": "paper",
+          "title": "Crowdsourcing user studies with Mechanical Turk",
+          "authors": "Kittur, Chi, Suh",
+          "year": 2008,
+          "venue": "CHI 2008",
+          "url": "https://doi.org/10.1145/1357054.1357127",
+          "minutes": 20,
+          "why": "An early, influential study of how to get valid data from crowdworkers; its design advice still applies to the online studies that dominate HAI research.",
+          "focus": "Compare the two experiments and the design changes between them; read the design recommendations.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In Cohen's conventions for the standardized mean difference d, what value counts as a 'medium' effect?",
+          "choices": [
+            "0.05",
+            "0.2",
+            "0.5",
+            "1.5"
+          ],
+          "answer": 2,
+          "explain": "Cohen's conventions are d = 0.2 (small), 0.5 (medium) and 0.8 (large). He presented them as rough guides for when no better basis exists, not as universal standards.",
+          "ref": "s11m02r01"
+        },
+        {
+          "q": "What level of statistical power does Cohen's primer propose as a conventional target?",
+          "choices": [
+            "0.80",
+            "0.05",
+            "0.50",
+            "0.99"
+          ],
+          "answer": 0,
+          "explain": "Cohen proposes power of .80, meaning an 80% chance of detecting a true effect of the assumed size, alongside a significance level of .05. Power of .50 is a coin flip; .05 is the usual significance level, not a power target.",
+          "ref": "s11m02r01"
+        },
+        {
+          "q": "Kaptein & Robertson describe 'the fallacy of the transposed conditional'. What mistake is that?",
+          "choices": [
+            "Using a one-tailed test instead of a two-tailed test",
+            "Reporting means instead of medians",
+            "Running too many conditions",
+            "Treating the p-value as the probability that the null hypothesis is true given the data"
+          ],
+          "answer": 3,
+          "explain": "A p-value is the probability of the data (or more extreme) given the null hypothesis, not the probability of the null given the data. Kaptein & Robertson list this, neglect of power, and reluctance to interpret effect sizes as the three problems.",
+          "ref": "s11m02r02"
+        },
+        {
+          "q": "What does Dragicevic recommend in place of declaring results simply 'significant' or 'not significant'?",
+          "choices": [
+            "Reporting only p-values to three decimals",
+            "Reporting effect sizes with confidence intervals and interpreting them with nuance",
+            "Avoiding statistics entirely",
+            "Using a stricter threshold such as p < .001"
+          ],
+          "answer": 1,
+          "explain": "Dragicevic argues for estimation: show how big the effect is and how uncertain, typically with confidence intervals, and avoid dichotomous conclusions. A stricter threshold keeps the same yes/no thinking.",
+          "ref": "s11m02r03"
+        },
+        {
+          "q": "What does 'HARKing' mean in Cockburn, Gutwin & Dix?",
+          "choices": [
+            "Hiring Additional Research Knowledge workers",
+            "Halting A study when Results look Known",
+            "Hypothesizing After the Results are Known, then presenting the hypothesis as if it had been made in advance",
+            "Holding All Results until Key findings appear"
+          ],
+          "answer": 2,
+          "explain": "HARKing is presenting a hypothesis formed after seeing the data as if it had been predicted. It makes exploratory findings look confirmatory and inflates false positives; preregistration makes the difference visible.",
+          "ref": "s11m02r04"
+        },
+        {
+          "q": "What does preregistering an experiment accomplish?",
+          "choices": [
+            "It records hypotheses and the analysis plan before data collection, so confirmatory and exploratory analyses can be told apart",
+            "It guarantees the results will be significant",
+            "It replaces the need for ethics approval",
+            "It prevents any exploratory analysis from being reported"
+          ],
+          "answer": 0,
+          "explain": "Preregistration time-stamps your predictions and plan. You can still report exploratory analyses; they are just labelled as such. It does not guarantee results or replace ethics review.",
+          "ref": "s11m02r04"
+        },
+        {
+          "q": "In Kittur, Chi & Suh's Mechanical Turk studies of rating Wikipedia articles, what change improved data quality in the second experiment?",
+          "choices": [
+            "Paying workers ten times more",
+            "Adding explicitly verifiable questions so that answering in bad faith took about as much effort as answering honestly",
+            "Recruiting only workers from one country",
+            "Removing all open-ended questions"
+          ],
+          "answer": 1,
+          "explain": "The redesigned task asked verifiable, quantitative questions about each article before the subjective rating, which reduced gaming and brought ratings closer to experts'. The general lesson: design tasks so that honest effort is the easiest path.",
+          "ref": "s11m02r05"
+        }
+      ],
+      "exercise": "You plan an online between-subjects experiment comparing an AI decision aid with and without explanations, measuring accuracy. (1) Using Cohen's table or a power calculator, state the sample size per group needed to detect d = 0.5 with power .80 at alpha .05, and explain how it changes if you expect only d = 0.2. (2) Explain why a within-subjects design would need fewer participants, and what it would risk. (3) Write the one-sentence confirmatory hypothesis you would preregister and one exploratory question you would label as exploratory. (4) Following Dragicevic, sketch how you would report the main result (an estimate with a confidence interval, not just p). (5) Following Kittur et al., add two task-design features that make low-effort crowd responses detectable or less likely, such as attention checks with verifiable answers."
+    },
+    {
+      "id": "s11m03",
+      "title": "Qualitative and design methods",
+      "goal": "Explain how thematic analysis works, when inter-rater reliability is and is not appropriate, how design artifacts can produce research knowledge, and how Wizard of Oz studies simulate systems that do not exist yet.",
+      "guide": "Braun & Clarke is the most cited guide to thematic analysis; read it first and note its six phases. McDonald, Schoenebeck & Forte then address a question you will face on every interview study with collaborators: should you compute inter-rater reliability? Zimmerman, Forlizzi & Evenson explain research through design, where making things is itself a way of producing knowledge. Dahlbäck, Jönsson & Ahrenberg describe Wizard of Oz studies, which are especially useful in HAI for testing how people respond to AI behavior you cannot yet build, or want to control exactly. Key terms: coding means labelling segments of data with short descriptive tags; a theme is a pattern of shared meaning across the data; inter-rater reliability (IRR) is a statistic for how consistently different coders apply the same codes; a Wizard of Oz study has a hidden human operate a system that participants believe is automated.",
+      "resources": [
+        {
+          "id": "s11m03r01",
+          "kind": "paper",
+          "title": "Using thematic analysis in psychology",
+          "authors": "Braun, Clarke",
+          "year": 2006,
+          "venue": "Qualitative Research in Psychology",
+          "url": "https://doi.org/10.1191/1478088706qp063oa",
+          "minutes": 50,
+          "why": "The standard reference for thematic analysis, the most common way HAI papers analyze interviews and open-ended survey answers.",
+          "focus": "Read the decisions the researcher must make (e.g., inductive vs theoretical, semantic vs latent) and the six-phase guide; skim the discussion of pitfalls.",
+          "optional": false
+        },
+        {
+          "id": "s11m03r02",
+          "kind": "paper",
+          "title": "Reliability and Inter-rater Reliability in Qualitative Research",
+          "authors": "McDonald, Schoenebeck, Forte",
+          "year": 2019,
+          "venue": "Proceedings of the ACM on Human-Computer Interaction (CSCW)",
+          "url": "https://doi.org/10.1145/3359174",
+          "minutes": 40,
+          "why": "Reviews how CSCW and HCI papers actually establish reliability in qualitative work and gives guidelines for when computing IRR makes sense.",
+          "focus": "Read the findings on current norms and the guidelines section; note when IRR fits and when it does not.",
+          "optional": false
+        },
+        {
+          "id": "s11m03r03",
+          "kind": "paper",
+          "title": "Research through design as a method for interaction design research in HCI",
+          "authors": "Zimmerman, Forlizzi, Evenson",
+          "year": 2007,
+          "venue": "CHI 2007",
+          "url": "https://doi.org/10.1145/1240624.1240704",
+          "minutes": 30,
+          "why": "Explains how design practice can contribute research knowledge and proposes criteria for judging such contributions; much speculative and generative HAI design work builds on it.",
+          "focus": "Read the model of how design research relates to engineers, behavioral scientists and anthropologists, and the four criteria for evaluating design research.",
+          "optional": false
+        },
+        {
+          "id": "s11m03r04",
+          "kind": "paper",
+          "title": "Wizard of Oz studies — why and how",
+          "authors": "Dahlbäck, Jönsson, Ahrenberg",
+          "year": 1993,
+          "venue": "Knowledge-Based Systems",
+          "url": "https://doi.org/10.1016/0950-7051(93)90017-N",
+          "minutes": 30,
+          "why": "A foundational methods paper on simulating a system with a hidden human operator, written for natural language interfaces, which makes it surprisingly relevant to LLM-era HAI research.",
+          "focus": "Read why simulating the system matters (people talk to computers differently than to people) and the practical advice on making the simulation realistic and consistent.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Which sequence matches Braun & Clarke's six phases of thematic analysis?",
+          "choices": [
+            "Generate themes, collect data, code, write up, review, define",
+            "Write up, define themes, generate codes, familiarize, review, search",
+            "Code, compute inter-rater reliability, count themes, report frequencies, test, publish",
+            "Familiarize with the data, generate initial codes, search for themes, review themes, define and name themes, produce the report"
+          ],
+          "answer": 3,
+          "explain": "Braun & Clarke's phases run from familiarizing yourself with the data through coding, searching for themes, reviewing them, defining and naming them, and producing the report. They stress the process is recursive, moving back and forth between phases.",
+          "ref": "s11m03r01"
+        },
+        {
+          "q": "Braun & Clarke criticize describing themes as 'emerging' from data. Why?",
+          "choices": [
+            "It hides the researcher's active role in identifying and selecting themes",
+            "Themes should always be decided before data collection",
+            "Themes only exist in quantitative data",
+            "Journals forbid the word"
+          ],
+          "answer": 0,
+          "explain": "Saying themes 'emerge' implies they sit in the data waiting to be found. Braun & Clarke emphasize that researchers actively identify, select and report themes, and should be explicit about the choices they made.",
+          "ref": "s11m03r01"
+        },
+        {
+          "q": "In Braun & Clarke's terms, what distinguishes a latent theme from a semantic theme?",
+          "choices": [
+            "Latent themes are found by software; semantic themes by people",
+            "Latent themes appear only in the final phase",
+            "Latent themes go beyond what participants explicitly said to the underlying ideas and assumptions",
+            "Latent themes are those mentioned by most participants"
+          ],
+          "answer": 2,
+          "explain": "Semantic themes stay at the surface meaning of what was said; latent themes interpret underlying ideas, assumptions and conceptualizations. Prevalence (how many participants mention it) is a separate question.",
+          "ref": "s11m03r01"
+        },
+        {
+          "q": "What did McDonald, Schoenebeck & Forte find about how often CSCW and HCI qualitative papers report inter-rater reliability?",
+          "choices": [
+            "Almost every qualitative paper reports it",
+            "It is rare, in around one in nine qualitative papers",
+            "It is required by the ACM",
+            "No paper had ever reported it"
+          ],
+          "answer": 1,
+          "explain": "In their sample of CSCW and HCI papers from 2016–2018, IRR appeared in about 1/9 of qualitative papers; authors used many other ways to communicate reliability.",
+          "ref": "s11m03r02"
+        },
+        {
+          "q": "A single researcher writes an auto-ethnography of using an AI companion for six months. Following McDonald et al., what is the most sensible view of IRR here?",
+          "choices": [
+            "IRR is mandatory and should be computed with two random coders",
+            "IRR should be computed between the researcher's first and second readings",
+            "The paper should be converted into a survey study",
+            "IRR is likely not appropriate, because the analysis rests on one person's situated interpretation; reliability is better communicated in other ways"
+          ],
+          "answer": 3,
+          "explain": "McDonald et al. argue that whether IRR makes sense depends on the method and its epistemology. For interpretive approaches such as auto-ethnography, agreement statistics do not fit; transparency about process and reflexivity serve better.",
+          "ref": "s11m03r02"
+        },
+        {
+          "q": "Zimmerman, Forlizzi & Evenson propose criteria for evaluating research through design. Which is NOT one of their criteria?",
+          "choices": [
+            "Invention",
+            "Relevance",
+            "Statistical significance",
+            "Extensibility"
+          ],
+          "answer": 2,
+          "explain": "Their four criteria are process, invention, relevance and extensibility. Design research is not judged by statistical significance; it is judged by whether the process is documented, the artifact is novel, it matters, and others can build on it.",
+          "ref": "s11m03r03"
+        },
+        {
+          "q": "Why might an HAI researcher choose a Wizard of Oz study instead of using a real LLM?",
+          "choices": [
+            "Wizard of Oz studies need no ethics review",
+            "To control exactly what the 'AI' says, for example to make it wrong on specific trials, or to test behavior no current system can produce",
+            "Because participants always prefer human operators",
+            "Because LLMs cannot be used in research"
+          ],
+          "answer": 1,
+          "explain": "Dahlbäck et al. motivate Wizard of Oz as a way to study how people interact with a system before it exists. In HAI it also gives experimental control over the AI's behavior. Because participants are misled about the system, ethics review and debriefing are still needed.",
+          "ref": "s11m03r04"
+        }
+      ],
+      "exercise": "Plan a small qualitative study: interviews with 10 knowledge workers about when they stop checking AI outputs. (1) Write five interview questions that ask for specific recent episodes rather than general opinions. (2) Decide whether your thematic analysis will be inductive or theoretical (for example, framed by the trust-calibration literature) and justify it. (3) Describe your coding process with a collaborator and decide, following McDonald et al., whether you will compute IRR and why. (4) Propose one Wizard of Oz probe to add to the interviews, such as a simulated assistant whose errors you control, and describe how you would debrief participants. (5) Note one way a research-through-design artifact (for example, a provocative 'checking nudge' prototype) could extend the study."
+    },
+    {
+      "id": "s11m04",
+      "title": "Building and evaluating systems",
+      "goal": "Explain why standard usability tests are often the wrong evaluation for new systems and toolkits, and which alternative claims and evaluation strategies HCI accepts.",
+      "guide": "Many HAI contributions are systems: new interfaces, toolkits for building AI features, or research platforms. Read Olsen first for the case that systems research makes different claims than usability studies, then Greenberg & Buxton for why evaluating too early or with the wrong method can harm good ideas, and finally Ledo et al. for a catalogue of how toolkit papers are actually evaluated. Key terms: a toolkit is software that helps others build interfaces or applications; ecological validity is how well a study's setting matches real use; an existence proof shows that something is possible by building it; expressive leverage means a tool lets designers accomplish more while specifying less.",
+      "resources": [
+        {
+          "id": "s11m04r01",
+          "kind": "paper",
+          "title": "Evaluating user interface systems research",
+          "authors": "Olsen",
+          "year": 2007,
+          "venue": "UIST 2007",
+          "url": "https://doi.org/10.1145/1294211.1294256",
+          "minutes": 30,
+          "why": "The standard argument for how to evaluate UI systems on their own terms, with a vocabulary of claims (importance, generality, viscosity, expressive leverage, scalability) used by systems papers and reviewers.",
+          "focus": "Read the critique of usability testing for systems and the list of claims and how to support each.",
+          "optional": false
+        },
+        {
+          "id": "s11m04r02",
+          "kind": "paper",
+          "title": "Usability evaluation considered harmful (some of the time)",
+          "authors": "Greenberg, Buxton",
+          "year": 2008,
+          "venue": "CHI 2008",
+          "url": "https://doi.org/10.1145/1357054.1357074",
+          "minutes": 30,
+          "why": "Argues that a reflexive demand for usability evaluation can stifle early, novel ideas and that the evaluation method should fit the research question.",
+          "focus": "Read the main argument and the cases where usability evaluation is inappropriate or misleading.",
+          "optional": false
+        },
+        {
+          "id": "s11m04r03",
+          "kind": "paper",
+          "title": "Evaluation Strategies for HCI Toolkit Research",
+          "authors": "Ledo, Houben, Vermeulen, Marquardt, Oehlberg, Greenberg",
+          "year": 2018,
+          "venue": "CHI 2018",
+          "url": "https://doi.org/10.1145/3173574.3173610",
+          "minutes": 40,
+          "why": "Reviews how toolkit papers have been evaluated and organizes the strategies into four types, with their strengths and pitfalls; directly useful if you build tools for creating AI-powered interfaces.",
+          "focus": "Read the four evaluation strategies and the pitfalls listed for each.",
+          "optional": false,
+          "listen": "https://ucalgary.scholaris.ca/bitstreams/21169686-81ec-4264-84f4-ec25b67fe0c6/download"
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Olsen argues usability testing often fits UI systems research poorly. Which assumption behind usability testing does he criticize?",
+          "choices": [
+            "That participants are paid",
+            "That systems are open source",
+            "That the system is walk-up-and-use, tasks are standardized, and the problem is small enough to test in a session",
+            "That evaluations use statistics"
+          ],
+          "answer": 2,
+          "explain": "Olsen identifies the walk-up-and-use assumption, the standardized-task assumption, and the scale-of-problem assumption. Toolkits and complex systems typically require expertise, open-ended tasks, and long use, so a short usability session cannot capture their value.",
+          "ref": "s11m04r01"
+        },
+        {
+          "q": "Olsen asks systems researchers to state the importance of their work in terms of 'STU'. What does STU stand for?",
+          "choices": [
+            "Situations, Tasks, Users",
+            "Speed, Throughput, Usability",
+            "Systems, Tools, Utilities",
+            "Study, Test, Update"
+          ],
+          "answer": 0,
+          "explain": "STU stands for Situations, Tasks and Users: the population, the tasks they need to do, and the situations in which they do them. Importance claims should say which STU contexts the system improves.",
+          "ref": "s11m04r01"
+        },
+        {
+          "q": "In Olsen's vocabulary, what does it mean for a tool to have 'expressive leverage'?",
+          "choices": [
+            "It runs faster than previous tools",
+            "It is easier for beginners to learn",
+            "It is compatible with many programming languages",
+            "A designer can accomplish more by expressing less"
+          ],
+          "answer": 3,
+          "explain": "Expressive leverage means a designer gets more done with fewer choices or less specification, for example by reusing common patterns. Olsen pairs it with expressive match: how closely the tool's way of expressing designs matches the problem.",
+          "ref": "s11m04r01"
+        },
+        {
+          "q": "What is Greenberg & Buxton's main concern about usability evaluation?",
+          "choices": [
+            "It is always too expensive",
+            "Applied reflexively or too early, it can kill novel ideas and lead to weak science when the method does not fit the question",
+            "It should be replaced entirely by surveys",
+            "It overestimates how much users like new systems"
+          ],
+          "answer": 1,
+          "explain": "Greenberg & Buxton do not reject usability evaluation; they argue it is harmful some of the time, particularly for early-stage inventions, and that the evaluation method should follow from the research question.",
+          "ref": "s11m04r02"
+        },
+        {
+          "q": "Ledo et al. organize toolkit evaluations into four strategies. Which is NOT one of them?",
+          "choices": [
+            "Demonstration",
+            "Usage",
+            "Market adoption",
+            "Technical performance"
+          ],
+          "answer": 2,
+          "explain": "The four strategies are demonstration, usage, technical performance, and heuristics. Long-term adoption can be strong evidence, but it is not one of the four categories they define.",
+          "ref": "s11m04r03"
+        },
+        {
+          "q": "You built a toolkit that lets researchers create Wizard of Oz HAI experiments with configurable AI errors. Which first evaluation best matches Ledo et al.'s 'demonstration' strategy?",
+          "choices": [
+            "Building several example studies with the toolkit that would previously have been hard to build, to show breadth",
+            "A 10-minute usability test with first-time users",
+            "Measuring how fast the toolkit loads",
+            "Counting GitHub stars after a week"
+          ],
+          "answer": 0,
+          "explain": "Demonstration shows what the toolkit makes possible through examples, often novel or replicated ones. Load time is technical performance; a short walk-up test is a usage evaluation with exactly the limits Olsen warns about.",
+          "ref": "s11m04r03"
+        }
+      ],
+      "exercise": "Imagine you have built 'TrustLens', a toolkit that lets designers add calibrated-uncertainty displays to any LLM interface. (1) State two of Olsen's claims you would make (for example, reducing solution viscosity or expressive leverage) and what evidence would support each. (2) Choose two of Ledo et al.'s strategies and design one concrete evaluation for each. (3) Explain why, following Greenberg & Buxton, a standard 30-minute usability test with novices would be a poor primary evaluation. (4) Describe one follow-up empirical study, with real end users, that tests whether interfaces built with TrustLens actually improve reliance calibration."
+    },
+    {
+      "id": "s11m05",
+      "title": "Capstone: your first HAI study",
+      "goal": "Produce a complete, defensible plan for a human-AI interaction experiment: question, hypotheses, design, measures, power, threats to validity, and ethics.",
+      "guide": "This module has little new reading; the work is the exercise. Use the Lazar, Feng & Hochheiser chapter as your design reference, Hart's review for the NASA-TLX workload measure, Jian, Bisantz & Drury for a widely used trust-in-automation questionnaire, and the Microsoft HAX Toolkit for design guidance on the AI interface itself. AsPredicted is optional: use it to draft a preregistration. Key terms: an independent variable is what you manipulate (e.g., explanation type); a dependent variable is what you measure (e.g., accuracy, reliance); a confound is a variable that changes along with your manipulation and could explain the result instead; counterbalancing means varying the order of conditions across participants; internal validity is whether your conclusions about cause are sound, and external validity is whether they generalize; an IRB (Institutional Review Board) is the committee that reviews research with human participants, guided by principles such as respect for persons, beneficence and justice.",
+      "resources": [
+        {
+          "id": "s11m05r01",
+          "kind": "book",
+          "title": "Experimental design (Chapter 3 of Research Methods in Human Computer Interaction, 2nd ed.)",
+          "authors": "Lazar, Feng, Hochheiser",
+          "year": 2017,
+          "venue": "Morgan Kaufmann / Elsevier",
+          "url": "https://doi.org/10.1016/b978-0-12-805390-4.00003-0",
+          "minutes": 60,
+          "why": "The standard HCI methods textbook; this chapter covers between- and within-subjects designs, factorial designs, and their tradeoffs, which is everything you need for the design section of your plan.",
+          "focus": "Read the sections on between-group, within-group and split-plot designs and on learning effects and counterbalancing. The neighboring chapters on statistical analysis and surveys are also worth using.",
+          "optional": false
+        },
+        {
+          "id": "s11m05r02",
+          "kind": "paper",
+          "title": "Nasa-Task Load Index (NASA-TLX); 20 Years Later",
+          "authors": "Hart",
+          "year": 2006,
+          "venue": "Proceedings of the Human Factors and Ergonomics Society Annual Meeting",
+          "url": "https://doi.org/10.1177/154193120605000909",
+          "minutes": 20,
+          "why": "A short review by the instrument's creator of how the NASA-TLX workload questionnaire has been used and modified; read it before adding workload as a measure.",
+          "focus": "Note the six subscales and the common simplification of dropping the pairwise weighting step ('Raw TLX').",
+          "optional": false
+        },
+        {
+          "id": "s11m05r03",
+          "kind": "paper",
+          "title": "Foundations for an Empirically Determined Scale of Trust in Automated Systems",
+          "authors": "Jian, Bisantz, Drury",
+          "year": 2000,
+          "venue": "International Journal of Cognitive Ergonomics",
+          "url": "https://doi.org/10.1207/S15327566IJCE0401_04",
+          "minutes": 30,
+          "why": "Develops one of the most frequently used questionnaires for trust in automation, still widely adapted for AI studies; know where it comes from and what it measures before you use it.",
+          "focus": "Read how the items were derived and the final 12-item scale; note what the authors conclude about trust and distrust.",
+          "optional": false
+        },
+        {
+          "id": "s11m05r04",
+          "kind": "tool",
+          "title": "Microsoft HAX Toolkit",
+          "authors": "Microsoft Research",
+          "year": 2021,
+          "venue": "Microsoft",
+          "url": "https://www.microsoft.com/en-us/haxtoolkit/",
+          "minutes": 30,
+          "why": "Practical resources built around the Guidelines for Human-AI Interaction (design patterns, a workbook, and a playbook for anticipating failures); useful for designing a realistic AI condition and for anticipating AI errors in your study.",
+          "focus": "Browse the guidelines and the playbook for planning how your AI will fail.",
+          "optional": false
+        },
+        {
+          "id": "s11m05r05",
+          "kind": "tool",
+          "title": "AsPredicted",
+          "authors": "Simmons, Nelson, Simonsohn (Credibility Lab, Wharton)",
+          "year": 2015,
+          "venue": "aspredicted.org",
+          "url": "https://aspredicted.org/",
+          "minutes": 15,
+          "why": "A widely used, lightweight preregistration form that asks short questions about hypotheses, the dependent variable, conditions, analyses, exclusions and sample size.",
+          "focus": "Read the form's questions and use them as a checklist for your study plan.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "You compare two explanation designs within subjects: every participant uses design A for 20 trials, then design B for 20 trials. What is the most serious problem?",
+          "choices": [
+            "Within-subjects designs need more participants than between-subjects designs",
+            "Order is confounded with design: practice, fatigue, or learning about the AI's errors in the A block could explain differences in B",
+            "Participants cannot rate two designs",
+            "There is no problem; this is the standard design"
+          ],
+          "answer": 1,
+          "explain": "Running A always before B means any order effect (learning, fatigue, or learning how reliable the AI is) is mixed up with the design difference. Lazar et al. discuss learning effects and counterbalancing for this reason. Within-subjects designs usually need fewer participants, not more.",
+          "ref": "s11m05r01"
+        },
+        {
+          "q": "Why do researchers counterbalance the order of conditions in a within-subjects study?",
+          "choices": [
+            "To make the study shorter",
+            "To ensure every participant prefers the same condition",
+            "To remove the need for statistics",
+            "So that order effects are spread evenly across conditions and do not systematically favor one"
+          ],
+          "answer": 3,
+          "explain": "Counterbalancing (e.g., half the participants get A then B, half B then A, or a Latin square for more conditions) balances order effects across conditions so they do not bias the comparison.",
+          "ref": "s11m05r01"
+        },
+        {
+          "q": "A researcher runs the AI-assisted condition in morning sessions and the no-AI condition in evening sessions, and finds the AI group more accurate. What is the problem?",
+          "choices": [
+            "Time of day is a confound: it varies with the condition and could explain the difference",
+            "The study lacks a dependent variable",
+            "The sample is too large",
+            "Accuracy cannot be measured in the evening"
+          ],
+          "answer": 0,
+          "explain": "Because time of day changes together with the condition, alertness or a different kind of participant who signs up for evening sessions could produce the difference. Random assignment of participants to conditions within each time slot removes this confound.",
+          "ref": "s11m05r01"
+        },
+        {
+          "q": "Which of the following is NOT one of the six NASA-TLX subscales?",
+          "choices": [
+            "Mental demand",
+            "Frustration",
+            "Trust",
+            "Temporal demand"
+          ],
+          "answer": 2,
+          "explain": "The NASA-TLX subscales are mental demand, physical demand, temporal demand, performance, effort and frustration. Trust needs a separate instrument, such as Jian et al.'s scale.",
+          "ref": "s11m05r02"
+        },
+        {
+          "q": "What do Jian, Bisantz & Drury conclude about trust and distrust in automation, based on their scale development?",
+          "choices": [
+            "Trust and distrust can be treated as opposite ends of a single dimension",
+            "Trust and distrust are completely unrelated",
+            "Distrust cannot be measured by questionnaire",
+            "Trust is the same as reliability"
+          ],
+          "answer": 0,
+          "explain": "Their analysis suggested trust and distrust behave as opposites on one dimension, which is why the final 12-item scale includes both trust items and distrust items on a single instrument rather than two separate scales.",
+          "ref": "s11m05r03"
+        },
+        {
+          "q": "Why should an HAI study measure behavioral reliance (for example, how often participants follow the AI when it is wrong) and not only a trust questionnaire?",
+          "choices": [
+            "Questionnaires are not allowed in experiments",
+            "Behavioral measures never need statistics",
+            "Trust questionnaires measure workload instead",
+            "Stated trust and actual reliance can diverge, and appropriate reliance is usually the outcome that matters"
+          ],
+          "answer": 3,
+          "explain": "People can report low trust and still follow the AI, or the reverse. Measuring agreement with correct versus incorrect AI advice separates appropriate reliance from over- and under-reliance, which is the core outcome in the decision-making literature from earlier stages.",
+          "ref": "s11m05r03"
+        },
+        {
+          "q": "What is the main purpose of a small pilot study before the main experiment?",
+          "choices": [
+            "To produce the paper's main result",
+            "To replace the power analysis entirely with the pilot's p-value",
+            "To find problems with the procedure, materials, timing and instructions before spending the full budget",
+            "To recruit participants for the main study"
+          ],
+          "answer": 2,
+          "explain": "Pilots catch confusing instructions, broken interfaces, ceiling or floor effects and timing problems. They can give rough estimates of variance, but effect sizes from tiny pilots are unreliable, so power analyses should not rest on a pilot's estimate alone.",
+          "ref": "s11m05r01"
+        }
+      ],
+      "exercise": "Write a complete plan (about two pages) for a first HAI experiment. Use this running example or substitute your own: 'Does asking people to state their own answer before seeing an LLM's suggestion reduce overreliance on wrong suggestions?'\n\n1. Research question and motivation: one paragraph citing two papers from earlier stages (for example, Buçinca et al. on cognitive forcing and Bansal et al. on complementarity).\n2. Hypotheses: H1 about reliance on incorrect AI advice, H2 about overall accuracy, H3 about workload. Each must name the direction of the effect.\n3. Design: independent variable(s) and levels (e.g., answer-first vs AI-first, plus a no-AI baseline); between- vs within-subjects, with your reasoning on carryover effects (learning the AI's error rate) vs sample size; how you will counterbalance if you go within-subjects.\n4. Task and AI behavior: the task domain, number of trials, the AI's accuracy, and which trials it gets wrong. Explain why you control the AI's errors (scripted or Wizard of Oz) instead of using live LLM outputs, and use the HAX Toolkit to make the AI condition realistic.\n5. Measures: behavioral reliance (agreement with AI when the AI is right vs wrong), accuracy, time, NASA-TLX (raw or weighted, and why), a trust scale (e.g., Jian et al.), plus one open-ended question for thematic analysis.\n6. Power and pilot: the smallest effect size you care about and why, the sample size from a power analysis (Cohen), and what the pilot (5–10 people) will check.\n7. Analysis plan: the confirmatory test for each hypothesis, the effect size and confidence interval you will report (Dragicevic), exclusion rules decided in advance (attention checks, Kittur et al.), and which analyses are exploratory. Draft it in the AsPredicted format.\n8. Threats to validity: at least two internal (e.g., confounds, demand effects) and two external (e.g., crowdworkers vs professionals, low stakes vs real stakes), each with a mitigation.\n9. Ethics and IRB: informed consent, any deception and debriefing, risks (e.g., exposure to wrong AI advice on sensitive topics), fair pay for crowdworkers, data privacy, and how participants can withdraw.\n10. Expected contribution: in Wobbrock & Kientz's terms, what type it is and what a null result would still teach the field."
+    }
+  ]
+}

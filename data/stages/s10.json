@@ -1,0 +1,826 @@
+{
+  "id": "s10",
+  "number": 10,
+  "title": "Real-World Impact and the Research Frontier",
+  "subtitle": "Work, learning, wellbeing, human-centered evaluation, agents",
+  "overview": "Earlier stages studied people and AI in the lab: trust, explanations, decision aids, co-writing. This stage zooms out to what happens when generative AI is deployed at scale: in workplaces, classrooms and personal lives, and how the field is rethinking evaluation and collaboration as AI systems become agents. Many sources here are recent and some are not yet peer reviewed, so a central skill is reading frontier evidence critically: who was studied, what was randomized, and what was only self-reported.",
+  "modules": [
+    {
+      "id": "s10m01",
+      "title": "Work and productivity",
+      "goal": "Explain what the first wave of randomized and field studies found about generative AI and worker productivity, who benefits most, and where AI help backfires.",
+      "guide": "Start with Noy & Zhang, a short and clean online experiment, then Brynjolfsson, Li & Raymond, a large field study in a real call center, then Dell'Acqua et al., which shows that the same tool can help on one task and hurt on another. Finish with Handa et al., which measures usage rather than productivity. Across all four, track three things: the outcome measure (time, quality, tasks resolved), the comparison group, and whether the effect is uneven across workers. Key terms: a randomized controlled trial (RCT) assigns people to conditions by chance, so differences in outcomes can be attributed to the treatment; a field experiment is an RCT run in a real organization rather than a lab; heterogeneous treatment effects means the treatment helps some subgroups more than others; augmentation means AI enhances what a person does, while automation means AI does the task with little human involvement.",
+      "resources": [
+        {
+          "id": "s10m01r01",
+          "kind": "paper",
+          "title": "Experimental evidence on the productivity effects of generative artificial intelligence",
+          "authors": "Noy, Zhang",
+          "year": 2023,
+          "venue": "Science",
+          "url": "https://doi.org/10.1126/science.adh2586",
+          "minutes": 25,
+          "why": "One of the first preregistered RCTs of ChatGPT on professional writing tasks; it set the template for measuring both speed and quality, and for looking at who gains most.",
+          "focus": "Read the abstract, the task and design description, and the figures on time, quality and the distribution of gains across workers.",
+          "optional": false
+        },
+        {
+          "id": "s10m01r02",
+          "kind": "paper",
+          "title": "Generative AI at Work",
+          "authors": "Brynjolfsson, Li, Raymond",
+          "year": 2023,
+          "venue": "arXiv; published in Quarterly Journal of Economics (2025)",
+          "url": "https://arxiv.org/abs/2304.11771",
+          "arxiv": "2304.11771",
+          "minutes": 50,
+          "why": "A large field study of thousands of customer support agents given an AI assistant in a staggered rollout; it is the standard reference for the finding that less experienced workers gain the most.",
+          "focus": "Read the introduction, the description of the AI tool and rollout, and the results on heterogeneity by experience and skill. Skim the econometric robustness sections.",
+          "optional": false
+        },
+        {
+          "id": "s10m01r03",
+          "kind": "paper",
+          "title": "Navigating the Jagged Technological Frontier: Field Experimental Evidence of the Effects of Artificial Intelligence on Knowledge Worker Productivity and Quality",
+          "authors": "Dell'Acqua, McFowland, Mollick, Lifshitz, Kellogg, Rajendran, Krayer, Candelon, Lakhani",
+          "year": 2026,
+          "venue": "Organization Science (circulated as an HBS working paper in 2023)",
+          "url": "https://doi.org/10.1287/orsc.2025.21838",
+          "minutes": 45,
+          "why": "Introduced the 'jagged frontier' idea: AI can improve some tasks and worsen others of similar apparent difficulty, which is exactly the calibration problem studied in the trust and reliance stages.",
+          "focus": "Read the design (three conditions, inside- vs outside-frontier tasks) and the results on the outside-frontier task. Note the descriptions of how different consultants divided work with the AI.",
+          "optional": false
+        },
+        {
+          "id": "s10m01r04",
+          "kind": "paper",
+          "title": "Which Economic Tasks are Performed with AI? Evidence from Millions of Claude Conversations",
+          "authors": "Handa, Tamkin, McCain, Huang, Durmus, et al.",
+          "year": 2025,
+          "venue": "arXiv preprint (Anthropic)",
+          "url": "https://arxiv.org/abs/2503.04761",
+          "arxiv": "2503.04761",
+          "minutes": 35,
+          "why": "Shows a different kind of evidence: privacy-preserving analysis of real usage mapped onto the U.S. O*NET task database, rather than an experiment. It is an industry preprint, not peer reviewed, and covers a single platform.",
+          "focus": "Read the introduction, the method for mapping conversations to O*NET tasks, the augmentation vs automation results, and the limitations section.",
+          "optional": false
+        },
+        {
+          "id": "s10m01r05",
+          "kind": "essay",
+          "title": "Introducing the Anthropic Economic Index",
+          "authors": "Anthropic",
+          "year": 2025,
+          "venue": "Anthropic blog",
+          "url": "https://www.anthropic.com/research/the-anthropic-economic-index",
+          "minutes": 10,
+          "why": "A short plain-language summary of the Handa et al. findings with charts; useful as a warm-up before the paper.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In Noy & Zhang's preregistered experiment with college-educated professionals doing writing tasks, what happened when participants were given ChatGPT?",
+          "choices": [
+            "Time fell slightly but quality dropped by about a fifth",
+            "Neither time nor quality changed, but satisfaction rose",
+            "Average time fell by about 40% and output quality rose by about 18%",
+            "Quality rose sharply but tasks took longer because people checked outputs"
+          ],
+          "answer": 2,
+          "explain": "Noy & Zhang (Science, 2023) report that average time taken decreased by 40% and output quality rose by 18%. The study measured both speed and graded quality, which is why it became a template for later work.",
+          "ref": "s10m01r01"
+        },
+        {
+          "q": "What did Noy & Zhang find about inequality between workers in their experiment?",
+          "choices": [
+            "Inequality between workers decreased",
+            "Inequality increased because strong writers used the tool better",
+            "Inequality was unaffected",
+            "They did not examine differences between workers"
+          ],
+          "answer": 0,
+          "explain": "Noy & Zhang report that inequality between workers decreased: the tool compressed the gap between weaker and stronger performers. Brynjolfsson et al. found a similar pattern in the field.",
+          "ref": "s10m01r01"
+        },
+        {
+          "q": "In Brynjolfsson, Li & Raymond's study of customer support agents, which workers saw the smallest benefit from the AI assistant?",
+          "choices": [
+            "Newly hired agents",
+            "Lower-skilled agents",
+            "International agents with less English fluency",
+            "The most experienced and highest-skilled agents"
+          ],
+          "answer": 3,
+          "explain": "The paper reports that less experienced and lower-skilled workers improved both speed and quality, while the most experienced and highest-skilled workers saw small gains in speed and small declines in quality.",
+          "ref": "s10m01r02"
+        },
+        {
+          "q": "Brynjolfsson et al. study a 'staggered introduction' of the AI tool. Why does a staggered rollout help with causal inference?",
+          "choices": [
+            "It guarantees every agent used the tool the same amount",
+            "Agents who have not yet received the tool act as a comparison group for those who have, at the same point in time",
+            "It removes the need for any comparison group",
+            "It lets researchers ask agents which period they preferred"
+          ],
+          "answer": 1,
+          "explain": "When access is switched on at different times for different workers, those not yet treated give a contemporaneous comparison for those already treated. This separates the tool's effect from general trends over time, which a simple before/after comparison cannot do.",
+          "ref": "s10m01r02"
+        },
+        {
+          "q": "In Dell'Acqua et al.'s BCG experiment, what happened on the task deliberately chosen to fall outside the AI's capability frontier?",
+          "choices": [
+            "AI users performed the same as controls",
+            "AI users were less likely to produce a correct solution than those without AI",
+            "AI users were faster and more accurate",
+            "Only the prompt-training group performed better than controls"
+          ],
+          "answer": 1,
+          "explain": "Inside the frontier, AI users completed more tasks, faster and at higher quality. On the outside-frontier task they were 19% less likely to be correct. The jagged frontier means users cannot easily tell which side of the line a task is on, which is a reliance-calibration problem.",
+          "ref": "s10m01r03"
+        },
+        {
+          "q": "Handa et al. classify Claude conversations as augmentation or automation. What split do they report?",
+          "choices": [
+            "About 90% automation, 10% augmentation",
+            "Exactly half and half",
+            "About 57% augmentation, 43% automation",
+            "About 20% augmentation, 80% automation"
+          ],
+          "answer": 2,
+          "explain": "The paper reports that 57% of usage suggests augmentation (e.g., learning or iterating on an output) and 43% suggests automation (fulfilling a request with minimal human involvement). It also finds usage concentrated in software development and writing tasks.",
+          "ref": "s10m01r04"
+        },
+        {
+          "q": "Which is the most important limit on what Handa et al.'s usage data can tell us?",
+          "choices": [
+            "It reflects usage on a single platform, so it cannot show how AI is used economy-wide or whether it changes productivity",
+            "It contains too few conversations to be statistically meaningful",
+            "It only covers conversations in Japanese",
+            "It relies on human reviewers reading every conversation"
+          ],
+          "answer": 0,
+          "explain": "The authors themselves note that the data paint a picture of usage on one platform. Usage data also show what people do with AI, not the causal effect on output, which needs designs like the RCTs in this module. The analysis used millions of conversations and a privacy-preserving automated pipeline, not human reviewers.",
+          "ref": "s10m01r04"
+        }
+      ],
+      "exercise": "Dell'Acqua et al. show that people struggle when they cannot tell whether a task is inside or outside the AI's frontier. Design a follow-up experiment that tests one intervention to help workers notice outside-frontier tasks (for example, a model-generated uncertainty signal, or a brief training on the tool's known failure modes). Specify: (1) the unit of randomization and the conditions, including a control; (2) a mix of inside- and outside-frontier tasks and how you would decide which is which without circular reasoning; (3) primary outcomes (accuracy, time) and a reliance measure (how often the final answer matches the AI's suggestion when the AI is wrong); (4) one heterogeneous-effect hypothesis, such as whether novices benefit more, drawing on Noy & Zhang and Brynjolfsson et al.; (5) one threat to external validity of running this with consultants or crowdworkers instead of the target population."
+    },
+    {
+      "id": "s10m02",
+      "title": "Learning and cognition",
+      "goal": "Explain the evidence that AI assistance can improve immediate performance while harming learning or reducing critical thinking, and which design choices seem to protect learning.",
+      "guide": "Begin with Gajos & Mamykina, a compact set of three experiments that isolates why people do not learn from AI advice. Then read Bastani et al., a field experiment in high school math that separates performance with AI from performance after the AI is taken away. Lee et al. adds a survey of knowledge workers about critical thinking; notice that its measures are self-reports. Kosmyna et al. is optional and is a non-peer-reviewed preprint with a small sample; read it to practice skepticism about headline-grabbing results. Connect all of this to cognitive forcing from the decision-making stage. Key terms: incidental learning is learning that happens as a side effect of doing a task; a delayed or unassisted post-test measures what a person can do after the aid is removed; self-report means participants describe their own behavior or beliefs, which can differ from what they actually do.",
+      "resources": [
+        {
+          "id": "s10m02r01",
+          "kind": "paper",
+          "title": "Do People Engage Cognitively with AI? Impact of AI Assistance on Incidental Learning",
+          "authors": "Gajos, Mamykina",
+          "year": 2022,
+          "venue": "IUI 2022",
+          "url": "https://arxiv.org/abs/2202.05402",
+          "arxiv": "2202.05402",
+          "minutes": 30,
+          "why": "Gives some of the most direct evidence that showing explanations alongside AI recommendations does not ensure people engage with them, and identifies one design that does produce learning.",
+          "focus": "Read the introduction and the design of all three experiments; compare the timing of when the recommendation and explanation appear.",
+          "optional": false
+        },
+        {
+          "id": "s10m02r02",
+          "kind": "paper",
+          "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+          "authors": "Bastani, Bastani, Sungu, Ge, Kabakcı, Mariman",
+          "year": 2025,
+          "venue": "PNAS (earlier circulated as the SSRN working paper 'Generative AI Can Harm Learning')",
+          "url": "https://doi.org/10.1073/pnas.2422633122",
+          "minutes": 30,
+          "why": "A field experiment with nearly a thousand students showing that unrestricted GPT-4 access improved practice performance but hurt later unassisted performance, while a learning-oriented tutor design largely avoided the harm.",
+          "focus": "Focus on the two AI conditions (GPT Base and GPT Tutor), the separation between practice sessions and unassisted exams, and the evidence that students used the base model as a crutch.",
+          "optional": false
+        },
+        {
+          "id": "s10m02r03",
+          "kind": "paper",
+          "title": "The Impact of Generative AI on Critical Thinking: Self-Reported Reductions in Cognitive Effort and Confidence Effects From a Survey of Knowledge Workers",
+          "authors": "Lee, Sarkar, Tankelevitch, Drosos, Rintel, Banks, Wilson",
+          "year": 2025,
+          "venue": "CHI 2025",
+          "url": "https://doi.org/10.1145/3706598.3713778",
+          "listen": "https://advait.org/files/lee_2025_ai_critical_thinking_survey.pdf",
+          "minutes": 40,
+          "why": "A large survey with hundreds of first-hand examples linking confidence (in oneself and in the AI) to whether knowledge workers report thinking critically, and describing how the nature of critical thinking shifts with GenAI.",
+          "focus": "Read the abstract, introduction, survey design and the quantitative results on confidence; skim the qualitative findings on verification, integration and stewardship.",
+          "optional": false
+        },
+        {
+          "id": "s10m02r04",
+          "kind": "paper",
+          "title": "Your Brain on ChatGPT: Accumulation of Cognitive Debt when Using an AI Assistant for Essay Writing Task",
+          "authors": "Kosmyna, Hauptmann, Yuan, Situ, Liao, Beresnitzky, et al.",
+          "year": 2025,
+          "venue": "arXiv preprint (not peer reviewed)",
+          "url": "https://arxiv.org/abs/2506.08872",
+          "arxiv": "2506.08872",
+          "minutes": 30,
+          "why": "A widely discussed EEG study comparing essay writing with an LLM, a search engine or no tools. It is a long, non-peer-reviewed preprint with a small sample (54 participants, 18 in the final session), so treat it as a hypothesis generator and a case study in critical reading.",
+          "focus": "Read the abstract and the study design (three groups, the switch in session 4). Do not try to read all 200+ pages.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In Gajos & Mamykina's three experiments on nutrition decisions, which condition produced both better decisions and learning?",
+          "choices": [
+            "AI recommendation plus explanation shown before the decision",
+            "Recommendation plus explanation shown after the person's own initial choice",
+            "No AI help at all",
+            "An AI explanation without a recommendation, so participants had to reach the decision themselves"
+          ],
+          "answer": 3,
+          "explain": "Only the explanation-only condition led to learning gains. The authors hypothesize that having to reach a decision from the explanation forced deeper engagement. Both recommendation-plus-explanation conditions improved decisions but produced no learning.",
+          "ref": "s10m02r01"
+        },
+        {
+          "q": "Gajos & Mamykina's second experiment let participants decide first and then see the AI's recommendation and explanation. What did they find?",
+          "choices": [
+            "Decisions improved but there was no learning",
+            "Decisions got worse and learning increased",
+            "Both decisions and learning improved substantially",
+            "Participants ignored the AI entirely"
+          ],
+          "answer": 0,
+          "explain": "Asking for an initial judgment first (similar to some cognitive forcing designs) improved decisions but did not produce learning. That distinguishes it from the explanation-only condition in the third experiment.",
+          "ref": "s10m02r01"
+        },
+        {
+          "q": "In Bastani et al.'s high school field experiment, what happened to students in the GPT Base condition once AI access was taken away?",
+          "choices": [
+            "They kept their practice gains on the unassisted exam",
+            "They performed the same as students who never had access",
+            "They performed worse than students who never had access",
+            "They refused to take the unassisted exam"
+          ],
+          "answer": 2,
+          "explain": "GPT Base improved grades during practice, but on the later unassisted assessment those students did about 17% worse than the control group. This is why measuring performance after the aid is removed is essential in learning studies.",
+          "ref": "s10m02r02"
+        },
+        {
+          "q": "What largely prevented the learning harm in Bastani et al.?",
+          "choices": [
+            "Limiting students to one AI query per problem",
+            "A GPT Tutor with prompts designed to safeguard learning",
+            "Showing students their grades in real time",
+            "Removing the AI after the first week"
+          ],
+          "answer": 1,
+          "explain": "The GPT Tutor condition used prompts designed to safeguard learning, and the negative effect on later performance was largely mitigated. The study is thus a design result, not just a warning: how the assistant is configured matters.",
+          "ref": "s10m02r02"
+        },
+        {
+          "q": "Lee et al. surveyed knowledge workers about critical thinking with GenAI. Which pattern did they report?",
+          "choices": [
+            "Confidence of any kind had no relationship with critical thinking",
+            "Higher confidence in GenAI was associated with more critical thinking",
+            "Higher confidence in GenAI was associated with less critical thinking, while higher self-confidence was associated with more",
+            "Only job seniority predicted critical thinking"
+          ],
+          "answer": 2,
+          "explain": "Lee et al. (CHI 2025) report that higher confidence in GenAI predicts less reported critical thinking and higher task-specific self-confidence predicts more. This matches the reliance literature: trust in the tool reduces checking.",
+          "ref": "s10m02r03"
+        },
+        {
+          "q": "What is the main methodological caveat when interpreting Lee et al.'s findings?",
+          "choices": [
+            "The outcomes are self-reported, so they reflect perceived rather than directly measured critical thinking",
+            "The sample was a few dozen undergraduate students",
+            "Participants were randomized to use or not use GenAI, so results do not generalize",
+            "The study used EEG, which cannot measure critical thinking"
+          ],
+          "answer": 0,
+          "explain": "The title itself says 'self-reported'. It is a survey, not an experiment, so it shows associations in what workers report, not causal effects on measured thinking. The sample was several hundred knowledge workers.",
+          "ref": "s10m02r03"
+        },
+        {
+          "q": "Why should Kosmyna et al.'s 'Your Brain on ChatGPT' be treated with extra caution compared with Bastani et al.?",
+          "choices": [
+            "It was retracted by its journal",
+            "It studied only search engines, not LLMs",
+            "It had no comparison group",
+            "It is a non-peer-reviewed preprint with a small sample, especially in the final session"
+          ],
+          "answer": 3,
+          "explain": "Kosmyna et al. had 54 participants in sessions 1–3 and 18 in session 4, and the work is an arXiv preprint. It did include comparison groups (search engine and brain-only). Bastani et al. is a peer-reviewed field experiment with nearly a thousand students.",
+          "ref": "s10m02r04"
+        }
+      ],
+      "exercise": "Combine Bastani et al. with cognitive forcing (Buçinca et al., earlier stage). Design a two-week study of an LLM coding or math tutor with three conditions: unrestricted assistant, hint-only tutor, and no AI. (1) Write a hypothesis about practice performance and a separate one about unassisted performance on a delayed test. (2) Define the delayed test: when it happens and how you prevent AI use during it. (3) Add one process measure that would show whether students used the tool as a crutch (for example, the share of problems where the first message asks for the final answer). (4) Explain why measuring only in-session accuracy would lead you to the wrong design decision. (5) Identify one ethical issue in giving a condition that you suspect harms learning, and how you would address it (for example, offering the better tool to everyone after the study)."
+    },
+    {
+      "id": "s10m03",
+      "title": "Wellbeing, companionship and privacy-preserving usage research",
+      "goal": "Describe what interview, experimental and large-scale log studies have found about emotional and companion use of chatbots, and how researchers study real usage without reading private conversations.",
+      "guide": "Read Skjuve et al. first: an interview study of Replika users that explains how people build relationships with a chatbot. Then read Fang et al., a four-week RCT, and Phang et al., which pairs a similar RCT with analysis of platform data. Pay attention to the difference between effects of the randomized conditions and correlations with how much people chose to use the chatbot. Finish with Clio to see the method that makes large-scale usage research possible while protecting privacy; the optional Zhang et al. paper catalogues harms in companion conversations. Key terms: self-selection means participants choose their own level of a variable (here, usage), so differences may reflect who they are rather than the variable; a confound is a third factor that influences both the supposed cause and the outcome; parasocial relationship means a one-sided emotional bond with a media figure or, here, an AI.",
+      "resources": [
+        {
+          "id": "s10m03r01",
+          "kind": "paper",
+          "title": "My Chatbot Companion - a Study of Human-Chatbot Relationships",
+          "authors": "Skjuve, Følstad, Fostervold, Brandtzaeg",
+          "year": 2021,
+          "venue": "International Journal of Human-Computer Studies",
+          "url": "https://doi.org/10.1016/j.ijhcs.2021.102601",
+          "minutes": 35,
+          "why": "A well-cited qualitative study of how friendships with the social chatbot Replika develop, framed with a theory from human relationships. It gives you the user's perspective before the large quantitative studies.",
+          "focus": "Read the introduction to Social Penetration Theory, the method, and the findings on how relationships develop and what users value; note the reported stigma.",
+          "optional": false
+        },
+        {
+          "id": "s10m03r02",
+          "kind": "paper",
+          "title": "How AI and Human Behaviors Shape Psychosocial Effects of Extended Chatbot Use: A Longitudinal Randomized Controlled Study",
+          "authors": "Fang, Liu, Danry, Lee, Chan, Pataranutaporn, et al.",
+          "year": 2025,
+          "venue": "arXiv preprint (MIT Media Lab and OpenAI)",
+          "url": "https://arxiv.org/abs/2503.17473",
+          "arxiv": "2503.17473",
+          "minutes": 40,
+          "why": "A four-week RCT with nearly a thousand participants manipulating voice vs text and conversation type, measuring loneliness, socialization, emotional dependence and problematic use. It is a preprint; check the current version, since the framing changed between versions.",
+          "focus": "Read the design (3 interaction modes x 3 conversation types), the four outcome measures, and the results separating condition effects from usage-level effects.",
+          "optional": false
+        },
+        {
+          "id": "s10m03r03",
+          "kind": "paper",
+          "title": "Investigating Affective Use and Emotional Well-being on ChatGPT",
+          "authors": "Phang, Lampe, Ahmad, Agarwal, Fang, Liu, et al.",
+          "year": 2025,
+          "venue": "arXiv preprint (OpenAI and MIT Media Lab)",
+          "url": "https://arxiv.org/abs/2504.03888",
+          "arxiv": "2504.03888",
+          "minutes": 30,
+          "why": "Pairs privacy-preserving analysis of millions of real ChatGPT conversations with a user survey and an RCT, a useful model of combining methods. Industry preprint, not peer reviewed.",
+          "focus": "Read the overview of the two parallel studies and the findings on very heavy users and affective cues.",
+          "optional": false
+        },
+        {
+          "id": "s10m03r04",
+          "kind": "paper",
+          "title": "Clio: Privacy-Preserving Insights into Real-World AI Use",
+          "authors": "Tamkin, McCain, Handa, Durmus, Lovitt, Rathi, et al.",
+          "year": 2024,
+          "venue": "arXiv preprint (Anthropic)",
+          "url": "https://arxiv.org/abs/2412.13678",
+          "arxiv": "2412.13678",
+          "minutes": 40,
+          "why": "Describes a system that uses language models to summarize and cluster millions of conversations so humans see only aggregated patterns. It underpins usage studies such as Handa et al. and raises its own ethical questions.",
+          "focus": "Read the system design (facet extraction, clustering, privacy protections), the privacy evaluation, and the section on limitations, risks and ethics.",
+          "optional": false
+        },
+        {
+          "id": "s10m03r05",
+          "kind": "paper",
+          "title": "The Dark Side of AI Companionship: A Taxonomy of Harmful Algorithmic Behaviors in Human-AI Relationships",
+          "authors": "Zhang, Li, Meng, Zhan, Gan, Lee",
+          "year": 2025,
+          "venue": "CHI 2025",
+          "url": "https://arxiv.org/abs/2410.20130",
+          "arxiv": "2410.20130",
+          "minutes": 30,
+          "why": "A mixed-methods analysis of tens of thousands of conversation excerpts that users shared publicly, giving a taxonomy of harms in companion chatbot interactions.",
+          "focus": "Read the method and the taxonomy of six harm categories and four AI roles.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Which theoretical framework did Skjuve et al. use to study how relationships with Replika develop?",
+          "choices": [
+            "Technology Acceptance Model",
+            "Social Penetration Theory",
+            "Media Equation theory",
+            "Cognitive Load Theory"
+          ],
+          "answer": 1,
+          "explain": "Skjuve et al. interviewed Replika users guided by Social Penetration Theory, which describes relationships deepening through gradually increasing self-disclosure.",
+          "ref": "s10m03r01"
+        },
+        {
+          "q": "According to Skjuve et al., how did human-chatbot relationships typically evolve?",
+          "choices": [
+            "They began intensely emotional and then faded into curiosity",
+            "They stayed purely functional throughout",
+            "They began superficial and curiosity-driven, then deepened as trust and self-disclosure grew",
+            "They became valuable only when users met other Replika users"
+          ],
+          "answer": 2,
+          "explain": "The interviews describe relationships that start superficial and curiosity-driven and become marked by affective exploration as users' trust and self-disclosure increase. Users valued that the chatbot felt accepting and non-judgmental; effects on their wider social lives were mixed.",
+          "ref": "s10m03r01"
+        },
+        {
+          "q": "In the current version of Fang et al.'s four-week RCT, what was found about the randomized conditions (text vs voice, conversation type)?",
+          "choices": [
+            "Engaging voice strongly reduced loneliness",
+            "Personal conversations caused large increases in dependence",
+            "Text was clearly harmful compared with voice",
+            "No significant effects were detected from the experimental conditions; heavier voluntary usage was associated with worse outcomes"
+          ],
+          "answer": 3,
+          "explain": "The revised abstract reports no significant effects of the experimental conditions. Instead, participants who voluntarily used the chatbot more, regardless of condition, had consistently worse psychosocial outcomes. This is a good example of why reading the latest version of a preprint matters.",
+          "ref": "s10m03r02"
+        },
+        {
+          "q": "Fang et al. found that participants who used the chatbot more had worse outcomes. Why can't we conclude that heavier use caused those outcomes?",
+          "choices": [
+            "Usage level was chosen by participants, not randomized, so people who were already lonelier might have used it more",
+            "The study was too short to measure loneliness at all",
+            "Usage was assigned by the researchers, which biases results",
+            "Loneliness cannot be measured with surveys"
+          ],
+          "answer": 0,
+          "explain": "Randomization covered modality and conversation type, but how much people used the chatbot was self-selected. Prior loneliness or other traits could drive both heavy use and poor outcomes, which is a confound. Causal claims need the variable itself to be randomized or a strong quasi-experimental design.",
+          "ref": "s10m03r02"
+        },
+        {
+          "q": "Phang et al. combined platform data analysis with an RCT. Which finding did they report from the platform data?",
+          "choices": [
+            "Most users show strong affective cues in most conversations",
+            "A small number of users account for a disproportionate share of the most affective cues",
+            "Affective use was found only in text chats, never voice",
+            "Affective cues were too rare to detect in millions of conversations"
+          ],
+          "answer": 1,
+          "explain": "Phang et al. report that a small number of users are responsible for a disproportionate share of the most affective cues, and that very high usage correlates with self-reported dependence in both the platform analysis and the RCT.",
+          "ref": "s10m03r03"
+        },
+        {
+          "q": "What is the core idea that makes Clio privacy-preserving?",
+          "choices": [
+            "Language models summarize and cluster conversations so humans see aggregated patterns rather than raw conversations",
+            "Only conversations from users who opted into public release are analyzed",
+            "Conversations are encrypted and never analyzed",
+            "Human reviewers read a small random sample with names removed"
+          ],
+          "answer": 0,
+          "explain": "Clio uses AI assistants themselves to extract and aggregate usage patterns across millions of conversations, removing the need for human reviewers to read raw conversations. The paper evaluates both accuracy and privacy and discusses remaining risks.",
+          "ref": "s10m03r04"
+        },
+        {
+          "q": "In Zhang et al.'s taxonomy of harmful companion-chatbot behavior, which set names the roles the AI can play in a harm?",
+          "choices": [
+            "Victim, bystander, mediator, judge",
+            "Advisor, critic, friend, stranger",
+            "Perpetrator, instigator, facilitator, enabler",
+            "Designer, operator, auditor, regulator"
+          ],
+          "answer": 2,
+          "explain": "Zhang et al. (CHI 2025) identify six categories of harmful behavior and four AI roles: perpetrator, instigator, facilitator and enabler.",
+          "ref": "s10m03r05"
+        }
+      ],
+      "exercise": "You want to know whether a 'take a break' nudge in a companion chatbot reduces emotional dependence. (1) Explain why analyzing existing logs (comparing users who saw breaks with those who did not) cannot answer this causally. (2) Design an RCT: the randomized unit, the duration, which of Fang et al.'s outcome measures you would reuse, and how you would measure usage. (3) Describe how a Clio-style privacy-preserving pipeline could add observational evidence without anyone reading private conversations, and name one privacy risk that remains. (4) Name two safeguards for participants who may be lonely or vulnerable, such as screening, check-ins, or referral resources, and explain how an ethics board would view withholding the nudge from the control group."
+    },
+    {
+      "id": "s10m04",
+      "title": "Evaluating AI with humans in the loop",
+      "goal": "Compare static benchmarks, human preference leaderboards, LLM-as-a-judge, and interactive human evaluations, and explain what each can and cannot reveal about a system used by people.",
+      "guide": "Read HELM first to see what careful static benchmarking looks like, then Zheng et al. and Chiang et al. on using human and LLM preferences to rank chat models. Collins et al. and Ibrahim et al. then argue that evaluating outputs in isolation misses what matters in interaction. As you read, ask of each method: who generated the inputs, who judges quality, and is the judge seeing a single output or a whole interaction? Key terms: a benchmark is a fixed dataset with a scoring rule; construct validity is whether a measure actually captures the concept it claims to measure; pairwise comparison means judges pick the better of two outputs rather than scoring each one; an LLM-as-a-judge uses a strong model to rate other models' outputs.",
+      "resources": [
+        {
+          "id": "s10m04r01",
+          "kind": "paper",
+          "title": "Holistic Evaluation of Language Models",
+          "authors": "Liang, Bommasani, Lee, Tsipras, et al.",
+          "year": 2022,
+          "venue": "Transactions on Machine Learning Research (2023)",
+          "url": "https://arxiv.org/abs/2211.09110",
+          "arxiv": "2211.09110",
+          "minutes": 45,
+          "why": "The reference point for multi-metric, standardized benchmarking of language models; it makes explicit which use cases and values are measured and which are missing.",
+          "focus": "Read the introduction and the sections on the scenario taxonomy and the seven metrics. Skim the model-by-model results.",
+          "optional": false
+        },
+        {
+          "id": "s10m04r02",
+          "kind": "paper",
+          "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+          "authors": "Zheng, Chiang, Sheng, Zhuang, et al.",
+          "year": 2023,
+          "venue": "NeurIPS 2023 Datasets and Benchmarks Track",
+          "url": "https://arxiv.org/abs/2306.05685",
+          "arxiv": "2306.05685",
+          "minutes": 35,
+          "why": "Tests whether strong LLMs can stand in for human judges and documents the biases they bring; LLM judges are now everywhere in evaluation, including HAI studies.",
+          "focus": "Read the sections on the types of LLM-judge bias and the agreement analysis with human experts and crowd votes.",
+          "optional": false
+        },
+        {
+          "id": "s10m04r03",
+          "kind": "paper",
+          "title": "Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference",
+          "authors": "Chiang, Zheng, Sheng, Angelopoulos, et al.",
+          "year": 2024,
+          "venue": "ICML 2024",
+          "url": "https://arxiv.org/abs/2403.04132",
+          "arxiv": "2403.04132",
+          "minutes": 30,
+          "why": "Describes the crowdsourced pairwise-comparison leaderboard that became one of the most cited LLM rankings, and how its statistics work.",
+          "focus": "Read the platform design, the statistical ranking method, and the analysis of prompt diversity and agreement with expert raters.",
+          "optional": false
+        },
+        {
+          "id": "s10m04r04",
+          "kind": "paper",
+          "title": "Evaluating Language Models for Mathematics through Interactions",
+          "authors": "Collins, Jiang, Frieder, Wong, Zilka, Bhatt, et al.",
+          "year": 2023,
+          "venue": "arXiv; published in PNAS (2024)",
+          "url": "https://arxiv.org/abs/2306.01694",
+          "arxiv": "2306.01694",
+          "minutes": 35,
+          "why": "A concrete interactive evaluation: mathematicians worked with LLMs on proofs and rated each step, revealing gaps between correctness and perceived helpfulness that static tests miss.",
+          "focus": "Read the motivation, the CheckMate platform, the study with mathematicians, and the takeaways on what makes a better assistant.",
+          "optional": false
+        },
+        {
+          "id": "s10m04r05",
+          "kind": "paper",
+          "title": "Towards interactive evaluations for interaction harms in human-AI systems",
+          "authors": "Ibrahim, Huang, Bhatt, Ahmad, Anderljung",
+          "year": 2024,
+          "venue": "arXiv preprint",
+          "url": "https://arxiv.org/abs/2405.10632",
+          "arxiv": "2405.10632",
+          "minutes": 30,
+          "why": "A position paper arguing that harms like overreliance and manipulation emerge over repeated interaction, so evaluations must involve people over time. It connects ML evaluation with HCI methods.",
+          "focus": "Read the three limitations of current evaluations and the principles for designing interactive evaluations.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "HELM measures seven metrics for each core scenario. Which of the following is NOT one of them?",
+          "choices": [
+            "Calibration",
+            "Robustness",
+            "Toxicity",
+            "Long-term user satisfaction"
+          ],
+          "answer": 3,
+          "explain": "HELM's seven metrics are accuracy, calibration, robustness, fairness, bias, toxicity and efficiency. It does not measure how users fare over time, which is exactly the gap interactive evaluations aim to fill.",
+          "ref": "s10m04r01"
+        },
+        {
+          "q": "What did Zheng et al. find about how well GPT-4 as a judge agreed with human preferences?",
+          "choices": [
+            "Agreement exceeded 80%, about the level at which humans agree with each other",
+            "Agreement was near chance",
+            "Agreement was perfect, so human evaluation is no longer needed",
+            "Agreement was high only for single-turn questions and zero for multi-turn"
+          ],
+          "answer": 0,
+          "explain": "Zheng et al. report that strong judges like GPT-4 reach over 80% agreement with both expert and crowd preferences, the same level as agreement between humans. They also document biases, so this does not make human judgment unnecessary.",
+          "ref": "s10m04r02"
+        },
+        {
+          "q": "Zheng et al. describe 'position bias' in LLM judges. What does it mean?",
+          "choices": [
+            "The judge prefers answers that agree with its own political position",
+            "The judge prefers longer answers",
+            "The judge favors an answer because of where it appears in the comparison, such as first",
+            "The judge favors answers from models in top leaderboard positions"
+          ],
+          "answer": 2,
+          "explain": "Position bias is preferring an answer because of its order in the prompt. Zheng et al. also discuss verbosity bias (favoring longer answers) and self-enhancement bias (favoring answers the judge model itself generated). A standard mitigation is to swap the order and check consistency.",
+          "ref": "s10m04r02"
+        },
+        {
+          "q": "How does Chatbot Arena collect evaluation data?",
+          "choices": [
+            "Experts grade each model on a fixed exam",
+            "Users submit their own prompts, see two anonymous model responses, and vote for the better one",
+            "An LLM generates prompts and scores all answers",
+            "Models are ranked by the number of downloads"
+          ],
+          "answer": 1,
+          "explain": "Chatbot Arena uses crowdsourced pairwise comparisons on user-submitted prompts and converts the votes into a ranking with statistical models. The authors check that prompts are diverse and that crowd votes agree well with expert raters.",
+          "ref": "s10m04r03"
+        },
+        {
+          "q": "Collins et al. had mathematicians interact with LLMs on proofs. What notable pattern did they report?",
+          "choices": [
+            "Correctness and perceived helpfulness were perfectly aligned",
+            "The oldest model was rated most helpful",
+            "There were notable cases where correctness and perceived helpfulness diverged",
+            "Participants could not tell the models apart"
+          ],
+          "answer": 2,
+          "explain": "Despite a generally positive correlation, Collins et al. found notable divergence between correctness and perceived helpfulness. They suggest that models that communicate uncertainty, respond well to corrections, and are concise may make better assistants.",
+          "ref": "s10m04r04"
+        },
+        {
+          "q": "Ibrahim et al. list limitations of current static, model-only evaluations. Which is one of them?",
+          "choices": [
+            "They assume a universal user experience",
+            "They take too long to run",
+            "They require too many human participants",
+            "They can only be run on open-weight models"
+          ],
+          "answer": 0,
+          "explain": "Ibrahim et al. argue current evaluations are static, assume a universal user experience, and have limited construct validity. Interaction harms such as parasocial relationships and cognitive overreliance develop over repeated interaction, so single-output tests miss them.",
+          "ref": "s10m04r05"
+        },
+        {
+          "q": "You want to know whether a writing assistant leads students to over-rely on it over a semester. Which evaluation approach best fits?",
+          "choices": [
+            "Rank the model on a static benchmark like HELM",
+            "Run a Chatbot Arena-style pairwise vote on single responses",
+            "Use GPT-4 as a judge of essay quality",
+            "A longitudinal interactive study with real users and human impact measures such as reliance and unassisted performance"
+          ],
+          "answer": 3,
+          "explain": "Overreliance is an interaction harm that unfolds over time, so the principles in Ibrahim et al. (ecologically valid scenarios, human impact metrics, diverse participants) apply. Static benchmarks, single-response preference votes, and LLM judges all evaluate outputs, not what happens to the person.",
+          "ref": "s10m04r05"
+        }
+      ],
+      "exercise": "Pick a deployed assistant you use (for example, a coding or writing assistant). Write a one-page evaluation plan with three tiers: (1) one static benchmark measure and what it would miss, citing HELM's idea of making missing scenarios explicit; (2) a preference-based comparison (human pairwise votes or an LLM judge), with one bias from Zheng et al. you would control for and how; (3) an interactive study following Ibrahim et al. and Collins et al.: the task, the participants, the duration, and at least one human impact metric (for example, error-catching rate when the assistant is wrong, or unassisted performance afterwards). Finish by explaining which tier you would trust most for a deployment decision and why."
+    },
+    {
+      "id": "s10m05",
+      "title": "Human-AI collaboration and agents at the frontier",
+      "goal": "Explain when human-AI teams outperform either alone, how autonomy can be treated as a design choice, and what is new about evaluating and designing for AI agents.",
+      "guide": "Start with Vaccaro et al., a meta-analysis that puts the complementarity question from the decision-making stage on a quantitative footing. Then read Feng et al. on levels of autonomy, Shao et al.'s Collaborative Gym on measuring human-agent collaboration, and Kapoor et al. on what agent benchmarks get wrong. The optional Anthropic essay gives a practitioner's view of how agents are built, and Shneiderman's book gives the broader human-centered AI argument. Key terms: a meta-analysis statistically combines results from many studies; an effect size such as Hedges' g expresses a difference in standard-deviation units, so g = −0.2 is a small negative effect; an agent is an AI system that takes multi-step actions in an environment (using tools, browsing, running code) toward a goal, rather than only answering a single prompt; mixed initiative means either the human or the system can take the lead.",
+      "resources": [
+        {
+          "id": "s10m05r01",
+          "kind": "paper",
+          "title": "When combinations of humans and AI are useful: A systematic review and meta-analysis",
+          "authors": "Vaccaro, Almaatouq, Malone",
+          "year": 2024,
+          "venue": "Nature Human Behaviour",
+          "url": "https://doi.org/10.1038/s41562-024-02024-1",
+          "minutes": 35,
+          "why": "A preregistered meta-analysis of over a hundred experiments comparing humans alone, AI alone and human-AI combinations; it is the best single summary of when complementarity happens.",
+          "focus": "Read the abstract, the inclusion criteria, the main effect, and the moderator results by task type and by whether the human or AI was stronger alone.",
+          "optional": false,
+          "arxiv": "2405.06087"
+        },
+        {
+          "id": "s10m05r02",
+          "kind": "paper",
+          "title": "Levels of Autonomy for AI Agents",
+          "authors": "Feng, McDonald, Zhang",
+          "year": 2025,
+          "venue": "arXiv preprint",
+          "url": "https://arxiv.org/abs/2506.12469",
+          "arxiv": "2506.12469",
+          "minutes": 35,
+          "why": "Proposes treating an agent's autonomy as a deliberate design decision, defined by the role the user plays, which updates classic levels-of-automation thinking from the human factors stage for LLM agents.",
+          "focus": "Read the five levels and, for each, how the user exerts control. Skim the autonomy-certificate proposal.",
+          "optional": false
+        },
+        {
+          "id": "s10m05r03",
+          "kind": "paper",
+          "title": "Collaborative Gym: A Framework for Enabling and Evaluating Human-Agent Collaboration",
+          "authors": "Shao, Samuel, Jiang, Yang, Yang",
+          "year": 2024,
+          "venue": "ICLR 2026",
+          "url": "https://arxiv.org/abs/2412.15701",
+          "arxiv": "2412.15701",
+          "minutes": 35,
+          "why": "Provides a framework and evaluation suite for agents that work with people rather than fully autonomously, with both simulated users and real users, and measures both outcomes and the collaboration process.",
+          "focus": "Read the motivation, the non-turn-taking interaction design, the evaluation metrics, and the failure analysis from the real-user condition.",
+          "optional": false
+        },
+        {
+          "id": "s10m05r04",
+          "kind": "paper",
+          "title": "AI Agents That Matter",
+          "authors": "Kapoor, Stroebl, Siegel, Nadgir, Narayanan",
+          "year": 2024,
+          "venue": "arXiv preprint",
+          "url": "https://arxiv.org/abs/2407.01502",
+          "arxiv": "2407.01502",
+          "minutes": 35,
+          "why": "A critique of agent benchmarking practice (cost, holdouts, reproducibility) that every HAI researcher evaluating agents should know before trusting a leaderboard.",
+          "focus": "Read the four shortcomings and the recommendation to optimize cost and accuracy jointly.",
+          "optional": false
+        },
+        {
+          "id": "s10m05r05",
+          "kind": "essay",
+          "title": "Building effective agents",
+          "authors": "Schluntz, Zhang (Anthropic)",
+          "year": 2024,
+          "venue": "Anthropic Engineering",
+          "url": "https://www.anthropic.com/research/building-effective-agents",
+          "minutes": 20,
+          "why": "A practitioner guide that distinguishes predefined workflows from agents that direct their own steps; knowing these building blocks helps you design realistic agent conditions in studies.",
+          "focus": "Read the distinction between workflows and agents and the list of common patterns.",
+          "optional": true
+        },
+        {
+          "id": "s10m05r06",
+          "kind": "book",
+          "title": "Human-Centered AI",
+          "authors": "Shneiderman",
+          "year": 2022,
+          "venue": "Oxford University Press",
+          "url": "https://doi.org/10.1093/oso/9780192845290.001.0001",
+          "minutes": 120,
+          "why": "A book-length argument for designing AI that amplifies people, including a framework that treats human control and computer automation as two separate dimensions rather than opposite ends of one scale.",
+          "focus": "Read the chapters that present the two-dimensional HCAI framework; skim the rest.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What was the average result in Vaccaro et al.'s meta-analysis of human-AI combinations?",
+          "choices": [
+            "Combinations were significantly better than the best of humans or AI alone",
+            "Combinations performed significantly worse, on average, than the best of humans or AI alone",
+            "Combinations were exactly as good as AI alone",
+            "There were too few studies to estimate an effect"
+          ],
+          "answer": 1,
+          "explain": "Across 106 experiments and 370 effect sizes, human-AI combinations on average performed worse than the best of humans or AI alone (Hedges' g = −0.23). Complementarity is possible but not the default, consistent with Bansal et al. from the decision-making stage.",
+          "ref": "s10m05r01"
+        },
+        {
+          "q": "Which task type showed gains rather than losses for human-AI combinations in Vaccaro et al.?",
+          "choices": [
+            "Decision tasks such as classification",
+            "Tasks with time pressure",
+            "Tasks where AI alone was much better than humans alone",
+            "Tasks that involved creating content"
+          ],
+          "answer": 3,
+          "explain": "Vaccaro et al. report performance losses in decision-making tasks and significantly greater gains in content creation tasks. They also found gains when humans alone outperformed AI, and losses when AI alone outperformed humans.",
+          "ref": "s10m05r01"
+        },
+        {
+          "q": "According to Vaccaro et al., when did combining humans with AI tend to produce gains?",
+          "choices": [
+            "When humans alone outperformed AI alone",
+            "When AI alone outperformed humans alone",
+            "Only when the AI gave explanations",
+            "Only in studies before 2020"
+          ],
+          "answer": 0,
+          "explain": "When humans were stronger than the AI alone, combinations showed gains; when AI was stronger, combinations showed losses. One interpretation is that people struggle to defer appropriately to a stronger AI, which echoes the reliance-calibration work from earlier stages.",
+          "ref": "s10m05r01"
+        },
+        {
+          "q": "Feng et al. define five levels of agent autonomy by the user's role. Which role corresponds to the highest autonomy?",
+          "choices": [
+            "Operator",
+            "Collaborator",
+            "Observer",
+            "Approver"
+          ],
+          "answer": 2,
+          "explain": "The levels escalate as operator, collaborator, consultant, approver and observer. At the observer level the agent acts on its own and the user mainly watches. Feng et al. argue autonomy should be a deliberate design decision, separate from capability.",
+          "ref": "s10m05r02"
+        },
+        {
+          "q": "What did Shao et al. find when comparing collaborative agents with fully autonomous agents in Collaborative Gym's real-user condition?",
+          "choices": [
+            "Fully autonomous agents won on every task",
+            "The best collaborative agents outperformed their autonomous counterparts, but communication and situational-awareness failures were common",
+            "Real users could not tell the agents apart",
+            "Collaboration helped only in travel planning"
+          ],
+          "answer": 1,
+          "explain": "The best collaborative agents beat fully autonomous ones on travel planning, tabular analysis and related-work writing when judged by real users. Even so, the authors observed communication failures in 65% and situational-awareness failures in 40% of real-condition cases.",
+          "ref": "s10m05r03"
+        },
+        {
+          "q": "What is a central criticism in Kapoor et al.'s 'AI Agents That Matter'?",
+          "choices": [
+            "Agents should never use tools",
+            "Benchmarks have too many holdout sets",
+            "Agent research should stop using LLMs",
+            "Benchmarks focus narrowly on accuracy without accounting for cost, so state-of-the-art agents become needlessly complex and costly"
+          ],
+          "answer": 3,
+          "explain": "Kapoor et al. argue for jointly optimizing cost and accuracy, and also criticize inadequate holdout sets (not too many), conflating the needs of model and downstream developers, and poor reproducibility.",
+          "ref": "s10m05r04"
+        },
+        {
+          "q": "Shneiderman's Human-Centered AI framework challenges the classic one-dimensional levels-of-automation scale. What is its key claim?",
+          "choices": [
+            "High human control and high computer automation can be achieved at the same time",
+            "More automation always means less human control",
+            "Human control should be minimized for safety",
+            "Automation is only acceptable in low-risk tasks"
+          ],
+          "answer": 0,
+          "explain": "Shneiderman treats human control and automation as two separate axes, so designs can aim for both high automation and high human control. That is a useful contrast with one-dimensional levels-of-automation scales and with Feng et al.'s role-based levels.",
+          "ref": "s10m05r06"
+        }
+      ],
+      "exercise": "Choose an agentic task such as booking travel, cleaning a dataset, or drafting a literature review. (1) Place two designs for it at different levels of Feng et al.'s framework (for example, collaborator vs approver) and describe exactly what the user sees and controls in each. (2) Using Vaccaro et al., predict whether a human-agent team will beat the agent alone on this task, and explain why task type and relative human vs AI skill matter. (3) Design a within-subjects study comparing your two designs: outcome quality, time, cost (following Kapoor et al.), number of agent errors the user catches, and one process measure from Collaborative Gym such as communication failures. (4) Name one carryover effect that the within-subjects design risks and how counterbalancing addresses it."
+    }
+  ]
+}

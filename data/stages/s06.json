@@ -1,0 +1,814 @@
+{
+  "id": "s06",
+  "number": 6,
+  "title": "Explainability and Interpretability",
+  "subtitle": "What explanations are, how they are made, and when they mislead",
+  "overview": "Stage 5 showed that people need to calibrate their trust in automation; explanations are the most common proposed fix. This stage shows that 'explanation' means different things to ML researchers, social scientists and end users, that popular explanation methods can mislead, and that an LLM's account of its own reasoning is not guaranteed to reflect what it computed. It ends with mechanistic interpretability, which tries to reverse-engineer the Transformers you studied in Stage 3.",
+  "modules": [
+    {
+      "id": "s06m01",
+      "title": "What is an explanation?",
+      "goal": "Explain what social science says about human explanation, the different goals of interpretability, and how interpretability should be evaluated.",
+      "guide": "Read Miller first: it is long, so focus on its four main findings about how people explain. Lipton then takes apart the word 'interpretability' and shows it covers several different goals and properties. Doshi-Velez and Kim propose how to evaluate interpretability scientifically. Key terms: interpretability (the degree to which a person can understand why a model did what it did); transparency (understanding how the model works internally) versus post-hoc explanation (explaining a model's output after the fact without opening it up); contrastive explanation (answering 'why P rather than Q?'); explainee (the person receiving the explanation).",
+      "resources": [
+        {
+          "id": "s06m01r01",
+          "kind": "paper",
+          "title": "Explanation in Artificial Intelligence: Insights from the Social Sciences",
+          "authors": "Tim Miller",
+          "year": 2019,
+          "venue": "Artificial Intelligence",
+          "url": "https://arxiv.org/abs/1706.07269",
+          "arxiv": "1706.07269",
+          "minutes": 60,
+          "why": "The most cited bridge between XAI and the social science of explanation; it argues XAI should be built on how people actually explain.",
+          "focus": "Sections 1 and 2 including the four major findings; skim the remaining sections and read the conclusion.",
+          "optional": false
+        },
+        {
+          "id": "s06m01r02",
+          "kind": "paper",
+          "title": "The Mythos of Model Interpretability",
+          "authors": "Zachary C. Lipton",
+          "year": 2016,
+          "venue": "ACM Queue (2018)",
+          "url": "https://arxiv.org/abs/1606.03490",
+          "arxiv": "1606.03490",
+          "minutes": 30,
+          "why": "Shows that 'interpretable' is used for several different goals and properties, so you should always ask which one a paper means.",
+          "optional": false
+        },
+        {
+          "id": "s06m01r03",
+          "kind": "paper",
+          "title": "Towards A Rigorous Science of Interpretable Machine Learning",
+          "authors": "Finale Doshi-Velez, Been Kim",
+          "year": 2017,
+          "venue": "arXiv",
+          "url": "https://arxiv.org/abs/1702.08608",
+          "arxiv": "1702.08608",
+          "minutes": 30,
+          "why": "Gives the standard three-level taxonomy for evaluating interpretability, which HAI studies use to describe their own designs.",
+          "focus": "Sections 1-3, especially the taxonomy of evaluation approaches.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "According to Miller, explanations people give are typically 'contrastive'. What does that mean?",
+          "choices": [
+            "They contrast the model with competing models",
+            "They answer why one outcome happened rather than some other expected outcome",
+            "They use high-contrast visuals",
+            "They list every possible cause"
+          ],
+          "answer": 1,
+          "explain": "Miller's first finding: people ask 'why P rather than Q?', where Q is often implicit. An explanation that ignores the user's expected alternative may not answer their actual question.",
+          "ref": "s06m01r01"
+        },
+        {
+          "q": "Which of these is one of Miller's main findings about human explanation?",
+          "choices": [
+            "People want every contributing cause listed",
+            "Statistical probabilities are the most satisfying explanations",
+            "People select a small number of causes from many possible ones, and probabilities matter less than causes",
+            "Explanations are the same no matter who receives them"
+          ],
+          "answer": 2,
+          "explain": "Miller reports that explanations are selected (people pick one or two causes using biases), that probabilities matter less than causal stories, and that explanations are social, tailored to the explainee.",
+          "ref": "s06m01r01"
+        },
+        {
+          "q": "What does Miller mean by calling explanations 'social'?",
+          "choices": [
+            "They are a transfer of knowledge in a conversation, shaped by what the explainer believes the explainee knows",
+            "They should be posted on social media",
+            "They must be written by a group",
+            "They are only about social topics"
+          ],
+          "answer": 0,
+          "explain": "Miller treats explanation as part of a conversation between explainer and explainee. This is why a single fixed explanation for every user often falls short.",
+          "ref": "s06m01r01"
+        },
+        {
+          "q": "Lipton separates two broad families of interpretability. What are they?",
+          "choices": [
+            "Global and local accuracy",
+            "Supervised and unsupervised",
+            "Fast and slow",
+            "Transparency (understanding how the model works) and post-hoc interpretability (explaining its outputs after the fact)"
+          ],
+          "answer": 3,
+          "explain": "Lipton lists transparency at the level of the whole model, its components and its training algorithm, versus post-hoc methods such as text explanations, visualizations, local explanations and explanation by example.",
+          "ref": "s06m01r02"
+        },
+        {
+          "q": "Which claim does Lipton make about linear models?",
+          "choices": [
+            "They are always perfectly interpretable",
+            "They are not automatically more interpretable than deep networks, for example when they rely on many heavily engineered features",
+            "They should never be used",
+            "They are always less accurate than deep networks"
+          ],
+          "answer": 1,
+          "explain": "Lipton challenges the common assumption that linear models are interpretable by default; it depends on which notion of interpretability you mean and on the inputs.",
+          "ref": "s06m01r02"
+        },
+        {
+          "q": "A team tests explanations by having radiologists use them during their real diagnostic work. In Doshi-Velez and Kim's taxonomy this is:",
+          "choices": [
+            "Functionally-grounded evaluation",
+            "Human-grounded evaluation",
+            "Application-grounded evaluation",
+            "Proxy evaluation"
+          ],
+          "answer": 2,
+          "explain": "Application-grounded means real users on the real task. Human-grounded uses real people on simplified tasks; functionally-grounded uses no humans, only a formal proxy for interpretability.",
+          "ref": "s06m01r03"
+        },
+        {
+          "q": "Why, according to Doshi-Velez and Kim, is interpretability needed at all?",
+          "choices": [
+            "Because some goals, such as safety or fairness, cannot be fully written into the model's objective, leaving an incompleteness that humans must check",
+            "Because all models are inaccurate",
+            "Because regulations require it in every country",
+            "Because users enjoy explanations"
+          ],
+          "answer": 0,
+          "explain": "They argue the need arises from incompleteness in how the problem is formalized: when we cannot fully specify what we want, we need to inspect how the model reaches its outputs.",
+          "ref": "s06m01r03"
+        }
+      ],
+      "exercise": "Take one output from an AI product you use, such as a loan decision or a recommendation. Write three explanations for it: a feature-based one, a contrastive one in Miller's sense, and an example-based one. Then say which of Doshi-Velez and Kim's evaluation levels you would use to compare them, and why."
+    },
+    {
+      "id": "s06m02",
+      "title": "Explanation techniques and their limits",
+      "goal": "Explain how LIME, SHAP and Integrated Gradients produce explanations, how sanity checks reveal misleading ones, and Rudin's case for interpretable models.",
+      "guide": "Use Molnar's book chapters as the gentle introduction, then read the LIME and SHAP papers. Integrated Gradients introduces the idea of 'axioms' an attribution method should satisfy. Adebayo et al. show that some popular saliency maps barely depend on the model at all. Rudin argues that for high-stakes decisions you should not be explaining black boxes at all. Key terms: feature attribution (assigning each input feature a share of credit for the output); local explanation (explaining one prediction, not the whole model); surrogate model (a simple model that imitates a complex one near an input); Shapley value (a method from game theory for fairly dividing a payoff among players); saliency map (an image highlighting which pixels mattered); baseline (a reference input, such as a black image, to compare against).",
+      "resources": [
+        {
+          "id": "s06m02r01",
+          "kind": "book",
+          "title": "Interpretable Machine Learning",
+          "authors": "Christoph Molnar",
+          "year": 2025,
+          "venue": "Online book, 3rd edition",
+          "url": "https://christophm.github.io/interpretable-ml-book/lime.html",
+          "listen": "https://christophm.github.io/interpretable-ml-book/lime.html",
+          "minutes": 40,
+          "why": "The standard free textbook on explanation methods, with clear, non-mathematical chapters on each technique.",
+          "focus": "The linked LIME chapter, then the SHAP and Saliency Maps chapters in the same book.",
+          "optional": false
+        },
+        {
+          "id": "s06m02r02",
+          "kind": "paper",
+          "title": "\"Why Should I Trust You?\": Explaining the Predictions of Any Classifier",
+          "authors": "Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin",
+          "year": 2016,
+          "venue": "KDD",
+          "url": "https://arxiv.org/abs/1602.04938",
+          "arxiv": "1602.04938",
+          "minutes": 35,
+          "why": "LIME is one of the most used explanation methods, and the paper includes user studies of whether explanations help people judge a model.",
+          "focus": "Sections 1-3 (the method) and the user experiments, including the husky-versus-wolf study.",
+          "optional": false
+        },
+        {
+          "id": "s06m02r03",
+          "kind": "paper",
+          "title": "A Unified Approach to Interpreting Model Predictions",
+          "authors": "Scott Lundberg, Su-In Lee",
+          "year": 2017,
+          "venue": "NeurIPS",
+          "url": "https://arxiv.org/abs/1705.07874",
+          "arxiv": "1705.07874",
+          "minutes": 35,
+          "why": "SHAP is the most widely deployed attribution method in industry; this paper explains what it guarantees.",
+          "focus": "Sections 1-3: the class of additive feature attribution methods and the three properties. Skim the estimation methods.",
+          "optional": false
+        },
+        {
+          "id": "s06m02r04",
+          "kind": "paper",
+          "title": "Axiomatic Attribution for Deep Networks",
+          "authors": "Mukund Sundararajan, Ankur Taly, Qiqi Yan",
+          "year": 2017,
+          "venue": "ICML",
+          "url": "https://arxiv.org/abs/1703.01365",
+          "arxiv": "1703.01365",
+          "minutes": 30,
+          "why": "Introduces Integrated Gradients and the idea of judging attribution methods by axioms rather than by whether their output looks plausible.",
+          "focus": "Sections 1-3 (the two axioms and the method).",
+          "optional": false
+        },
+        {
+          "id": "s06m02r05",
+          "kind": "paper",
+          "title": "Sanity Checks for Saliency Maps",
+          "authors": "Adebayo, Gilmer, Muelly, Goodfellow, Hardt, Kim",
+          "year": 2018,
+          "venue": "NeurIPS",
+          "url": "https://arxiv.org/abs/1810.03292",
+          "arxiv": "1810.03292",
+          "minutes": 35,
+          "why": "Shows that an explanation can look convincing while telling you almost nothing about the model, a central caution for any user study of explanations.",
+          "focus": "Sections 1-3 and the randomization test figures.",
+          "optional": false
+        },
+        {
+          "id": "s06m02r06",
+          "kind": "paper",
+          "title": "Stop Explaining Black Box Machine Learning Models for High Stakes Decisions and Use Interpretable Models Instead",
+          "authors": "Cynthia Rudin",
+          "year": 2019,
+          "venue": "Nature Machine Intelligence",
+          "url": "https://arxiv.org/abs/1811.10154",
+          "arxiv": "1811.10154",
+          "minutes": 35,
+          "why": "An influential argument against post-hoc explanation in high-stakes settings such as criminal justice and healthcare.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "How does LIME explain a single prediction?",
+          "choices": [
+            "It reads the model's weights directly",
+            "It retrains the model on a smaller dataset",
+            "It perturbs the input, queries the black-box model on those variations, and fits a simple, interpretable model weighted toward samples close to the original input",
+            "It asks a human expert to annotate the input"
+          ],
+          "answer": 2,
+          "explain": "LIME is model-agnostic: it only needs to query the model. The simple surrogate is meant to be faithful locally, near that input, not across the whole model.",
+          "ref": "s06m02r02"
+        },
+        {
+          "q": "In LIME's husky-versus-wolf experiment, what did the explanations reveal?",
+          "choices": [
+            "The classifier was relying on snow in the background rather than on the animal",
+            "The classifier was perfect",
+            "Huskies and wolves are genetically identical",
+            "Users preferred no explanations"
+          ],
+          "answer": 0,
+          "explain": "Ribeiro et al. deliberately trained a flawed classifier in which wolf photos had snow. Explanations helped participants see the model was untrustworthy and identify snow as the feature it used.",
+          "ref": "s06m02r02"
+        },
+        {
+          "q": "What do Lundberg and Lee prove about SHAP values?",
+          "choices": [
+            "They are the fastest attributions to compute",
+            "Within the class of additive feature attribution methods, Shapley values are the unique solution satisfying local accuracy, missingness and consistency",
+            "They always match human intuition",
+            "They work only for linear models"
+          ],
+          "answer": 1,
+          "explain": "The paper unifies several earlier methods, including LIME, as additive feature attributions and shows that only Shapley values satisfy the three properties. These are mathematical guarantees, not guarantees that users will understand them.",
+          "ref": "s06m02r03"
+        },
+        {
+          "q": "Integrated Gradients satisfies 'completeness'. What does that mean?",
+          "choices": [
+            "Every pixel receives a positive attribution",
+            "The method explains every model in existence",
+            "Attributions are computed for every training example",
+            "The attributions add up to the difference between the model's output on the input and its output on the baseline"
+          ],
+          "answer": 3,
+          "explain": "Integrated Gradients accumulates gradients along a straight path from a baseline (such as a black image) to the input, so attributions sum to the output difference. The choice of baseline therefore affects the explanation.",
+          "ref": "s06m02r04"
+        },
+        {
+          "q": "What did Adebayo et al.'s model-randomization test show for some popular saliency methods, such as Guided Backpropagation?",
+          "choices": [
+            "Their maps changed completely when the model's weights were randomized",
+            "Their maps looked much the same even after the model's weights were randomized, so they were not reflecting what the model had learned",
+            "They became more accurate on random models",
+            "They could not be computed on random models"
+          ],
+          "answer": 1,
+          "explain": "If an explanation barely changes when the model is destroyed, it cannot be telling you about the model. Adebayo et al. compare such methods to edge detectors, while plain gradients and GradCAM passed the test.",
+          "ref": "s06m02r05"
+        },
+        {
+          "q": "What is Rudin's main recommendation?",
+          "choices": [
+            "For high-stakes decisions, use inherently interpretable models instead of explaining black boxes after the fact",
+            "Always use the most accurate black box and add SHAP",
+            "Avoid machine learning in high-stakes settings entirely",
+            "Explanations should be written by lawyers"
+          ],
+          "answer": 0,
+          "explain": "Rudin argues that post-hoc explanations of black boxes can be unfaithful and that the assumed trade-off between accuracy and interpretability often does not hold for structured data, using criminal-justice risk prediction as an example.",
+          "ref": "s06m02r06"
+        },
+        {
+          "q": "Clinicians in a study say a saliency map 'looks reasonable'. Based on Adebayo et al., why is that not enough?",
+          "choices": [
+            "Clinicians cannot read images",
+            "Saliency maps are always wrong",
+            "Looking plausible to people does not show that the map depends on what the model learned; sanity checks are needed",
+            "Saliency maps cannot be shown to users"
+          ],
+          "answer": 2,
+          "explain": "Adebayo et al. warn that visual inspection alone can be misleading, because some maps look plausible even for a randomized model.",
+          "ref": "s06m02r05"
+        }
+      ],
+      "exercise": "Design a user study testing whether SHAP explanations improve appropriate reliance (not just trust) on a loan-approval model. Include a condition with a deliberately flawed model, as in LIME's husky-versus-wolf experiment. State what pattern of results would show that explanations help, and what pattern would show they merely increase trust."
+    },
+    {
+      "id": "s06m03",
+      "title": "Human-centered XAI",
+      "goal": "Explain how HCI researchers design and evaluate explanations around users' questions, and why faithfulness differs from plausibility.",
+      "guide": "Liao, Gruen and Miller start from what practitioners and users actually ask about AI. Wang et al. connect theories of human reasoning to specific XAI techniques. Kulesza et al. show explanations as part of a two-way interaction where users also correct the model. Jacovi and Goldberg give the crucial distinction between an explanation being convincing and being accurate. Ehsan and Riedl (optional) widen the view to social context. Key terms: XAI question bank (a list of typical user questions, such as 'why' or 'what if'); counterfactual explanation (what would have to change for a different outcome); faithfulness (how accurately an explanation reflects the model's real reasoning); plausibility (how convincing an explanation is to people); sociotechnical (involving both technology and the people and institutions around it).",
+      "resources": [
+        {
+          "id": "s06m03r01",
+          "kind": "paper",
+          "title": "Questioning the AI: Informing Design Practices for Explainable AI User Experiences",
+          "authors": "Q. Vera Liao, Daniel Gruen, Sarah Miller",
+          "year": 2020,
+          "venue": "CHI",
+          "url": "https://arxiv.org/abs/2001.02478",
+          "arxiv": "2001.02478",
+          "minutes": 40,
+          "why": "The XAI question bank is a widely used tool for designing explanations around user needs.",
+          "focus": "The method (interviews with practitioners), the question bank table, and the design implications.",
+          "optional": false
+        },
+        {
+          "id": "s06m03r02",
+          "kind": "paper",
+          "title": "Designing Theory-Driven User-Centric Explainable AI",
+          "authors": "Danding Wang, Qian Yang, Ashraf Abdul, Brian Y. Lim",
+          "year": 2019,
+          "venue": "CHI",
+          "url": "https://doi.org/10.1145/3290605.3300831",
+          "minutes": 40,
+          "why": "Links theories of human reasoning and cognitive biases to XAI techniques, and applies them in a clinical tool.",
+          "focus": "The conceptual framework figure, the section on mitigating cognitive biases, and the clinical case study.",
+          "optional": false
+        },
+        {
+          "id": "s06m03r03",
+          "kind": "paper",
+          "title": "Principles of Explanatory Debugging to Personalize Interactive Machine Learning",
+          "authors": "Todd Kulesza, Margaret Burnett, Weng-Keen Wong, Simone Stumpf",
+          "year": 2015,
+          "venue": "IUI",
+          "url": "https://doi.org/10.1145/2678025.2701399",
+          "minutes": 35,
+          "why": "Treats explanation as a two-way loop: the system explains itself and the user corrects it, which is central to interactive ML.",
+          "focus": "The principles of explainability and correctability, the EluciDebug prototype, and the main results.",
+          "optional": false
+        },
+        {
+          "id": "s06m03r04",
+          "kind": "paper",
+          "title": "Towards Faithfully Interpretable NLP Systems: How should we define and evaluate faithfulness?",
+          "authors": "Alon Jacovi, Yoav Goldberg",
+          "year": 2020,
+          "venue": "ACL",
+          "url": "https://arxiv.org/abs/2004.03685",
+          "arxiv": "2004.03685",
+          "minutes": 30,
+          "why": "Separates faithfulness from plausibility, a distinction every HAI study of explanations must respect.",
+          "focus": "Sections 1-3, including the guidelines for evaluating faithfulness.",
+          "optional": false
+        },
+        {
+          "id": "s06m03r05",
+          "kind": "paper",
+          "title": "Human-centered Explainable AI: Towards a Reflective Sociotechnical Approach",
+          "authors": "Upol Ehsan, Mark O. Riedl",
+          "year": 2020,
+          "venue": "HCI International",
+          "url": "https://arxiv.org/abs/2002.01092",
+          "arxiv": "2002.01092",
+          "minutes": 30,
+          "why": "Argues that understanding 'who' the human is, including values and social context, is essential to XAI.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "How did Liao, Gruen and Miller gather their findings?",
+          "choices": [
+            "A large online survey of end users",
+            "Interviews with 20 UX and design practitioners working on AI products, using an XAI question bank as a probe",
+            "Benchmarking explanation algorithms",
+            "Eye tracking of radiologists"
+          ],
+          "answer": 1,
+          "explain": "The paper interviews practitioners to find gaps between XAI algorithms and product needs, and uses the question bank as a study probe.",
+          "ref": "s06m03r01"
+        },
+        {
+          "q": "A loan applicant asks: 'What would I need to change to get approved?' Which category of Liao et al.'s question bank is this?",
+          "choices": [
+            "Performance",
+            "Data",
+            "How to be that (a counterfactual question about getting a different outcome)",
+            "How (global model logic)"
+          ],
+          "answer": 2,
+          "explain": "The question bank separates 'Why', 'Why not', 'What if', 'How to be that', 'How to still be this' and others. Asking how to reach a different outcome is 'How to be that', answered by counterfactual explanations.",
+          "ref": "s06m03r01"
+        },
+        {
+          "q": "What do Wang et al. contribute beyond proposing a framework?",
+          "choices": [
+            "A new deep learning architecture",
+            "A proof that explanations always reduce bias",
+            "A benchmark of saliency methods",
+            "An explainable clinical diagnostic tool for intensive care, built using the framework and examined in a co-design exercise with clinicians"
+          ],
+          "answer": 3,
+          "explain": "Wang et al. draw on philosophy and psychology to link reasoning processes and cognitive biases to XAI features, then apply the framework in a clinical prototype.",
+          "ref": "s06m03r02"
+        },
+        {
+          "q": "Kulesza et al.'s Explanatory Debugging has two core principles. Which pair is it?",
+          "choices": [
+            "Explainability and correctability",
+            "Accuracy and speed",
+            "Privacy and fairness",
+            "Simplicity and novelty"
+          ],
+          "answer": 0,
+          "explain": "The system should explain its reasoning (iteratively, soundly and completely, without overwhelming the user) and let users correct it in actionable, reversible ways that are always honored.",
+          "ref": "s06m03r03"
+        },
+        {
+          "q": "According to Jacovi and Goldberg, what is the difference between faithfulness and plausibility?",
+          "choices": [
+            "They are two names for the same property",
+            "Faithfulness is about how convincing an explanation is; plausibility is about accuracy",
+            "Faithfulness is how accurately an explanation reflects the model's actual reasoning; plausibility is how convincing it is to humans",
+            "Plausibility applies only to images"
+          ],
+          "answer": 2,
+          "explain": "An explanation can be highly plausible and completely unfaithful. The two must be evaluated separately.",
+          "ref": "s06m03r04"
+        },
+        {
+          "q": "Why do Jacovi and Goldberg advise against using human ratings to evaluate faithfulness?",
+          "choices": [
+            "Humans are too slow",
+            "Human ratings measure how plausible an explanation seems, not whether it reflects the model's real reasoning",
+            "Human ratings are always biased toward negative scores",
+            "Ethics boards forbid it"
+          ],
+          "answer": 1,
+          "explain": "People cannot see inside the model, so their judgments reflect plausibility. Faithfulness needs tests against the model itself.",
+          "ref": "s06m03r04"
+        },
+        {
+          "q": "What do Ehsan and Riedl argue Human-centered XAI must understand more fully?",
+          "choices": [
+            "'Who' the human is, including their values, interpersonal dynamics and the social setting of the AI system",
+            "The exact gradient of each layer",
+            "How to remove humans from decision loops",
+            "The hardware the model runs on"
+          ],
+          "answer": 0,
+          "explain": "Ehsan and Riedl call for a reflective, sociotechnical approach that draws on methods such as value-sensitive and participatory design.",
+          "ref": "s06m03r05"
+        }
+      ],
+      "exercise": "Pick one category from Liao et al.'s question bank (for example 'Why not'). For a concrete AI product, choose an explanation technique from the previous module that could answer it. Then describe two separate evaluations: one testing faithfulness without human judges, and one testing usefulness with real users, following Jacovi and Goldberg's distinction."
+    },
+    {
+      "id": "s06m04",
+      "title": "Do LLMs explain themselves faithfully?",
+      "goal": "Explain the evidence that chain-of-thought explanations can be unfaithful, how faithfulness is tested, and what this means for users who read them.",
+      "guide": "Recall chain-of-thought from Stage 4: the model writes its reasoning before answering. Turpin et al. show that those written steps can leave out what actually drove the answer. Lanham et al. test faithfulness by tampering with the reasoning and seeing whether the answer changes. Chen et al. extend the question to recent 'reasoning models'. Kadavath et al. (optional) ask a related question: can models tell when they know the answer? Key terms: unfaithful explanation (a plausible account that does not reflect the actual cause of the output); biasing feature (a cue added to the prompt that pushes the model toward an answer); post-hoc rationalization (an explanation built to justify an answer already chosen); calibration (whether stated confidence matches actual accuracy).",
+      "resources": [
+        {
+          "id": "s06m04r01",
+          "kind": "paper",
+          "title": "Language Models Don't Always Say What They Think: Unfaithful Explanations in Chain-of-Thought Prompting",
+          "authors": "Miles Turpin, Julian Michael, Ethan Perez, Samuel R. Bowman",
+          "year": 2023,
+          "venue": "NeurIPS",
+          "url": "https://arxiv.org/abs/2305.04388",
+          "arxiv": "2305.04388",
+          "minutes": 35,
+          "why": "Direct evidence that the reasoning an LLM shows users can omit the real reason for its answer.",
+          "focus": "Sections 1-3 and the main results figure; note the social-bias experiments.",
+          "optional": false
+        },
+        {
+          "id": "s06m04r02",
+          "kind": "paper",
+          "title": "Measuring Faithfulness in Chain-of-Thought Reasoning",
+          "authors": "Lanham, Chen, Radhakrishnan, Steiner, et al.",
+          "year": 2023,
+          "venue": "arXiv (Anthropic)",
+          "url": "https://arxiv.org/abs/2307.13702",
+          "arxiv": "2307.13702",
+          "minutes": 35,
+          "why": "Introduces intervention tests for chain-of-thought faithfulness and finds that it varies with task and model size.",
+          "focus": "Sections 1-2 (the interventions) and the results on model size.",
+          "optional": false
+        },
+        {
+          "id": "s06m04r03",
+          "kind": "paper",
+          "title": "Reasoning Models Don't Always Say What They Think",
+          "authors": "Chen, Benton, Radhakrishnan, Uesato, et al.",
+          "year": 2025,
+          "venue": "arXiv (Anthropic)",
+          "url": "https://arxiv.org/abs/2505.05410",
+          "arxiv": "2505.05410",
+          "minutes": 35,
+          "why": "Tests whether the visible reasoning of current reasoning models reveals when they used a hint, which matters for anyone relying on reasoning traces for oversight.",
+          "focus": "Abstract, introduction and main results on how often hint use is verbalized.",
+          "optional": false
+        },
+        {
+          "id": "s06m04r04",
+          "kind": "paper",
+          "title": "Language Models (Mostly) Know What They Know",
+          "authors": "Kadavath, Conerly, Askell, Henighan, et al.",
+          "year": 2022,
+          "venue": "arXiv (Anthropic)",
+          "url": "https://arxiv.org/abs/2207.05221",
+          "arxiv": "2207.05221",
+          "minutes": 40,
+          "why": "Studies whether models can estimate their own correctness, the basis for showing users confidence signals.",
+          "focus": "Section 1 and the sections introducing P(True) and P(IK).",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "How did Turpin et al. bias models in their experiments?",
+          "choices": [
+            "By retraining the models on biased data",
+            "By adding features to the prompt, such as reordering few-shot answers so the correct one is always '(A)', or having the user suggest an answer",
+            "By deleting parts of the model",
+            "By translating the questions"
+          ],
+          "answer": 1,
+          "explain": "Turpin et al. added biasing cues to the prompt and then checked whether the chain-of-thought explanations mentioned those cues.",
+          "ref": "s06m04r01"
+        },
+        {
+          "q": "What did Turpin et al. find about the explanations models gave under these biases?",
+          "choices": [
+            "The explanations almost always mentioned the bias",
+            "The models refused to answer",
+            "Accuracy improved",
+            "The models' answers shifted toward the biased option, but their explanations rarely mentioned the bias and instead rationalized the answer"
+          ],
+          "answer": 3,
+          "explain": "The explanations were plausible but unfaithful: they gave reasons for the biased answer without acknowledging the real influence. On a social-bias task, explanations justified stereotype-aligned answers without mentioning stereotypes.",
+          "ref": "s06m04r01"
+        },
+        {
+          "q": "Which of these is one of Lanham et al.'s tests of chain-of-thought faithfulness?",
+          "choices": [
+            "Truncating the reasoning early or inserting a mistake, and checking whether the final answer changes",
+            "Asking users to rate the reasoning",
+            "Comparing reasoning length to accuracy",
+            "Translating the reasoning to another language"
+          ],
+          "answer": 0,
+          "explain": "If the answer does not change when the reasoning is cut short or corrupted, the model was not really relying on that reasoning. Other tests paraphrase the reasoning or replace it with filler tokens.",
+          "ref": "s06m04r02"
+        },
+        {
+          "q": "Why did Lanham et al. replace the chain of thought with filler tokens such as '...'?",
+          "choices": [
+            "To make outputs shorter for users",
+            "To test whether any gain comes simply from extra computation over more tokens rather than from the content of the reasoning",
+            "To hide the answer",
+            "To reduce cost"
+          ],
+          "answer": 1,
+          "explain": "Filler tokens give the model more positions to compute with but no reasoning content. They did not reproduce the benefit of chain-of-thought.",
+          "ref": "s06m04r02"
+        },
+        {
+          "q": "What did Lanham et al. find about model size and faithfulness?",
+          "choices": [
+            "Larger models were always more faithful",
+            "Size made no difference",
+            "On most tasks, larger and more capable models produced less faithful reasoning",
+            "Only the smallest models used chain-of-thought"
+          ],
+          "answer": 2,
+          "explain": "Lanham et al. report that faithfulness often decreased with scale, suggesting one might choose a smaller model when faithful reasoning matters.",
+          "ref": "s06m04r02"
+        },
+        {
+          "q": "What did Chen et al. (2025) find about reasoning models' chains of thought?",
+          "choices": [
+            "They always disclose when they use a hint",
+            "They never use hints",
+            "When models used a hint in the prompt, their reasoning often did not mention it; in most settings the reveal rate was below 20%",
+            "Reinforcement learning made them perfectly faithful"
+          ],
+          "answer": 2,
+          "explain": "The models mentioned hint use in at least some cases, but often in under 20% of them. Outcome-based RL improved faithfulness at first and then plateaued, so reading the chain of thought cannot rule out hidden influences.",
+          "ref": "s06m04r03"
+        },
+        {
+          "q": "From an HAI perspective, why do these findings matter for products that show users the model's reasoning?",
+          "choices": [
+            "Visible reasoning can make answers look justified and raise trust even when it does not reflect the true cause, which can encourage over-reliance",
+            "Users never read reasoning traces",
+            "Reasoning traces are always faithful for commercial models",
+            "Showing reasoning makes models more accurate"
+          ],
+          "answer": 0,
+          "explain": "Turpin et al. note that plausible but unfaithful explanations can increase trust without increasing safety, which connects to automation bias and trust calibration from Stage 5.",
+          "ref": "s06m04r01"
+        }
+      ],
+      "exercise": "Design a user study testing whether showing an LLM's chain of thought changes people's reliance when that reasoning is unfaithful. Use Turpin et al.'s biasing cues to create trials with unfaithful reasoning. What is your dependent measure, what are your conditions, and what result would show that displaying reasoning is harmful?"
+    },
+    {
+      "id": "s06m05",
+      "title": "Mechanistic interpretability",
+      "goal": "Explain the core ideas of mechanistic interpretability (features, circuits, superposition, sparse dictionary learning) and what they have revealed about language models.",
+      "guide": "This module goes inside the model. Start with 'Zoom In', which sets out the research program on image models. The 'Mathematical Framework' paper applies it to Transformers; read it slowly with your Stage 3 notes. 'Toy Models of Superposition' explains why single neurons are often hard to interpret, and the two Monosemanticity papers show how sparse autoencoders get around this, first on a tiny model and then on a production model. 'Biology of a Large Language Model' (optional) traces whole computations. Key terms: feature (a property of the input that the network represents, like 'curve' or 'Golden Gate Bridge'); circuit (features connected by weights that implement a computation); polysemantic neuron (one neuron responding to several unrelated things); superposition (representing more features than there are dimensions); residual stream (the running vector each Transformer layer reads from and adds to); sparse autoencoder (a network trained to rewrite activations as a few active features out of many).",
+      "resources": [
+        {
+          "id": "s06m05r01",
+          "kind": "essay",
+          "title": "Zoom In: An Introduction to Circuits",
+          "authors": "Olah, Cammarata, Schubert, Goh, Petrov, Carter",
+          "year": 2020,
+          "venue": "Distill",
+          "url": "https://distill.pub/2020/circuits/zoom-in/",
+          "listen": "https://distill.pub/2020/circuits/zoom-in/",
+          "minutes": 35,
+          "why": "The manifesto of mechanistic interpretability, written accessibly and full of concrete examples.",
+          "optional": false
+        },
+        {
+          "id": "s06m05r02",
+          "kind": "essay",
+          "title": "A Mathematical Framework for Transformer Circuits",
+          "authors": "Elhage, Nanda, Olsson, Henighan, et al.",
+          "year": 2021,
+          "venue": "Transformer Circuits Thread",
+          "url": "https://transformer-circuits.pub/2021/framework/index.html",
+          "listen": "https://transformer-circuits.pub/2021/framework/index.html",
+          "minutes": 75,
+          "why": "Gives the conceptual tools (residual stream, attention-head circuits, induction heads) used in most later work on Transformers.",
+          "focus": "The summary, the residual stream section, one-layer models, and the two-layer induction head section. Skip the detailed math on a first pass.",
+          "optional": false
+        },
+        {
+          "id": "s06m05r03",
+          "kind": "paper",
+          "title": "Toy Models of Superposition",
+          "authors": "Elhage, Hume, Olsson, Schiefer, et al.",
+          "year": 2022,
+          "venue": "Transformer Circuits Thread",
+          "url": "https://arxiv.org/abs/2209.10652",
+          "arxiv": "2209.10652",
+          "minutes": 45,
+          "why": "Explains why individual neurons are often uninterpretable, which motivates the dictionary-learning methods below.",
+          "focus": "The introduction and key results summary, plus the first demonstration of superposition. Skim the geometry sections.",
+          "optional": false
+        },
+        {
+          "id": "s06m05r04",
+          "kind": "essay",
+          "title": "Towards Monosemanticity: Decomposing Language Models With Dictionary Learning",
+          "authors": "Bricken, Templeton, Batson, Chen, et al.",
+          "year": 2023,
+          "venue": "Transformer Circuits Thread",
+          "url": "https://transformer-circuits.pub/2023/monosemantic-features/index.html",
+          "listen": "https://transformer-circuits.pub/2023/monosemantic-features/index.html",
+          "minutes": 45,
+          "why": "Shows that sparse autoencoders can split a small model's activations into far more interpretable features than its neurons.",
+          "focus": "The summary of results, the problem setup, and the detailed investigations of a few features.",
+          "optional": false
+        },
+        {
+          "id": "s06m05r05",
+          "kind": "essay",
+          "title": "Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet",
+          "authors": "Templeton, Conerly, Marcus, Lindsey, et al.",
+          "year": 2024,
+          "venue": "Transformer Circuits Thread",
+          "url": "https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html",
+          "listen": "https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html",
+          "minutes": 45,
+          "why": "Scales dictionary learning to a production model and finds abstract and safety-relevant features that can be used to steer behavior.",
+          "focus": "The key results, the feature examples (including the Golden Gate Bridge feature), feature steering, and the safety-relevant features section.",
+          "optional": false
+        },
+        {
+          "id": "s06m05r06",
+          "kind": "essay",
+          "title": "On the Biology of a Large Language Model",
+          "authors": "Lindsey, Gurnee, Ameisen, Chen, et al.",
+          "year": 2025,
+          "venue": "Transformer Circuits Thread",
+          "url": "https://transformer-circuits.pub/2025/attribution-graphs/biology.html",
+          "listen": "https://transformer-circuits.pub/2025/attribution-graphs/biology.html",
+          "minutes": 60,
+          "why": "Traces specific computations inside a production model, including a case study on chain-of-thought faithfulness that links back to module 4.",
+          "focus": "The introduction, then the case studies on multi-step reasoning, planning in poems, and chain-of-thought faithfulness.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Which three claims does 'Zoom In' propose?",
+          "choices": [
+            "Neural networks are linear, sparse and small",
+            "Features are the fundamental unit of networks; features connected by weights form circuits; similar features and circuits form across different models (universality)",
+            "Interpretability is impossible, unnecessary and dangerous",
+            "Attention is all you need, scale is all you need, data is all you need"
+          ],
+          "answer": 1,
+          "explain": "Olah et al. present these as speculative claims supported by evidence from image models, such as curve detectors and a car detector built from window, body and wheel detectors.",
+          "ref": "s06m05r01"
+        },
+        {
+          "q": "What is a 'polysemantic' neuron, as described in Zoom In?",
+          "choices": [
+            "A neuron that responds to several unrelated things, such as cat faces and fronts of cars",
+            "A neuron that never activates",
+            "A neuron that processes several languages",
+            "A neuron that is duplicated across layers"
+          ],
+          "answer": 0,
+          "explain": "Polysemantic neurons make neuron-by-neuron analysis hard. 'Toy Models of Superposition' offers an explanation for why they occur.",
+          "ref": "s06m05r01"
+        },
+        {
+          "q": "In 'A Mathematical Framework for Transformer Circuits', what is an induction head?",
+          "choices": [
+            "The first attention head in every model",
+            "A head that only attends to the first token",
+            "A head that predicts the next word from word frequencies alone",
+            "A mechanism, formed by attention heads in different layers working together, that finds an earlier occurrence of the current token and predicts the token that followed it"
+          ],
+          "answer": 3,
+          "explain": "Induction heads complete patterns like '[A][B] ... [A] -> [B]'. They need composition between heads in two layers, which is why they appear in two-layer but not one-layer attention-only models.",
+          "ref": "s06m05r02"
+        },
+        {
+          "q": "What is superposition, according to Elhage et al. (2022)?",
+          "choices": [
+            "Running two models at the same time",
+            "Stacking layers on top of each other",
+            "A network representing more features than it has dimensions, which works when features are sparse but causes interference",
+            "Averaging the weights of several models"
+          ],
+          "answer": 2,
+          "explain": "When features rarely occur together, a network can pack many into fewer dimensions. This explains polysemantic neurons: each neuron participates in several features.",
+          "ref": "s06m05r03"
+        },
+        {
+          "q": "What method does 'Towards Monosemanticity' use to find interpretable features?",
+          "choices": [
+            "A sparse autoencoder (dictionary learning) that rewrites a layer's activations as combinations of a larger number of mostly inactive features",
+            "Visualizing individual neurons",
+            "Removing neurons one at a time",
+            "Asking the model to describe itself"
+          ],
+          "answer": 0,
+          "explain": "Bricken et al. trained sparse autoencoders on the MLP activations of a one-layer Transformer and found that the learned features were much more interpretable than the neurons.",
+          "ref": "s06m05r04"
+        },
+        {
+          "q": "What did 'Scaling Monosemanticity' show about the features it found in Claude 3 Sonnet?",
+          "choices": [
+            "They only captured simple word frequencies",
+            "Many were abstract (multilingual and multimodal), and amplifying or suppressing a feature, such as the Golden Gate Bridge feature, changed the model's behavior",
+            "They could not be found in a large model",
+            "They were identical to individual neurons"
+          ],
+          "answer": 1,
+          "explain": "The paper reports abstract features, features relevant to safety such as deception and sycophancy, and steering experiments showing the features causally affect outputs.",
+          "ref": "s06m05r05"
+        },
+        {
+          "q": "In 'On the Biology of a Large Language Model', what did the authors find when the model wrote rhyming poetry?",
+          "choices": [
+            "It picked rhymes at random",
+            "It could not rhyme",
+            "It copied poems from training data",
+            "It planned ahead, representing candidate rhyming words before writing the line that ends with them"
+          ],
+          "answer": 3,
+          "explain": "Lindsey et al. report evidence of planning: the model considered words that would rhyme in advance and built the line toward them, rather than only choosing one word at a time without lookahead.",
+          "ref": "s06m05r06"
+        }
+      ],
+      "exercise": "Mechanistic interpretability results are usually checked by researchers inspecting features, not by end users. Propose how a finding such as a 'sycophancy' feature in Scaling Monosemanticity could become a signal shown to users, and design an evaluation of whether it improves appropriate reliance. What could make such a signal misleading, given what you learned about faithfulness in this stage?"
+    }
+  ]
+}

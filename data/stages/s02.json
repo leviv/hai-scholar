@@ -1,0 +1,532 @@
+{
+  "id": "s02",
+  "number": 2,
+  "title": "Machine Learning from Zero",
+  "subtitle": "What learning means, gradient descent, backpropagation, and deep learning",
+  "overview": "This is the first technical stage. It assumes your CS background (functions, graphs, recursion, big-O) but no machine learning, and builds up to how a neural network learns from data — first through visual explainers, then by writing a tiny automatic-differentiation engine yourself. You need this to read HAI research critically: claims about what AI 'knows', why it fails, and why it is hard to explain all rest on how these systems are trained. Stage 3 builds directly on this to explain language models.",
+  "modules": [
+    {
+      "id": "s02m01",
+      "title": "What is machine learning?",
+      "goal": "Explain, in plain terms, what it means for a program to 'learn' from data, why generalization is the goal, and what a neural network is as a mathematical function.",
+      "guide": "Watch the 3Blue1Brown video first: it shows a neural network as nothing more than a big function with adjustable numbers. Then read Domingos, which steps back to give the twelve lessons practitioners learn the hard way — read it slowly, it is dense. Use the Google crash course as a reference to fill gaps (the early modules on linear regression, classification, and overfitting are the most useful here). Key terms: a 'parameter' is a number inside the model that training adjusts; 'weights' and 'biases' are the parameters of a neural network; 'training data' are the examples the model learns from, and 'test data' are held-out examples used to check it; 'generalization' means performing well on new data, not just the training examples; 'overfitting' is when a model fits the training data (including its noise) but fails on new data.",
+      "resources": [
+        {
+          "id": "s02m01r01",
+          "kind": "video",
+          "title": "But what is a neural network? | Deep learning chapter 1",
+          "authors": "Grant Sanderson (3Blue1Brown)",
+          "year": 2017,
+          "venue": "3Blue1Brown (YouTube)",
+          "url": "https://www.youtube.com/watch?v=aircAruvnKk",
+          "youtube": "aircAruvnKk",
+          "minutes": 19,
+          "why": "The clearest visual introduction to what a neural network actually computes; it removes the mystique, which matters when evaluating claims people make about AI.",
+          "focus": "Pay attention to how the digit-recognition network is structured (layers of neurons, weights, biases) and how many parameters it ends up with."
+        },
+        {
+          "id": "s02m01r02",
+          "kind": "paper",
+          "title": "A few useful things to know about machine learning",
+          "authors": "Pedro Domingos",
+          "year": 2012,
+          "venue": "Communications of the ACM",
+          "url": "https://doi.org/10.1145/2347736.2347755",
+          "minutes": 45,
+          "why": "A compact tour of the lessons that separate textbook ML from practice — generalization, overfitting, the curse of dimensionality, the value of data — written for computer scientists.",
+          "focus": "Read the whole article. Make sure you understand 'learning = representation + evaluation + optimization', 'it's generalization that counts', and 'overfitting has many faces'."
+        },
+        {
+          "id": "s02m01r03",
+          "kind": "course",
+          "title": "Machine Learning Crash Course",
+          "authors": "Google",
+          "year": 2024,
+          "venue": "Google for Developers",
+          "url": "https://developers.google.com/machine-learning/crash-course",
+          "minutes": 120,
+          "why": "A free, practical course with interactive visualizations; useful as a reference whenever a term in this path is unfamiliar.",
+          "focus": "Do the Introduction to ML, Linear regression, Classification, and 'Datasets, generalization, and overfitting' modules. Leave the rest for later.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In the 3Blue1Brown digit-recognition network, what does training actually change?",
+          "choices": [
+            "The number of layers and neurons",
+            "The pixel values of the input images",
+            "The weights and biases — the numbers on the connections and in each neuron",
+            "The labels attached to the training images"
+          ],
+          "answer": 2,
+          "explain": "The video presents the network as a function with about 13,000 weights and biases; 'learning' means finding values for those numbers. The architecture (layers and neurons) is fixed in advance.",
+          "ref": "s02m01r01"
+        },
+        {
+          "q": "Domingos breaks every learning algorithm into three components. Which are they?",
+          "choices": [
+            "Data, compute, and labels",
+            "Representation, evaluation, and optimization",
+            "Input, hidden, and output layers",
+            "Training, validation, and testing"
+          ],
+          "answer": 1,
+          "explain": "Representation is the space of models the learner can express, evaluation is the scoring function that says which model is better, and optimization is the search method. The other options are real concepts but not his decomposition.",
+          "ref": "s02m01r02"
+        },
+        {
+          "q": "A model gets 99% accuracy on its training data but 60% on new data. What does Domingos call the fundamental mistake behind trusting the 99%?",
+          "choices": [
+            "Forgetting that it's generalization that counts — performance on data the model has not seen is what matters",
+            "Using too few features",
+            "Choosing a learner that is too simple",
+            "Not training long enough"
+          ],
+          "answer": 0,
+          "explain": "Domingos stresses that the goal is to generalize beyond the training examples, so you must hold out test data. A big gap between training and test accuracy is the classic sign of overfitting.",
+          "ref": "s02m01r02"
+        },
+        {
+          "q": "What does Domingos mean when he says intuition fails in high dimensions?",
+          "choices": [
+            "Computers cannot store data with many dimensions",
+            "High-dimensional data is always linearly separable, so any learner works",
+            "Humans cannot read high-dimensional code",
+            "As the number of features grows, the space becomes so large that training examples cover a vanishing fraction of it, and similarity-based reasoning breaks down"
+          ],
+          "answer": 3,
+          "explain": "This is the curse of dimensionality: with many features, a fixed amount of data covers only a tiny part of the input space, and intuitions built in two or three dimensions (like 'nearby points are similar') become unreliable.",
+          "ref": "s02m01r02"
+        },
+        {
+          "q": "According to Domingos, which usually helps more in practice: a cleverer algorithm or more data?",
+          "choices": [
+            "A cleverer algorithm, always",
+            "Neither; only feature engineering matters",
+            "More data — a dumb algorithm with lots of data often beats a clever one with modest data",
+            "They are always exactly equivalent"
+          ],
+          "answer": 2,
+          "explain": "'More data beats a cleverer algorithm' is one of his lessons, with the caveat that data and computation have costs. This idea foreshadows Sutton's 'Bitter Lesson' later in this stage.",
+          "ref": "s02m01r02"
+        },
+        {
+          "q": "An HAI paper claims a model 'knows' what a cat is because it classifies cat photos well. Based on the 3Blue1Brown video, what is the most accurate description of what the model is?",
+          "choices": [
+            "A database of stored cat photos it compares against",
+            "A function whose many numeric parameters were tuned so its outputs match labeled examples",
+            "A set of human-written rules about whiskers and ears",
+            "A program that reasons logically about animals"
+          ],
+          "answer": 1,
+          "explain": "The video presents a network as a parameterized function from inputs (pixel values) to outputs (scores for each digit). Sanderson's hope that hidden neurons detect edges and loops is offered as a motivation, not a guarantee — a caution against reading human concepts into the model.",
+          "ref": "s02m01r01"
+        }
+      ]
+    },
+    {
+      "id": "s02m02",
+      "title": "How networks learn",
+      "goal": "Explain how a loss function, gradient descent, and backpropagation work together to train a neural network.",
+      "guide": "Watch the three 3Blue1Brown videos in order, then read the first chapter of Nielsen's online book, which covers the same ground in prose with a bit more math. Don't worry if the calculus video is heavy on first viewing; the intuition video matters more. Key terms: the 'loss' (or 'cost') is a single number measuring how wrong the model is on the training data — lower is better; the 'gradient' is the vector of partial derivatives of the loss with respect to every parameter, pointing in the direction that increases the loss fastest; 'gradient descent' repeatedly nudges parameters a small step against the gradient; the 'learning rate' is the size of that step; 'backpropagation' is the algorithm that computes the gradient efficiently by applying the chain rule backwards through the network; a 'mini-batch' is a small random subset of training examples used for one step; an 'activation function' (like sigmoid) is the nonlinear function each neuron applies to its weighted input.",
+      "resources": [
+        {
+          "id": "s02m02r01",
+          "kind": "video",
+          "title": "Gradient descent, how neural networks learn | Deep Learning Chapter 2",
+          "authors": "Grant Sanderson (3Blue1Brown)",
+          "year": 2017,
+          "venue": "3Blue1Brown (YouTube)",
+          "url": "https://www.youtube.com/watch?v=IHZwWFHWa-w",
+          "youtube": "IHZwWFHWa-w",
+          "minutes": 21,
+          "why": "Shows learning as minimizing a cost function by walking downhill — the single most important idea for understanding how any modern AI system is built.",
+          "focus": "Focus on how the cost function is defined and what the negative gradient tells you. Note the closing discussion of what the network has (and hasn't) learned."
+        },
+        {
+          "id": "s02m02r02",
+          "kind": "video",
+          "title": "Backpropagation, intuitively | Deep Learning Chapter 3",
+          "authors": "Grant Sanderson (3Blue1Brown)",
+          "year": 2017,
+          "venue": "3Blue1Brown (YouTube)",
+          "url": "https://www.youtube.com/watch?v=Ilg3gGewQ5U",
+          "youtube": "Ilg3gGewQ5U",
+          "minutes": 13,
+          "why": "Builds intuition for how each training example 'requests' changes to every weight, and why training uses mini-batches.",
+          "focus": "Watch for how desired changes propagate backwards from the output layer and the explanation of stochastic gradient descent."
+        },
+        {
+          "id": "s02m02r03",
+          "kind": "video",
+          "title": "Backpropagation calculus | Deep Learning Chapter 4",
+          "authors": "Grant Sanderson (3Blue1Brown)",
+          "year": 2017,
+          "venue": "3Blue1Brown (YouTube)",
+          "url": "https://www.youtube.com/watch?v=tIeHLnjs5U8",
+          "youtube": "tIeHLnjs5U8",
+          "minutes": 10,
+          "why": "Connects the intuition to the chain rule, so you can follow the math in technical papers.",
+          "focus": "Follow the one-neuron-per-layer example closely; the general case is the same idea with more indices."
+        },
+        {
+          "id": "s02m02r04",
+          "kind": "book",
+          "title": "Neural Networks and Deep Learning, Chapter 1: Using neural nets to recognize handwritten digits",
+          "authors": "Michael A. Nielsen",
+          "year": 2015,
+          "venue": "Determination Press (free online book)",
+          "url": "http://neuralnetworksanddeeplearning.com/chap1.html",
+          "listen": "http://neuralnetworksanddeeplearning.com/chap1.html",
+          "minutes": 75,
+          "why": "A careful prose treatment of the same material, with working Python code; good for consolidating what the videos showed.",
+          "focus": "Read the sections on perceptrons, sigmoid neurons, network architecture, and learning with gradient descent. Skim the code section on a first pass."
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In 3Blue1Brown's chapter 2, how is the cost for a single training image computed?",
+          "choices": [
+            "By adding up the squared differences between the network's output activations and the desired outputs",
+            "By counting how many layers the network has",
+            "By measuring how long the network took to produce an answer",
+            "By checking whether the highest output matches the label (1 if wrong, 0 if right)"
+          ],
+          "answer": 0,
+          "explain": "The video defines the cost as the sum of squared differences between the output layer and the target (1 for the correct digit, 0 elsewhere), then averages over all training examples. A simple right/wrong count wouldn't give a smooth signal to follow downhill.",
+          "ref": "s02m02r01"
+        },
+        {
+          "q": "Why does gradient descent move parameters in the direction of the negative gradient?",
+          "choices": [
+            "Because the gradient points to the global minimum directly",
+            "Because the gradient points in the direction of steepest increase in the cost, so its negative is the direction of steepest decrease",
+            "Because negative numbers make the network more stable",
+            "Because the gradient measures accuracy, and we want to reduce accuracy"
+          ],
+          "answer": 1,
+          "explain": "The gradient is the direction of steepest ascent; stepping against it lowers the cost fastest locally. It does not point to the global minimum — gradient descent can settle in a local minimum.",
+          "ref": "s02m02r01"
+        },
+        {
+          "q": "Why do networks usually compute each gradient step on a random mini-batch rather than the full training set?",
+          "choices": [
+            "Because using the full training set produces the wrong gradient",
+            "Because mini-batches guarantee reaching the global minimum",
+            "Because computing the exact gradient over all examples for every step is slow, and a mini-batch gives a cheap, good-enough estimate",
+            "Because neural networks can only process a few examples at a time by design"
+          ],
+          "answer": 2,
+          "explain": "3Blue1Brown describes stochastic gradient descent as taking many quick, approximate steps — like a drunk man stumbling quickly downhill — instead of a few slow, precise ones.",
+          "ref": "s02m02r02"
+        },
+        {
+          "q": "What mathematical rule is at the heart of backpropagation, according to 'Backpropagation calculus'?",
+          "choices": [
+            "The quadratic formula",
+            "Bayes' rule",
+            "The fundamental theorem of arithmetic",
+            "The chain rule, which expresses how the cost depends on an early weight through each intermediate quantity"
+          ],
+          "answer": 3,
+          "explain": "Backprop applies the chain rule: the sensitivity of the cost to a weight is a product of how the weight affects a neuron's weighted input, how that affects its activation, and how that activation affects the cost — repeated layer by layer.",
+          "ref": "s02m02r03"
+        },
+        {
+          "q": "Nielsen explains why we use sigmoid neurons instead of perceptrons for learning. What is the reason?",
+          "choices": [
+            "Sigmoid neurons are faster to compute",
+            "With a sigmoid, small changes in weights and biases cause small changes in output, which makes gradual learning possible; a perceptron's output can flip abruptly",
+            "Perceptrons cannot compute logical functions",
+            "Sigmoid neurons need no weights"
+          ],
+          "answer": 1,
+          "explain": "A perceptron's step function means a tiny change can flip its output from 0 to 1, so you can't tell how to nudge weights. The smooth sigmoid makes the output change smoothly, which gradient-based learning needs.",
+          "ref": "s02m02r04"
+        },
+        {
+          "q": "What would likely happen if the learning rate were set far too large?",
+          "choices": [
+            "Training would always converge faster to a better solution",
+            "The network would stop using its hidden layers",
+            "Steps would overshoot the low regions of the cost, so the cost could bounce around or grow instead of decreasing",
+            "The gradient would become exactly zero"
+          ],
+          "answer": 2,
+          "explain": "Nielsen discusses choosing the learning rate: it must be small enough that the linear approximation behind gradient descent holds. Too large a step jumps past the valley, so the cost can oscillate or diverge.",
+          "ref": "s02m02r04"
+        }
+      ]
+    },
+    {
+      "id": "s02m03",
+      "title": "Build it yourself",
+      "goal": "Implement and explain a minimal automatic-differentiation engine and know the practical habits that make neural network training work.",
+      "guide": "This module is hands-on. Code along with Karpathy's micrograd video in a notebook; your CS background will help, because backpropagation turns out to be a graph traversal (a topological sort, then a reverse pass). Afterwards, read Nielsen's chapter 2 to see the same algorithm written as four matrix equations, and finally read Karpathy's recipe, which is about what goes wrong in practice. Key terms: a 'computational graph' records each arithmetic operation as a node so derivatives can be traced back; 'autograd' (automatic differentiation) computes gradients by walking that graph; the 'forward pass' computes outputs from inputs; the 'backward pass' computes gradients from the loss back to the parameters; an 'MLP' (multilayer perceptron) is a stack of fully connected layers like the 3Blue1Brown network.",
+      "resources": [
+        {
+          "id": "s02m03r01",
+          "kind": "video",
+          "title": "The spelled-out intro to neural networks and backpropagation: building micrograd",
+          "authors": "Andrej Karpathy",
+          "year": 2022,
+          "venue": "Andrej Karpathy (YouTube)",
+          "url": "https://www.youtube.com/watch?v=VMj-3S1tku0",
+          "youtube": "VMj-3S1tku0",
+          "minutes": 150,
+          "why": "Building backprop from scratch turns it from magic into code you understand — useful later when reading about interpretability, fine-tuning, or why models behave unexpectedly.",
+          "focus": "Code along. Make sure you understand why gradients accumulate with += and why they must be reset to zero before each step."
+        },
+        {
+          "id": "s02m03r02",
+          "kind": "book",
+          "title": "Neural Networks and Deep Learning, Chapter 2: How the backpropagation algorithm works",
+          "authors": "Michael A. Nielsen",
+          "year": 2015,
+          "venue": "Determination Press (free online book)",
+          "url": "http://neuralnetworksanddeeplearning.com/chap2.html",
+          "listen": "http://neuralnetworksanddeeplearning.com/chap2.html",
+          "minutes": 60,
+          "why": "Gives the matrix form of backpropagation and explains why it is so much faster than naive alternatives.",
+          "focus": "Read the four fundamental equations at a high level and the section explaining in what sense backpropagation is a fast algorithm. The proofs are optional."
+        },
+        {
+          "id": "s02m03r03",
+          "kind": "essay",
+          "title": "A Recipe for Training Neural Networks",
+          "authors": "Andrej Karpathy",
+          "year": 2019,
+          "venue": "karpathy.github.io",
+          "url": "https://karpathy.github.io/2019/04/25/recipe/",
+          "listen": "https://karpathy.github.io/2019/04/25/recipe/",
+          "minutes": 30,
+          "why": "A practitioner's account of why training fails silently and how experts work around it — useful for judging how fragile and contingent the models HAI studies really are.",
+          "focus": "Read the two opening observations and the step-by-step recipe. Skim the specific tips."
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In micrograd, why must the backward pass visit nodes in reverse topological order?",
+          "choices": [
+            "Because Python requires lists to be processed in reverse",
+            "Because it makes the forward pass faster",
+            "Because the gradient at a node can only be propagated once every node that depends on it has already contributed its gradient",
+            "Because leaf nodes must always be processed first"
+          ],
+          "answer": 2,
+          "explain": "Karpathy builds a topological ordering of the computational graph and then calls each node's backward function in reverse, so that a node's gradient is complete before it is passed further back toward the inputs.",
+          "ref": "s02m03r01"
+        },
+        {
+          "q": "In micrograd, a value is used twice (for example, b = a + a). Why do gradients use += rather than =?",
+          "choices": [
+            "Because when a value feeds into several operations, its gradient is the sum of the contributions from each use; = would overwrite one of them",
+            "Because += is faster in Python",
+            "Because gradients must always be positive",
+            "Because it prevents the learning rate from changing"
+          ],
+          "answer": 0,
+          "explain": "Karpathy demonstrates this bug: with =, the second use overwrites the first and the gradient is wrong. Accumulating with += follows the multivariable chain rule.",
+          "ref": "s02m03r01"
+        },
+        {
+          "q": "Because gradients accumulate, what goes wrong in a training loop that never resets them to zero?",
+          "choices": [
+            "Nothing; the gradients are recomputed from scratch anyway",
+            "Each step's gradient includes leftover gradients from all previous steps, so updates are wrong and typically grow too large",
+            "The forward pass stops working",
+            "The network's layers are deleted"
+          ],
+          "answer": 1,
+          "explain": "Karpathy points out this common mistake in the video: forgetting to zero the gradients before each backward pass makes them accumulate across iterations, corrupting the updates.",
+          "ref": "s02m03r01"
+        },
+        {
+          "q": "According to Nielsen, why is backpropagation fast compared with estimating each partial derivative separately by perturbing one weight at a time?",
+          "choices": [
+            "Because it skips half the weights",
+            "Because it only works on small networks",
+            "Because it uses random sampling instead of exact derivatives",
+            "Because it computes all the partial derivatives using one forward pass and one backward pass, instead of one extra forward pass per weight"
+          ],
+          "answer": 3,
+          "explain": "With a million weights, the naive approach needs about a million and one forward passes per gradient; backpropagation gets all of them for roughly the cost of two passes. This is why training large networks is feasible at all.",
+          "ref": "s02m03r02"
+        },
+        {
+          "q": "Karpathy's recipe says neural network training 'fails silently'. What does he mean?",
+          "choices": [
+            "Training programs crash without error messages",
+            "Mistakes in data or code often still produce a model that trains and gives plausible results, just worse ones, so bugs are easy to miss",
+            "The GPU makes no noise during training",
+            "Models never report their accuracy"
+          ],
+          "answer": 1,
+          "explain": "Misconfigurations rarely raise exceptions; the model still trains, only somewhat worse. That is why he recommends a slow, careful, step-by-step process with lots of visualization.",
+          "ref": "s02m03r03"
+        },
+        {
+          "q": "What is the first step of Karpathy's training recipe?",
+          "choices": [
+            "Become one with the data: spend time inspecting examples and their distribution before touching any model code",
+            "Pick the largest model you can afford",
+            "Tune hyperparameters on the test set",
+            "Add as much regularization as possible"
+          ],
+          "answer": 0,
+          "explain": "He recommends thoroughly inspecting the data first, looking for duplicates, corrupted labels, and patterns. Tuning on the test set is a classic mistake, since it leaks test information into training.",
+          "ref": "s02m03r03"
+        }
+      ],
+      "exercise": "After building micrograd, train it on a tiny dataset and deliberately introduce one 'silent' bug from Karpathy's recipe (for example, forget to zero gradients or shuffle labels). Record how the loss curve changes and write two sentences on how you would detect this bug if you couldn't see the code."
+    },
+    {
+      "id": "s02m04",
+      "title": "Deep learning in context",
+      "goal": "Explain what makes deep learning 'deep', why it overtook earlier approaches, and why its success with general methods and scale is still puzzling.",
+      "guide": "Read the LeCun, Bengio & Hinton review first — it is the standard overview by three of the field's founders. Then read the AlexNet paper to see the 2012 result that convinced the computer-vision community, and Sutton's short 'Bitter Lesson' essay, which draws a broad moral from results like it. The two optional papers deepen the picture: ResNet shows the trick that made very deep networks trainable, and Zhang et al. show that classical theory can't explain why these networks generalize. Key terms: 'representation learning' means the model learns its own features instead of relying on hand-designed ones; a 'convolutional network' applies the same small filter across an image to detect local patterns; 'ReLU' is the activation function max(0, x); 'dropout' randomly switches off neurons during training to reduce overfitting; 'regularization' is any technique that discourages overfitting.",
+      "resources": [
+        {
+          "id": "s02m04r01",
+          "kind": "paper",
+          "title": "Deep learning",
+          "authors": "Yann LeCun, Yoshua Bengio, Geoffrey Hinton",
+          "year": 2015,
+          "venue": "Nature",
+          "url": "https://doi.org/10.1038/nature14539",
+          "minutes": 50,
+          "why": "The authoritative overview of deep learning's core ideas — representation learning, backpropagation, convolutional and recurrent networks — and the vocabulary used throughout the field.",
+          "focus": "Read the abstract and introduction closely, then the sections on supervised learning, backpropagation, and convolutional networks. Skim the rest."
+        },
+        {
+          "id": "s02m04r02",
+          "kind": "paper",
+          "title": "ImageNet classification with deep convolutional neural networks",
+          "authors": "Alex Krizhevsky, Ilya Sutskever, Geoffrey E. Hinton",
+          "year": 2017,
+          "venue": "Communications of the ACM (reprint of the NeurIPS 2012 paper)",
+          "url": "https://doi.org/10.1145/3065386",
+          "minutes": 45,
+          "why": "The 'AlexNet' result that started the deep learning boom; knowing what changed (data, GPUs, ReLU, dropout) explains much of the field's later trajectory.",
+          "focus": "Read the introduction, the architecture overview, the sections on reducing overfitting, and the results. Skim implementation details."
+        },
+        {
+          "id": "s02m04r03",
+          "kind": "essay",
+          "title": "The Bitter Lesson",
+          "authors": "Rich Sutton",
+          "year": 2019,
+          "venue": "incompleteideas.net",
+          "url": "http://www.incompleteideas.net/IncIdeas/BitterLesson.html",
+          "listen": "http://www.incompleteideas.net/IncIdeas/BitterLesson.html",
+          "minutes": 10,
+          "why": "A short, much-debated argument that general methods plus computation beat hand-built human knowledge — a key idea behind the scaling of modern AI and a frequent foil for human-centered critiques.",
+          "focus": "Read it twice; note the examples he gives and the two general methods he says scale."
+        },
+        {
+          "id": "s02m04r04",
+          "kind": "paper",
+          "title": "Deep Residual Learning for Image Recognition",
+          "authors": "Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun",
+          "year": 2015,
+          "venue": "CVPR 2016",
+          "url": "https://arxiv.org/abs/1512.03385",
+          "arxiv": "1512.03385",
+          "minutes": 40,
+          "why": "Residual connections made very deep networks trainable and appear in every Transformer you will meet in Stage 3.",
+          "focus": "Read the introduction (the degradation problem) and the residual learning section. Skim the experiments.",
+          "optional": true
+        },
+        {
+          "id": "s02m04r05",
+          "kind": "paper",
+          "title": "Understanding deep learning requires rethinking generalization",
+          "authors": "Chiyuan Zhang, Samy Bengio, Moritz Hardt, Benjamin Recht, Oriol Vinyals",
+          "year": 2016,
+          "venue": "ICLR 2017",
+          "url": "https://arxiv.org/abs/1611.03530",
+          "arxiv": "1611.03530",
+          "minutes": 40,
+          "why": "Showed that standard networks can memorize random labels perfectly, so their good generalization on real data is not explained by classical theory — a reminder that even experts don't fully understand why these models work.",
+          "focus": "Read the abstract, introduction, and the randomization-test experiments. Skim the theory.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "According to LeCun, Bengio & Hinton, what is the key aspect that distinguishes deep learning from conventional machine learning?",
+          "choices": [
+            "Deep learning needs no training data",
+            "Deep learning uses hand-designed features chosen by domain experts",
+            "Deep learning only works on images",
+            "The layers of features are learned from data with a general-purpose learning procedure rather than designed by human engineers"
+          ],
+          "answer": 3,
+          "explain": "The review emphasizes representation learning: multiple layers learn increasingly abstract representations of the raw input. Hand-designed features are exactly what conventional pipelines relied on.",
+          "ref": "s02m04r01"
+        },
+        {
+          "q": "Which combination of ingredients does the AlexNet paper credit for its results?",
+          "choices": [
+            "A large labeled dataset (ImageNet), efficient GPU training, ReLU activations, and dropout to reduce overfitting",
+            "Hand-crafted edge detectors and a support vector machine",
+            "A very small network trained on a laptop CPU",
+            "A symbolic reasoning system combined with a database of rules"
+          ],
+          "answer": 0,
+          "explain": "The paper trained a large convolutional network on ImageNet using two GPUs, used ReLU nonlinearities for faster training, and used data augmentation and dropout to fight overfitting.",
+          "ref": "s02m04r02"
+        },
+        {
+          "q": "What are the two general methods Sutton says continue to scale with increased computation?",
+          "choices": [
+            "Logic and rules",
+            "Search and learning",
+            "Feature engineering and expert systems",
+            "Compression and encryption"
+          ],
+          "answer": 1,
+          "explain": "Sutton argues that search and learning are the methods that keep improving as computation grows, while approaches built on human knowledge help in the short term but plateau.",
+          "ref": "s02m04r03"
+        },
+        {
+          "q": "An HAI researcher proposes improving a model by encoding expert knowledge about how people make decisions. How would Sutton's 'Bitter Lesson' frame the risk?",
+          "choices": [
+            "It will certainly fail because human knowledge is always wrong",
+            "It is guaranteed to win in the long run",
+            "It may help in the short term, but history suggests general methods that leverage computation tend to overtake such hand-built approaches",
+            "Computation is irrelevant to the result"
+          ],
+          "answer": 2,
+          "explain": "Sutton's examples (chess, Go, speech recognition, computer vision) follow this pattern. The essay is an argument from history, not a proof — which is why HAI researchers often debate it.",
+          "ref": "s02m04r03"
+        },
+        {
+          "q": "What 'degradation problem' does the ResNet paper address?",
+          "choices": [
+            "Adding more layers to a plain network can make even its training error worse, which is not caused by overfitting",
+            "Images lose quality when compressed",
+            "Networks forget earlier tasks when trained on new ones",
+            "GPUs slow down as they heat up"
+          ],
+          "answer": 0,
+          "explain": "He et al. show that deeper plain networks can have higher training error than shallower ones, so the problem is optimization, not overfitting. Residual (shortcut) connections let layers learn changes relative to their input, making very deep networks trainable.",
+          "ref": "s02m04r04"
+        },
+        {
+          "q": "Zhang et al. trained standard networks on images whose labels had been randomly shuffled. What did they find?",
+          "choices": [
+            "The networks could not fit the training data at all",
+            "The networks refused to train",
+            "The networks generalized well to the test set anyway",
+            "The networks fit the random labels perfectly on the training set, so their capacity alone can't explain why they generalize on real data"
+          ],
+          "answer": 3,
+          "explain": "The networks reached zero training error on random labels (and therefore chance-level test accuracy). Since the same networks generalize well on real labels, classical capacity-based explanations of generalization fall short.",
+          "ref": "s02m04r05"
+        }
+      ]
+    }
+  ]
+}

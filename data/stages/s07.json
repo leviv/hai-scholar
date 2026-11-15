@@ -1,0 +1,721 @@
+{
+  "id": "s07",
+  "number": 7,
+  "title": "AI-Assisted Decision Making",
+  "subtitle": "Complementarity, overreliance, measuring trust, learning to defer",
+  "overview": "This stage takes the trust and automation ideas from human factors and the explanation methods from XAI and asks the empirical question that dominates current HAI research: when a person makes a decision with an AI's advice, is the combined decision any better? You will learn how these experiments are designed, why 'human + AI beats both' is rarer than it sounds, why explanations often increase blind acceptance, how trust and reliance are measured, and how ML researchers formalize the choice of who should decide each case.",
+  "modules": [
+    {
+      "id": "s07m01",
+      "title": "A science of human-AI decisions",
+      "goal": "Explain how empirical studies of AI-assisted decision making are designed, and what early studies found about human accuracy, agency, and bias when people work with model predictions.",
+      "guide": "Start with the Lai et al. survey to get the map: every study chooses a decision task, a form of AI assistance (prediction, confidence, explanation), and evaluation metrics. Then read Lai & Tan as a concrete example of a study that varies how much the machine's output is shown. Finish with the two Green & Chen papers, which bring the stakes of criminal justice and lending into the picture. Key terms: 'AI-assisted decision making' (a human makes the final call after seeing AI output); 'algorithm-in-the-loop' (Green & Chen's inversion of 'human-in-the-loop', stressing that the human decides and the algorithm informs); 'risk assessment' (a model that scores how likely someone is to, e.g., fail to appear in court); 'human agency' (how much the final decision reflects the person's own judgment).",
+      "resources": [
+        {
+          "id": "s07m01r01",
+          "kind": "paper",
+          "title": "Towards a Science of Human-AI Decision Making: A Survey of Empirical Studies",
+          "authors": "Lai, Chen, Liao, Smith-Renner, Tan",
+          "year": 2021,
+          "venue": "arXiv",
+          "url": "https://arxiv.org/abs/2112.11471",
+          "arxiv": "2112.11471",
+          "minutes": 60,
+          "why": "The standard map of the field: it catalogs the study design choices of over 100 empirical papers, so you can place every later paper in this stage within a shared design space.",
+          "focus": "Read the introduction and the three main sections on decision tasks, AI assistance elements, and evaluation metrics. Skim the per-paper tables; pay attention to the recommendations at the end of each section.",
+          "optional": false
+        },
+        {
+          "id": "s07m01r02",
+          "kind": "paper",
+          "title": "On Human Predictions with Explanations and Predictions of Machine Learning Models: A Case Study on Deception Detection",
+          "authors": "Lai, Tan",
+          "year": 2019,
+          "venue": "FAT* 2019",
+          "url": "https://arxiv.org/abs/1811.07901",
+          "arxiv": "1811.07901",
+          "minutes": 40,
+          "why": "A clean early experiment that frames AI assistance as a spectrum from full human agency to full automation, and shows that more machine influence raises accuracy while reducing agency.",
+          "focus": "Focus on the spectrum of assistance levels and the main results figure. Note the task: judging whether hotel reviews are genuine or deceptive, where humans are near chance.",
+          "optional": false
+        },
+        {
+          "id": "s07m01r03",
+          "kind": "paper",
+          "title": "The Principles and Limits of Algorithm-in-the-Loop Decision Making",
+          "authors": "Green, Chen",
+          "year": 2019,
+          "venue": "Proceedings of the ACM on Human-Computer Interaction (CSCW)",
+          "url": "https://doi.org/10.1145/3359152",
+          "minutes": 45,
+          "why": "Proposes normative principles for how people should use risk assessments and tests whether people meet them; a model for combining ethics with controlled experiments.",
+          "focus": "Read the three principles and the results for each. Notice the two contexts (pretrial release and financial lending) and the different ways the risk assessment was presented.",
+          "optional": false
+        },
+        {
+          "id": "s07m01r04",
+          "kind": "paper",
+          "title": "Disparate Interactions: An Algorithm-in-the-Loop Analysis of Fairness in Risk Assessments",
+          "authors": "Green, Chen",
+          "year": 2019,
+          "venue": "FAT* 2019",
+          "url": "https://doi.org/10.1145/3287560.3287563",
+          "minutes": 35,
+          "why": "Shows that a fair-looking model does not guarantee fair decisions: what matters is how people respond to the model, which can differ by the race of the person being judged.",
+          "focus": "Read the setup and the results on accuracy and on how participants' deviations from the risk score differed by defendant race.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Lai et al. organize the design choices of empirical human-AI decision-making studies into three aspects. Which set is it?",
+          "choices": [
+            "Model architecture, training data, and loss function",
+            "Decision tasks, AI models and assistance elements, and evaluation metrics",
+            "Participants, incentives, and interface layout",
+            "Trust, reliance, and satisfaction"
+          ],
+          "answer": 1,
+          "explain": "The survey summarizes over 100 papers along decision tasks, AI models and AI assistance elements, and evaluation metrics, and argues the field needs common frameworks so results can build on each other.",
+          "ref": "s07m01r01"
+        },
+        {
+          "q": "Why does the Lai et al. survey argue that the field needs common frameworks for study design?",
+          "choices": [
+            "Because most studies use the same task, so results are redundant",
+            "Because journals require a standard template",
+            "Because without them, varied ad hoc design choices make it hard to compare studies and produce generalizable knowledge",
+            "Because AI models change too fast for any study to matter"
+          ],
+          "answer": 2,
+          "explain": "The survey's central message is that inconsistent tasks, assistance types, and metrics make findings hard to compare; common frameworks would let researchers make rigorous choices and build on each other's work.",
+          "ref": "s07m01r01"
+        },
+        {
+          "q": "In Lai & Tan's deception-detection study, what happened when participants saw explanations alone, without the model's predicted label?",
+          "choices": [
+            "Accuracy improved only slightly",
+            "Accuracy dropped sharply",
+            "Accuracy improved by more than 20%",
+            "Participants refused to make decisions"
+          ],
+          "answer": 0,
+          "explain": "Explanations alone gave a slight improvement; showing predicted labels gave a large (>20% relative) improvement. This illustrates their tradeoff: more machine influence raises performance but lowers human agency.",
+          "ref": "s07m01r02"
+        },
+        {
+          "q": "Which tradeoff does Lai & Tan's 'spectrum from full human agency to full automation' make visible?",
+          "choices": [
+            "Human performance versus human agency",
+            "Speed versus cost",
+            "Model accuracy versus model size",
+            "Privacy versus transparency"
+          ],
+          "answer": 0,
+          "explain": "As assistance moves toward automation (showing labels, stating the model is accurate), human accuracy goes up but the decision reflects less of the person's own judgment. The authors find explanations can moderate this tradeoff.",
+          "ref": "s07m01r02"
+        },
+        {
+          "q": "In Green & Chen's CSCW study of risk assessments in pretrial and lending decisions, which statement matches their findings?",
+          "choices": [
+            "Participants calibrated their reliance to the risk assessment's accuracy",
+            "Participants could accurately judge whether their own predictions or the model's were better",
+            "All presentation conditions eliminated bias",
+            "Only one of the proposed principles was consistently satisfied; participants could not evaluate accuracy, did not calibrate reliance, and showed bias"
+          ],
+          "answer": 3,
+          "explain": "Across conditions, only one desideratum held consistently. Participants could not evaluate their own or the model's accuracy, did not calibrate their reliance, and exhibited bias in how they used the risk assessment.",
+          "ref": "s07m01r03"
+        },
+        {
+          "q": "What do Green & Chen mean by 'disparate interactions'?",
+          "choices": [
+            "The risk model has different accuracy for different races",
+            "People deviate from the risk assessment differently depending on the defendant's race, introducing bias at the human-algorithm interaction",
+            "Different participants used different interfaces",
+            "The algorithm interacts differently with judges and juries"
+          ],
+          "answer": 1,
+          "explain": "The FAT* paper shows bias can arise in how people respond to a model: participants' deviations from the risk score differed by defendant race. Fairness analysis must therefore cover the whole human-algorithm system, not just the model.",
+          "ref": "s07m01r04"
+        },
+        {
+          "q": "A city says, 'Our risk model was audited and is fair, so decisions made with it will be fair.' Which lesson from Green & Chen most directly challenges this?",
+          "choices": [
+            "Models are always less accurate than people",
+            "Crowdworkers cannot be used in experiments",
+            "Fair model outputs can still produce unfair decisions because of how people interact with those outputs",
+            "Risk assessments should only be used in lending"
+          ],
+          "answer": 2,
+          "explain": "Both Green & Chen papers argue evaluations must extend beyond the model to the sociotechnical context; the human-in-the-middle can reintroduce bias.",
+          "ref": "s07m01r04"
+        }
+      ],
+      "exercise": "Pick one study from this module and identify two threats to external validity (e.g., crowdworkers instead of judges, no real consequences, a simplified task). For each, propose a concrete change to the design that would reduce it, and say what new cost or confound that change introduces."
+    },
+    {
+      "id": "s07m02",
+      "title": "Complementarity: when is the team better?",
+      "goal": "Define complementary performance, explain why it is hard to achieve, and summarize what mental models, updates, statistical combination, and meta-analysis tell us about when human-AI teams beat either alone.",
+      "guide": "Read Bansal et al. 2021 first; it sets the bar: a team should beat both the human alone and the AI alone. Then read the HCOMP paper on mental models of the AI's 'error boundary', and optionally the AAAI paper on how model updates can break that mental model. Steyvers et al. show a different route to complementarity: statistically combining independent human and machine judgments rather than having a person read AI advice. Finish with Vaccaro et al.'s meta-analysis, the best current summary of the overall evidence. Key terms: 'complementary performance' (team accuracy higher than both human-only and AI-only); 'error boundary' (the set of inputs where the AI is wrong); 'backward compatibility' of an update (the new model does not make new errors where the old one was right); 'effect size' (a standardized measure of how large a difference is; Hedges' g is one such measure).",
+      "resources": [
+        {
+          "id": "s07m02r01",
+          "kind": "paper",
+          "title": "Does the Whole Exceed its Parts? The Effect of AI Explanations on Complementary Team Performance",
+          "authors": "Bansal, Wu, Zhou, Fok, Nushi, Kamar, Ribeiro, Weld",
+          "year": 2021,
+          "venue": "CHI 2021",
+          "url": "https://arxiv.org/abs/2006.14779",
+          "arxiv": "2006.14779",
+          "minutes": 50,
+          "why": "Reframed the goal of XAI evaluation around complementary performance and showed that explanations mostly increased acceptance of AI advice, right or wrong.",
+          "focus": "Read the introduction (the critique of earlier studies where the AI alone beat the team), the study design, and the results on explanations versus no explanations.",
+          "optional": false
+        },
+        {
+          "id": "s07m02r02",
+          "kind": "paper",
+          "title": "Beyond Accuracy: The Role of Mental Models in Human-AI Team Performance",
+          "authors": "Bansal, Nushi, Kamar, Lasecki, Weld, Horvitz",
+          "year": 2019,
+          "venue": "HCOMP 2019",
+          "url": "https://doi.org/10.1609/hcomp.v7i1.5285",
+          "minutes": 35,
+          "why": "Argues that what makes a model a good teammate is not just accuracy but whether people can learn when it errs.",
+          "focus": "Focus on the definitions of parsimony and stochasticity of the error boundary and the experimental results on how they affect team performance.",
+          "optional": false
+        },
+        {
+          "id": "s07m02r03",
+          "kind": "paper",
+          "title": "Updates in Human-AI Teams: Understanding and Addressing the Performance/Compatibility Tradeoff",
+          "authors": "Bansal, Nushi, Kamar, Weld, Lasecki, Horvitz",
+          "year": 2019,
+          "venue": "AAAI 2019",
+          "url": "https://doi.org/10.1609/aaai.v33i01.33012429",
+          "minutes": 35,
+          "why": "Shows that a 'better' model update can make the human-AI team worse because it violates what users have learned about the model.",
+          "focus": "Read the definition of compatibility and the proposed re-training objective; skim the dataset details.",
+          "optional": true
+        },
+        {
+          "id": "s07m02r04",
+          "kind": "paper",
+          "title": "Bayesian modeling of human–AI complementarity",
+          "authors": "Steyvers, Tejeda, Kerrigan, Smyth",
+          "year": 2022,
+          "venue": "PNAS",
+          "url": "https://doi.org/10.1073/pnas.2111547119",
+          "minutes": 40,
+          "why": "Shows a statistical alternative to 'AI advises human': combine independent human and machine predictions with a model that accounts for how each expresses confidence.",
+          "focus": "Read the Significance statement, the description of the combination model, and the main results on when hybrid combinations outperform their parts.",
+          "optional": false
+        },
+        {
+          "id": "s07m02r05",
+          "kind": "paper",
+          "title": "When combinations of humans and AI are useful: A systematic review and meta-analysis",
+          "authors": "Vaccaro, Almaatouq, Malone",
+          "year": 2024,
+          "venue": "Nature Human Behaviour",
+          "url": "https://doi.org/10.1038/s41562-024-02024-1",
+          "minutes": 45,
+          "why": "The most comprehensive quantitative summary of human-AI combination experiments; its sobering average result and its moderators should shape any study you design.",
+          "focus": "Read the abstract, the main results figures, and the moderator analyses (task type; whether the human or the AI was better alone). Read the limitations section.",
+          "optional": false,
+          "arxiv": "2405.06087"
+        }
+      ],
+      "quiz": [
+        {
+          "q": "According to Bansal et al. 2021, what limitation did many earlier studies showing that explanations 'improve team performance' have?",
+          "choices": [
+            "They used too many participants",
+            "They never measured accuracy",
+            "They only studied image tasks",
+            "The AI alone outperformed both the human and the best team, so the human added nothing"
+          ],
+          "answer": 3,
+          "explain": "Bansal et al. note prior improvements came in settings where the AI alone beat the team; in that case the best policy is simply to automate. They test settings where AI accuracy is comparable to humans.",
+          "ref": "s07m02r01"
+        },
+        {
+          "q": "What was Bansal et al.'s main finding about explanations?",
+          "choices": [
+            "Explanations greatly increased complementary performance",
+            "Explanations made people ignore the AI",
+            "Explanations increased the chance people accepted the AI's recommendation, regardless of whether it was correct",
+            "Explanations had no effect on behavior at all"
+          ],
+          "answer": 2,
+          "explain": "They observed complementary improvements from AI assistance, but explanations did not increase them; instead explanations raised acceptance of AI advice whether right or wrong, which is the opposite of appropriate trust.",
+          "ref": "s07m02r01"
+        },
+        {
+          "q": "In Bansal et al.'s HCOMP paper, what does the 'error boundary' refer to, and why does it matter?",
+          "choices": [
+            "The confidence threshold above which the model is deployed; it sets cost",
+            "The region of inputs where the AI makes mistakes; if people can learn it, they know when to override",
+            "The maximum error the regulator allows",
+            "The boundary between training and test data"
+          ],
+          "answer": 1,
+          "explain": "Knowing 'when does the AI err?' lets the human accept or override appropriately. The paper shows that error boundaries that are parsimonious (simple) and non-stochastic are easier to learn.",
+          "ref": "s07m02r02"
+        },
+        {
+          "q": "Bansal et al. (AAAI 2019) show that an update which raises an AI's accuracy can lower team performance. Why?",
+          "choices": [
+            "The new model is slower",
+            "The update introduces new errors on cases where users had learned to trust the old model, breaking their mental model",
+            "Users always prefer older software",
+            "The update deletes the training data"
+          ],
+          "answer": 1,
+          "explain": "An incompatible update makes errors where the old model was right, contradicting users' experience. The authors propose a training objective that penalizes such new errors to improve compatibility.",
+          "ref": "s07m02r03"
+        },
+        {
+          "q": "How does the approach in Steyvers et al.'s PNAS paper differ from the 'AI-advised human' setup in Bansal et al. 2021?",
+          "choices": [
+            "It statistically combines separate human and machine predictions, modeling how each expresses confidence, instead of having a person read the AI's advice",
+            "It removes humans entirely",
+            "It uses only human crowds",
+            "It requires the human to explain the AI"
+          ],
+          "answer": 0,
+          "explain": "Steyvers et al. build hybrid human-machine combinations with a Bayesian model that accounts for differences in how humans and algorithms express confidence. This sidesteps human biases in reading advice.",
+          "ref": "s07m02r04"
+        },
+        {
+          "q": "What was the average result in Vaccaro, Almaatouq & Malone's meta-analysis of 106 experiments?",
+          "choices": [
+            "Human-AI combinations performed significantly worse, on average, than the best of humans or AI alone",
+            "Human-AI combinations performed significantly better than the best of humans or AI alone",
+            "There was no measurable difference in any study",
+            "Humans alone were always best"
+          ],
+          "answer": 0,
+          "explain": "On average combinations were worse than the best single performer (Hedges' g = -0.23). Effects were heterogeneous: losses in decision tasks, larger gains in content-creation tasks.",
+          "ref": "s07m02r05"
+        },
+        {
+          "q": "Per Vaccaro et al., which condition was associated with performance gains for the human-AI combination?",
+          "choices": [
+            "When the AI outperformed humans alone",
+            "When explanations were shown",
+            "When humans outperformed the AI alone",
+            "When the task was a binary decision"
+          ],
+          "answer": 2,
+          "explain": "When humans were better than the AI alone, combinations tended to gain; when the AI was better, combinations tended to lose. The authors flag publication bias and design variation as limitations.",
+          "ref": "s07m02r05"
+        }
+      ],
+      "exercise": "You are planning a study of an AI that helps radiologists flag fractures. Using Vaccaro et al. and Bansal et al., write down: (a) the three conditions you must include to test complementarity, (b) how you would set the AI's accuracy relative to the clinicians and why, and (c) one prediction for whether an explanation condition will help, with your reasoning."
+    },
+    {
+      "id": "s07m03",
+      "title": "Overreliance and how to fight it",
+      "goal": "Explain why people overrely on AI advice even with explanations, and describe interventions (cognitive forcing, cost reduction, confidence display) and their tradeoffs.",
+      "guide": "Start with Buçinca et al., which explains overreliance using dual-process theory and tests 'cognitive forcing' designs. Then read Vasconcelos et al., which reframes overreliance as a strategic cost-benefit choice and finds conditions where explanations do help. Zhang et al. tests whether confidence scores calibrate trust; Poursabzi-Sangdeh et al. shows that making a model more transparent can backfire. Key terms: 'overreliance' (accepting AI advice when it is wrong); 'dual-process theory' (fast, heuristic 'System 1' versus slow, analytical 'System 2' thinking); 'cognitive forcing function' (a design that interrupts quick acceptance and forces deliberate thought); 'Need for Cognition' (a person's stable tendency to enjoy effortful thinking); 'trust calibration' (trust that matches the AI's actual reliability).",
+      "resources": [
+        {
+          "id": "s07m03r01",
+          "kind": "paper",
+          "title": "To Trust or to Think: Cognitive Forcing Functions Can Reduce Overreliance on AI in AI-assisted Decision-making",
+          "authors": "Buçinca, Malaya, Gajos",
+          "year": 2021,
+          "venue": "Proceedings of the ACM on Human-Computer Interaction (CSCW)",
+          "url": "https://arxiv.org/abs/2102.09692",
+          "arxiv": "2102.09692",
+          "minutes": 45,
+          "why": "Introduced cognitive forcing to HAI and exposed a key tension: the designs that reduce overreliance most are the ones people like least.",
+          "focus": "Read the motivation from dual-process theory, the three interventions, and the results on overreliance, subjective ratings, and Need for Cognition.",
+          "optional": false
+        },
+        {
+          "id": "s07m03r02",
+          "kind": "paper",
+          "title": "Explanations Can Reduce Overreliance on AI Systems During Decision-Making",
+          "authors": "Vasconcelos, Jörke, Grunde-McLaughlin, Gerstenberg, Bernstein, Krishna",
+          "year": 2023,
+          "venue": "Proceedings of the ACM on Human-Computer Interaction (CSCW)",
+          "url": "https://arxiv.org/abs/2212.06823",
+          "arxiv": "2212.06823",
+          "minutes": 45,
+          "why": "Offers a cost-benefit theory of when people engage with explanations, and suggests that earlier null results may come from explanations that did not make verification cheaper.",
+          "focus": "Read the cost-benefit framework and the summary of Studies 1-4; skim Study 5 (Cognitive Effort Discounting) unless you are interested in measurement.",
+          "optional": false
+        },
+        {
+          "id": "s07m03r03",
+          "kind": "paper",
+          "title": "Effect of Confidence and Explanation on Accuracy and Trust Calibration in AI-Assisted Decision Making",
+          "authors": "Zhang, Liao, Bellamy",
+          "year": 2020,
+          "venue": "FAT* 2020",
+          "url": "https://arxiv.org/abs/2001.02114",
+          "arxiv": "2001.02114",
+          "minutes": 35,
+          "why": "Separates 'trust calibration' from 'better decisions': confidence scores helped the first but not necessarily the second.",
+          "focus": "Read the two experiments' conditions and the discussion of why calibrated trust alone did not improve joint accuracy.",
+          "optional": false
+        },
+        {
+          "id": "s07m03r04",
+          "kind": "paper",
+          "title": "Manipulating and Measuring Model Interpretability",
+          "authors": "Poursabzi-Sangdeh, Goldstein, Hofman, Wortman Vaughan, Wallach",
+          "year": 2021,
+          "venue": "CHI 2021",
+          "url": "https://arxiv.org/abs/1802.07810",
+          "arxiv": "1802.07810",
+          "minutes": 40,
+          "why": "Large pre-registered experiments showing that 'interpretable' models do not automatically produce better human use of them; a key reality check after the XAI stage.",
+          "focus": "Read the 2x2 design (number of features x clear vs. black-box) and the results on simulation, following the model, and detecting its mistakes.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Buçinca et al. explain overreliance using dual-process theory. What is their core claim?",
+          "choices": [
+            "People carefully analyze every explanation but still disagree with the AI",
+            "People rarely engage analytically with each recommendation and explanation; they form general heuristics about when to follow the AI",
+            "People are unable to read explanations",
+            "Overreliance is caused by slow interfaces"
+          ],
+          "answer": 1,
+          "explain": "They argue people do not engage System 2 thinking with each AI suggestion, so simply adding explanations does not help. Cognitive forcing designs try to compel that engagement.",
+          "ref": "s07m03r01"
+        },
+        {
+          "q": "What tradeoff did Buçinca et al. find?",
+          "choices": [
+            "Interventions that increased accuracy also increased overreliance",
+            "Faster interventions were more accurate",
+            "Interventions that reduced overreliance most received the least favorable subjective ratings",
+            "Explanations were preferred and reduced overreliance the most"
+          ],
+          "answer": 2,
+          "explain": "Cognitive forcing reduced overreliance compared to simple XAI, but people disliked the most effective designs. This is a practical barrier to deploying them.",
+          "ref": "s07m03r01"
+        },
+        {
+          "q": "Buçinca et al. checked for 'intervention-generated inequalities.' What did they find?",
+          "choices": [
+            "Participants higher in Need for Cognition benefited more from cognitive forcing",
+            "All participants benefited equally",
+            "Participants lower in Need for Cognition benefited more",
+            "Older participants could not use the interventions"
+          ],
+          "answer": 0,
+          "explain": "On average, people who enjoy effortful thinking benefited more, suggesting cognitive motivation moderates XAI effectiveness and that interventions might widen gaps between users.",
+          "ref": "s07m03r01"
+        },
+        {
+          "q": "Vasconcelos et al. argue that overreliance is often a strategic choice. Which manipulation would their framework predict to reduce overreliance?",
+          "choices": [
+            "Making the task easier to do alone and making the explanation cheaper to verify",
+            "Hiding the AI's prediction",
+            "Making explanations longer and more technical",
+            "Removing monetary bonuses for accuracy"
+          ],
+          "answer": 0,
+          "explain": "In their maze studies, costs (task and explanation difficulty) and benefits (monetary rewards) changed overreliance. Explanations that lower the cost of checking the AI make engagement worthwhile.",
+          "ref": "s07m03r02"
+        },
+        {
+          "q": "What did Zhang, Liao & Bellamy find about showing a model's confidence score?",
+          "choices": [
+            "It improved both trust calibration and decision accuracy dramatically",
+            "It helped calibrate trust, but calibrated trust alone did not improve joint accuracy",
+            "It had no effect on trust",
+            "It made people distrust the AI completely"
+          ],
+          "answer": 1,
+          "explain": "Confidence helped people trust the AI more when it was confident, but improvement also depends on whether the human brings unique knowledge to complement the AI's errors. Local explanations were less helpful.",
+          "ref": "s07m03r03"
+        },
+        {
+          "q": "In Poursabzi-Sangdeh et al.'s experiments, what was a counterintuitive effect of showing a clear (transparent) model?",
+          "choices": [
+            "Participants followed it much more closely",
+            "Participants could not simulate its predictions",
+            "Participants rated it as less trustworthy but used it more",
+            "Participants were less able to detect and correct the model's large mistakes, apparently due to information overload"
+          ],
+          "answer": 3,
+          "explain": "Clear models with few features were easier to simulate, but people did not follow them more closely and were worse at catching big errors. The authors stress testing over intuition.",
+          "ref": "s07m03r04"
+        }
+      ],
+      "exercise": "Design a cognitive forcing intervention for an LLM coding assistant that suggests bug fixes. State (1) the specific forcing mechanism, (2) the dependent variables that would show reduced overreliance without simply showing reduced reliance, and (3) how you would check for unequal benefits across users, following Buçinca et al."
+    },
+    {
+      "id": "s07m04",
+      "title": "Measuring trust and reliance",
+      "goal": "Distinguish trust (an attitude) from reliance (a behavior), and choose appropriate self-report and behavioral measures for a human-AI study.",
+      "guide": "Start with Vereschak et al.'s survey, which shows how inconsistently trust has been defined and measured, and offers practical guidelines. Then look at Jian et al., the origin of the most widely reused trust-in-automation questionnaire. Hoffman et al. collects measures for explanation quality, satisfaction, understanding, and trust. Schemmer et al. gives a behavioral definition of appropriate reliance you can compute from experiment logs. Key terms: 'trust' (an attitude: willingness to be vulnerable to the system, as in Lee & See); 'reliance' (the behavior of following the system's advice); 'psychometric scale' (a validated questionnaire whose items together measure one construct); 'switch' or 'agreement' rate (behavioral measures: how often people change to, or end up matching, the AI's answer).",
+      "resources": [
+        {
+          "id": "s07m04r01",
+          "kind": "paper",
+          "title": "How to Evaluate Trust in AI-Assisted Decision Making? A Survey of Empirical Methodologies",
+          "authors": "Vereschak, Bailly, Caramiaux",
+          "year": 2021,
+          "venue": "Proceedings of the ACM on Human-Computer Interaction (CSCW)",
+          "url": "https://doi.org/10.1145/3476068",
+          "minutes": 50,
+          "why": "A methods survey that will save you from the most common mistakes in trust studies, especially measuring 'trust' without defining it.",
+          "focus": "Read the analysis of how trust is defined and the practical guidelines section. Skim the corpus tables.",
+          "optional": false
+        },
+        {
+          "id": "s07m04r02",
+          "kind": "paper",
+          "title": "Foundations for an Empirically Determined Scale of Trust in Automated Systems",
+          "authors": "Jian, Bisantz, Drury",
+          "year": 2000,
+          "venue": "International Journal of Cognitive Ergonomics",
+          "url": "https://doi.org/10.1207/S15327566IJCE0401_04",
+          "minutes": 30,
+          "why": "The source of the 12-item trust-in-automation scale that many HAI studies still use; knowing how it was built tells you what it does and does not measure.",
+          "focus": "Focus on how words related to trust were collected and clustered, the question of whether trust and distrust are separate, and the final item list.",
+          "optional": false
+        },
+        {
+          "id": "s07m04r03",
+          "kind": "paper",
+          "title": "Metrics for Explainable AI: Challenges and Prospects",
+          "authors": "Hoffman, Mueller, Klein, Litman",
+          "year": 2018,
+          "venue": "arXiv",
+          "url": "https://arxiv.org/abs/1812.04608",
+          "arxiv": "1812.04608",
+          "minutes": 50,
+          "why": "A toolkit of measures for evaluating XAI with people: explanation goodness, satisfaction, mental models, curiosity, trust, and performance.",
+          "focus": "Skim for the conceptual model of the explanation process, then read the sections on explanation satisfaction and on trust and reliance. Use the appendices as a reference.",
+          "optional": false
+        },
+        {
+          "id": "s07m04r04",
+          "kind": "paper",
+          "title": "Appropriate Reliance on AI Advice: Conceptualization and the Effect of Explanations",
+          "authors": "Schemmer, Kühl, Benz, Bartos, Satzger",
+          "year": 2023,
+          "venue": "IUI 2023",
+          "url": "https://arxiv.org/abs/2302.02187",
+          "arxiv": "2302.02187",
+          "minutes": 35,
+          "why": "Gives a computable, two-dimensional definition of appropriate reliance, which is what most HAI studies actually care about.",
+          "focus": "Read the definition of Appropriateness of Reliance (AoR) and how its two dimensions are computed from a 'decide first, then see advice' protocol.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What central problem did Vereschak et al. find in empirical studies of trust in AI-assisted decision making?",
+          "choices": [
+            "Studies used too many participants",
+            "The definition of trust was usually not integrated into the experimental protocol, making findings hard to interpret and compare",
+            "Studies only used behavioral measures",
+            "All studies used the same questionnaire"
+          ],
+          "answer": 1,
+          "explain": "They found trust definitions were often missing from protocols, which can lead to overclaimed or incomparable findings. They draw on human-human trust research to propose guidelines.",
+          "ref": "s07m04r01"
+        },
+        {
+          "q": "A study measures only how often participants agree with the AI and reports it as 'trust.' What is the main conceptual problem?",
+          "choices": [
+            "Agreement cannot be measured",
+            "Agreement is a behavior (reliance), which can differ from the attitude of trust",
+            "Trust can only be measured with physiological sensors",
+            "Agreement rates are always 100%"
+          ],
+          "answer": 1,
+          "explain": "Following Lee & See and the guidelines in Vereschak et al., trust is an attitude and reliance a behavior; people can rely without trusting (e.g., under time pressure) or trust without relying.",
+          "ref": "s07m04r01"
+        },
+        {
+          "q": "Jian, Bisantz & Drury investigated whether trust and distrust are separate constructs. What did they conclude?",
+          "choices": [
+            "They are fully independent dimensions",
+            "Distrust cannot be measured",
+            "They behave like opposite ends of a single dimension",
+            "Only distrust matters for automation"
+          ],
+          "answer": 2,
+          "explain": "Their empirical analysis suggested trust and distrust lie on one continuum, which is why their 12-item scale mixes positively and negatively worded items into one score.",
+          "ref": "s07m04r02"
+        },
+        {
+          "q": "Hoffman et al. propose measuring several things when evaluating an XAI system. Which is NOT one of their categories?",
+          "choices": [
+            "The model's training-time GPU efficiency",
+            "Explanation goodness and user satisfaction",
+            "Users' mental models / understanding",
+            "Whether trust and reliance are appropriate"
+          ],
+          "answer": 0,
+          "explain": "Their categories include explanation goodness, satisfaction, understanding (mental models), curiosity, appropriate trust and reliance, and human-XAI work system performance. Compute efficiency is not a human-centered metric.",
+          "ref": "s07m04r03"
+        },
+        {
+          "q": "Schemmer et al.'s Appropriateness of Reliance (AoR) has two dimensions. What do they capture?",
+          "choices": [
+            "Speed and accuracy",
+            "Self-reported trust and self-reported distrust",
+            "Model confidence and model accuracy",
+            "Relying on the AI when it is right and relying on oneself when the AI is wrong"
+          ],
+          "answer": 3,
+          "explain": "AoR separates correctly switching to correct AI advice from correctly keeping one's own answer when the AI is wrong. Both are computed by having people decide first, then see the AI's advice.",
+          "ref": "s07m04r04"
+        },
+        {
+          "q": "Why might a researcher prefer a behavioral reliance measure plus a validated trust scale over either alone?",
+          "choices": [
+            "Because attitudes and behavior can diverge, and measuring both lets you see whether an intervention changed how people feel, what they do, or both",
+            "Because scales are cheaper",
+            "Because journals forbid single measures",
+            "Because behavior can only be measured with eye tracking"
+          ],
+          "answer": 0,
+          "explain": "Vereschak et al. and Hoffman et al. both stress that trust and reliance are different. Measuring both shows whether a design changes perceptions, behavior, or their alignment.",
+          "ref": "s07m04r01"
+        }
+      ],
+      "exercise": "Take a study from s07m03 and rewrite its measurement plan: give a one-sentence definition of trust you will commit to, one validated self-report measure, two behavioral measures (one for overreliance and one for under-reliance), and explain when in the task each will be collected."
+    },
+    {
+      "id": "s07m05",
+      "title": "Learning to defer: who should decide?",
+      "goal": "Explain how ML formalizes the choice between the model deciding and handing the case to a human, and why this depends on estimating both human and model error per case.",
+      "guide": "This module switches from HCI experiments to ML formulations of the same question. Read Raghu et al. first; it is the most intuitive, arguing that automation means choosing which cases to give the algorithm, not just comparing average accuracy. Then read Madras et al., which introduced 'learning to defer'; finally Mozannar & Sontag, which provides a consistent loss for training such systems. Key terms: 'rejection learning' (a classifier may abstain when unsure, ignoring who handles it next); 'learning to defer' (abstaining while accounting for the downstream human's strengths and biases); 'triage' (allocating cases between human and machine); 'surrogate loss' (a training objective that is easier to optimize than the true objective); 'consistent' (minimizing the surrogate, with enough data, also minimizes the true objective). Connect this to Horvitz's mixed-initiative ideas from Stage 1.",
+      "resources": [
+        {
+          "id": "s07m05r01",
+          "kind": "paper",
+          "title": "The Algorithmic Automation Problem: Prediction, Triage, and Human Effort",
+          "authors": "Raghu, Blumer, Corrado, Kleinberg, Obermeyer, Mullainathan",
+          "year": 2019,
+          "venue": "arXiv",
+          "url": "https://arxiv.org/abs/1903.12220",
+          "arxiv": "1903.12220",
+          "minutes": 40,
+          "why": "Reframes automation as an allocation problem: which instances go to the algorithm and which to people, so that the system as a whole performs best.",
+          "focus": "Read the introduction and framework sections; skim the medical experiments for the main gain from triage.",
+          "optional": false
+        },
+        {
+          "id": "s07m05r02",
+          "kind": "paper",
+          "title": "Predict Responsibly: Improving Fairness and Accuracy by Learning to Defer",
+          "authors": "Madras, Pitassi, Zemel",
+          "year": 2018,
+          "venue": "NeurIPS 2018",
+          "url": "https://arxiv.org/abs/1711.06664",
+          "arxiv": "1711.06664",
+          "minutes": 40,
+          "why": "Introduced learning to defer and showed that modeling the downstream decision-maker can improve both accuracy and fairness of the whole system.",
+          "focus": "Read the comparison of rejection learning and learning to defer, and the experiments with biased or inconsistent decision-makers.",
+          "optional": false
+        },
+        {
+          "id": "s07m05r03",
+          "kind": "paper",
+          "title": "Consistent Estimators for Learning to Defer to an Expert",
+          "authors": "Mozannar, Sontag",
+          "year": 2020,
+          "venue": "ICML 2020",
+          "url": "https://arxiv.org/abs/2006.01862",
+          "arxiv": "2006.01862",
+          "minutes": 45,
+          "why": "The standard technical treatment of learning to defer; most later work builds on its loss function.",
+          "focus": "Read the problem setup and the intuition for the surrogate loss (it treats 'defer' as an extra class). Skim the proofs.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What is the key argument of Raghu et al.'s 'algorithmic automation problem'?",
+          "choices": [
+            "Algorithms should replace experts whenever average accuracy is higher",
+            "Humans should always review every algorithmic decision",
+            "Prediction and automation are the same task",
+            "Automation also involves deciding which instances to give the algorithm, which requires estimating both algorithmic and human error per instance"
+          ],
+          "answer": 3,
+          "explain": "They argue the debate wrongly equates prediction with automation. Triage, sending each case to whoever is likely to do better, can improve performance even on well-studied medical AI tasks.",
+          "ref": "s07m05r01"
+        },
+        {
+          "q": "How does learning to defer (Madras et al.) differ from rejection learning?",
+          "choices": [
+            "It never abstains",
+            "It decides when to pass a case downstream while accounting for the downstream decision-maker's properties, including their biases",
+            "It trains the human instead of the model",
+            "It only works for regression"
+          ],
+          "answer": 1,
+          "explain": "Rejection learning abstains based on the model's own uncertainty. Learning to defer generalizes it by considering how the external decision-maker will handle deferred cases.",
+          "ref": "s07m05r02"
+        },
+        {
+          "q": "Madras et al. report that deferring models helped even with inconsistent or biased users. What did they improve?",
+          "choices": [
+            "Only training speed",
+            "User satisfaction ratings",
+            "The accuracy and/or fairness of the whole system",
+            "The interpretability of the model"
+          ],
+          "answer": 2,
+          "explain": "Their experiments show learning to defer can make the combined system more accurate and less biased, because the model learns where to take over from a biased decision-maker.",
+          "ref": "s07m05r02"
+        },
+        {
+          "q": "What is the main technical contribution of Mozannar & Sontag?",
+          "choices": [
+            "A consistent surrogate loss for learning a classifier and rejector, via a reduction to cost-sensitive learning that generalizes cross-entropy",
+            "A user interface for deferral",
+            "A dataset of expert decisions",
+            "A proof that deferral never helps"
+          ],
+          "answer": 0,
+          "explain": "Given samples of expert decisions, they reduce learning to defer to cost-sensitive learning and give a consistent surrogate loss, so minimizing it leads toward the optimal defer/predict policy.",
+          "ref": "s07m05r03"
+        },
+        {
+          "q": "A hospital deploys a learning-to-defer model trained on one radiologist's past decisions, but deferred cases now go to a different radiologist. Why is this a problem?",
+          "choices": [
+            "The deferral policy was learned for a specific expert's strengths and weaknesses, which may not match the new expert",
+            "It is not a problem; the model is independent of the expert",
+            "The model will refuse to run",
+            "Radiologists cannot read deferred cases"
+          ],
+          "answer": 0,
+          "explain": "Both Madras et al. and Mozannar & Sontag learn deferral from the expert's decisions, so the policy reflects that expert's error profile. A new expert breaks the assumption.",
+          "ref": "s07m05r03"
+        },
+        {
+          "q": "Which HCI concern do learning-to-defer formulations usually leave out, compared with the studies in earlier modules?",
+          "choices": [
+            "That humans make errors",
+            "That the human's behavior can change when they know or see the AI's output (e.g., anchoring, overreliance)",
+            "That models make errors",
+            "That some cases are harder than others"
+          ],
+          "answer": 1,
+          "explain": "These ML formulations typically model the expert as deciding independently on deferred cases. Studies like Bansal et al. and Buçinca et al. show that seeing AI output changes human decisions, a gap worth studying.",
+          "ref": "s07m05r01"
+        }
+      ],
+      "exercise": "Learning-to-defer papers usually assume the human's accuracy on a case is fixed. Propose a study that tests this assumption: describe how you would measure a human's accuracy on deferred cases when they (a) know the AI deferred, versus (b) do not know. What result would require changing the ML formulation?"
+    }
+  ]
+}

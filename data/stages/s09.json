@@ -1,0 +1,666 @@
+{
+  "id": "s09",
+  "number": 9,
+  "title": "Fairness, Accountability and Society",
+  "subtitle": "Sources of harm, documentation, practitioners, audits, LLM risks",
+  "overview": "Earlier stages focused on one person working with one AI system. This stage widens the frame to the people affected by AI systems and the organizations that build them. You will learn where algorithmic harms come from, how documentation and audits make systems accountable, what practitioners actually struggle with, how everyday users notice and expose problems, and how researchers map the risks of large language models, including their power to change what people believe.",
+  "modules": [
+    {
+      "id": "s09m01",
+      "title": "Where harms come from",
+      "goal": "Explain, using concrete cases, how bias can enter an ML system through data, labels, and evaluation, and name the main sources of harm across the ML life cycle.",
+      "guide": "Read the two case studies first: Gender Shades (who is missing from the benchmark?) and Obermeyer et al. (what is the label actually measuring?). Then read Suresh & Guttag, which gives you a vocabulary for placing each case in the ML pipeline. The Barocas, Hardt & Narayanan textbook is the standard reference for formal fairness definitions; read the classification chapter if you want the math. Key terms: 'benchmark' (a standard test set used to compare models); 'intersectional' (looking at combinations of attributes, e.g., darker-skinned women, not each attribute alone); 'proxy label' (a measurable stand-in for what you really care about, e.g., health costs standing in for health needs); 'representation bias' (some groups are under-sampled); 'measurement bias' (the features or labels measure the intended concept poorly or unevenly across groups).",
+      "resources": [
+        {
+          "id": "s09m01r01",
+          "kind": "paper",
+          "title": "Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification",
+          "authors": "Buolamwini, Gebru",
+          "year": 2018,
+          "venue": "FAT* 2018 (PMLR 81)",
+          "url": "https://proceedings.mlr.press/v81/buolamwini18a.html",
+          "listen": "https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf",
+          "minutes": 35,
+          "why": "A foundational audit showing large accuracy gaps for darker-skinned women in commercial systems, and that the benchmarks used to evaluate them hid this.",
+          "focus": "Read how the Pilot Parliaments Benchmark was built, the use of the Fitzpatrick skin type scale, and the intersectional error results.",
+          "optional": false
+        },
+        {
+          "id": "s09m01r02",
+          "kind": "paper",
+          "title": "Dissecting racial bias in an algorithm used to manage the health of populations",
+          "authors": "Obermeyer, Powers, Vogeli, Mullainathan",
+          "year": 2019,
+          "venue": "Science",
+          "url": "https://doi.org/10.1126/science.aax2342",
+          "minutes": 30,
+          "why": "The clearest real-world example of label choice bias: predicting cost instead of need produced large racial disparities in who got extra care.",
+          "focus": "Read the whole paper; focus on how the authors showed that patients with the same risk score had different health needs, and on the reformulated label.",
+          "optional": false,
+          "listen": "https://escholarship.org/content/qt6h92v832/qt6h92v832.pdf"
+        },
+        {
+          "id": "s09m01r03",
+          "kind": "paper",
+          "title": "A Framework for Understanding Sources of Harm throughout the Machine Learning Life Cycle",
+          "authors": "Suresh, Guttag",
+          "year": 2021,
+          "venue": "EAAMO 2021",
+          "url": "https://arxiv.org/abs/1901.10002",
+          "arxiv": "1901.10002",
+          "minutes": 35,
+          "why": "Replaces the vague phrase 'biased data' with seven distinct sources of harm, each pointing to a different mitigation.",
+          "focus": "Read the life-cycle figure and the definition and example for each of the seven sources.",
+          "optional": false
+        },
+        {
+          "id": "s09m01r04",
+          "kind": "book",
+          "title": "Fairness and Machine Learning: Limitations and Opportunities",
+          "authors": "Barocas, Hardt, Narayanan",
+          "year": 2023,
+          "venue": "MIT Press (free online)",
+          "url": "https://fairmlbook.org/",
+          "minutes": 90,
+          "why": "The standard textbook on algorithmic fairness, free online; the formal companion to the case studies here.",
+          "focus": "Read the introduction and the classification chapter (independence, separation, sufficiency, and why they conflict).",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In Gender Shades, which group had the highest error rates across the commercial gender classifiers?",
+          "choices": [
+            "Lighter-skinned men",
+            "Darker-skinned women",
+            "Lighter-skinned women",
+            "Darker-skinned men"
+          ],
+          "answer": 1,
+          "explain": "Darker-skinned females were the most misclassified group (error rates up to about 35%), while lighter-skinned males had error rates under 1%.",
+          "ref": "s09m01r01"
+        },
+        {
+          "q": "Why did Buolamwini & Gebru build a new benchmark (the Pilot Parliaments Benchmark)?",
+          "choices": [
+            "Existing benchmarks were too small to train models",
+            "They wanted to test speech recognition",
+            "Existing face benchmarks were overwhelmingly lighter-skinned, so aggregate accuracy hid poor performance on darker-skinned groups",
+            "Commercial companies asked them to"
+          ],
+          "answer": 2,
+          "explain": "They found common benchmarks were dominated by lighter-skinned subjects, and built a benchmark balanced by skin type and gender to enable intersectional evaluation.",
+          "ref": "s09m01r01"
+        },
+        {
+          "q": "According to Obermeyer et al., why did the health algorithm underestimate Black patients' needs?",
+          "choices": [
+            "It predicted health costs as a proxy for health needs, and less money is spent on Black patients with the same level of need",
+            "It used race as an input feature",
+            "It was trained on too little data",
+            "Doctors overrode its recommendations"
+          ],
+          "answer": 0,
+          "explain": "The bias came from the label: cost is not equal to need across groups. Reformulating the target so it no longer used cost as a proxy for need eliminated the bias in predicting who needs extra care.",
+          "ref": "s09m01r02"
+        },
+        {
+          "q": "Which of Suresh & Guttag's sources of harm best describes the Obermeyer et al. case?",
+          "choices": [
+            "Deployment bias",
+            "Measurement bias: the chosen label (cost) measures the target concept (need) unevenly across groups",
+            "Aggregation bias",
+            "Evaluation bias"
+          ],
+          "answer": 1,
+          "explain": "Measurement bias arises when features or labels are poor or uneven proxies for the construct of interest. Using cost to stand in for need is a classic example.",
+          "ref": "s09m01r03"
+        },
+        {
+          "q": "Which Suresh & Guttag source of harm best describes Gender Shades' finding that common benchmarks under-represented darker-skinned people?",
+          "choices": [
+            "Historical bias",
+            "Learning bias",
+            "Evaluation bias: the benchmark used to judge performance does not represent the population the model will serve",
+            "Deployment bias"
+          ],
+          "answer": 2,
+          "explain": "Evaluation bias occurs when benchmark data do not represent the use population, so good benchmark scores hide subgroup failures. (Unrepresentative training data would be representation bias.)",
+          "ref": "s09m01r03"
+        },
+        {
+          "q": "Why do Suresh & Guttag argue it is useful to name distinct sources of harm instead of saying 'the data is biased'?",
+          "choices": [
+            "Because each source points to different, more targeted mitigations and allows more precise communication",
+            "Because data is never the problem",
+            "Because it makes papers longer",
+            "Because regulators require seven categories"
+          ],
+          "answer": 0,
+          "explain": "The framework aims at more productive communication and application-grounded mitigation: collecting more data fixes representation bias but not historical or measurement bias.",
+          "ref": "s09m01r03"
+        },
+        {
+          "q": "In the Barocas, Hardt & Narayanan textbook, what are independence, separation, and sufficiency?",
+          "choices": [
+            "Three stages of model training",
+            "Three types of datasets",
+            "Three legal doctrines",
+            "Three formal group-fairness criteria for classifiers that, in general, cannot all be satisfied at once"
+          ],
+          "answer": 3,
+          "explain": "The classification chapter formalizes these criteria and shows that, except in degenerate cases, they conflict, so choosing among them is a value judgment.",
+          "ref": "s09m01r04"
+        }
+      ],
+      "exercise": "Choose a deployed AI system you know (e.g., resume screening). For each of Suresh & Guttag's seven sources of harm, write one sentence on how it could appear in that system, then pick the two most likely and describe an audit study (data, comparison groups, metric) that would detect each."
+    },
+    {
+      "id": "s09m02",
+      "title": "Documentation and accountability",
+      "goal": "Describe what model cards, datasheets, and internal audit frameworks document, and explain how documentation supports accountability.",
+      "guide": "Read Datasheets for Datasets and Model Cards together; they are companion proposals, one for data and one for models. Notice that both are mostly lists of questions, and think about who answers them and who reads them. Then read Raji et al., which expands documentation into a full internal audit process across development. Key terms: 'intended use' (the contexts a model was designed and evaluated for); 'disaggregated evaluation' (reporting performance separately for subgroups); 'accountability' (being answerable for a system's outcomes to someone with power to respond); 'internal audit' (an audit by the developing organization itself, before and during deployment, as opposed to an external audit by journalists or researchers).",
+      "resources": [
+        {
+          "id": "s09m02r01",
+          "kind": "paper",
+          "title": "Datasheets for Datasets",
+          "authors": "Gebru, Morgenstern, Vecchione, Wortman Vaughan, Wallach, Daumé, Crawford",
+          "year": 2021,
+          "venue": "Communications of the ACM",
+          "url": "https://arxiv.org/abs/1803.09010",
+          "arxiv": "1803.09010",
+          "minutes": 40,
+          "why": "The standard proposal for dataset documentation; its questions are now used across industry and research.",
+          "focus": "Read the motivation (the electronics datasheet analogy) and skim the question list organized by the dataset life cycle.",
+          "optional": false
+        },
+        {
+          "id": "s09m02r02",
+          "kind": "paper",
+          "title": "Model Cards for Model Reporting",
+          "authors": "Mitchell, Wu, Zaldivar, Barnes, Vasserman, Hutchinson, Spitzer, Raji, Gebru",
+          "year": 2019,
+          "venue": "FAT* 2019",
+          "url": "https://arxiv.org/abs/1810.03993",
+          "arxiv": "1810.03993",
+          "minutes": 35,
+          "why": "Defines the model card, now a common format for releasing models, built around intended use and disaggregated evaluation.",
+          "focus": "Read the list of model card sections and the two example cards (smiling detection, toxicity).",
+          "optional": false
+        },
+        {
+          "id": "s09m02r03",
+          "kind": "paper",
+          "title": "Closing the AI Accountability Gap: Defining an End-to-End Framework for Internal Algorithmic Auditing",
+          "authors": "Raji, Smart, White, Mitchell, Gebru, Hutchinson, Smith-Loud, Theron, Barnes",
+          "year": 2020,
+          "venue": "FAT* 2020",
+          "url": "https://arxiv.org/abs/2001.00973",
+          "arxiv": "2001.00973",
+          "minutes": 45,
+          "why": "Moves from single documents to an organizational process, borrowing from audit practices in other high-stakes industries.",
+          "focus": "Read the motivation and the stages of the SMACTR framework and the documents produced at each stage.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What analogy motivates Datasheets for Datasets?",
+          "choices": [
+            "Datasheets that accompany every electronic component, describing operating characteristics, test results, and recommended uses",
+            "Nutrition labels on food",
+            "Software licenses",
+            "Medical consent forms"
+          ],
+          "answer": 0,
+          "explain": "Gebru et al. propose that, like electronic components, every dataset should come with a datasheet documenting motivation, composition, collection, recommended uses, and more.",
+          "ref": "s09m02r01"
+        },
+        {
+          "q": "Which communication gap do datasheets mainly aim to close?",
+          "choices": [
+            "Between models and GPUs",
+            "Between dataset creators and dataset consumers",
+            "Between end users and app stores",
+            "Between journals and reviewers"
+          ],
+          "answer": 1,
+          "explain": "Datasheets are meant to improve communication between those who create datasets and those who use them, and to push the field toward transparency and accountability.",
+          "ref": "s09m02r01"
+        },
+        {
+          "q": "What is a central feature of a model card's evaluation section?",
+          "choices": [
+            "A single overall accuracy number",
+            "The model's source code",
+            "Training hardware specifications only",
+            "Performance benchmarked across relevant groups, including intersectional groups, relevant to the intended use"
+          ],
+          "answer": 3,
+          "explain": "Model cards report disaggregated evaluation across cultural, demographic, or phenotypic groups and their intersections, along with intended use and evaluation details.",
+          "ref": "s09m02r02"
+        },
+        {
+          "q": "Why do model cards emphasize documenting the intended use of a model?",
+          "choices": [
+            "To advertise the model",
+            "To satisfy copyright law",
+            "To discourage use in contexts the model is not suited for",
+            "To make the model run faster"
+          ],
+          "answer": 2,
+          "explain": "Mitchell et al. aim to clarify intended use cases and minimize use in unsuitable contexts; performance claims only hold for the conditions evaluated.",
+          "ref": "s09m02r02"
+        },
+        {
+          "q": "What gap does Raji et al.'s internal audit framework address?",
+          "choices": [
+            "It is hard for organizations to identify harms of their own systems before deployment, and emergent issues afterward are hard to trace back to their source",
+            "The lack of GPUs for auditing",
+            "External auditors are too expensive",
+            "Models are too accurate to audit"
+          ],
+          "answer": 0,
+          "explain": "Most audits are external and after deployment. SMACTR embeds auditing throughout internal development, with each stage producing documents that form an audit report.",
+          "ref": "s09m02r03"
+        },
+        {
+          "q": "A company publishes a polished model card but nobody inside the company has to act on what it reports. Which idea from Raji et al. does this most clearly lack?",
+          "choices": [
+            "Disaggregated metrics",
+            "A process that ties documentation to the organization's stated values and decisions throughout development",
+            "A dataset datasheet",
+            "A larger model"
+          ],
+          "answer": 1,
+          "explain": "Raji et al. argue documentation must be part of an end-to-end process that assesses decisions against the organization's principles; a document alone does not create accountability.",
+          "ref": "s09m02r03"
+        }
+      ],
+      "exercise": "Find a real model card or dataset card on a public model hub. Score it against the sections proposed by Mitchell et al. or Gebru et al.: which are missing or vague? Then write two questions a downstream user would need answered before deploying it in a hospital, and say which proposed section should have answered them."
+    },
+    {
+      "id": "s09m03",
+      "title": "Practitioners and data work",
+      "goal": "Explain what practitioners need to build fairer systems, why data work is undervalued, and how design choices about whose labels count shape model behavior.",
+      "guide": "These papers study the people who build AI. Holstein et al. ask practitioners what they need and compare it with what fairness research offers. Sambasivan et al. introduce 'data cascades' from interviews with practitioners in several countries. Gordon et al. (optional) make the social choice in labeling explicit. Key terms: 'semi-structured interview' (a qualitative method with planned questions but room to follow up); 'data cascade' (compounding downstream problems caused by data issues); 'ground truth' (the labels treated as correct for training and evaluation); 'annotator disagreement' (when labelers differ, often systematically by group); 'majority vote' (the default way to combine labels, which can override minority groups).",
+      "resources": [
+        {
+          "id": "s09m03r01",
+          "kind": "paper",
+          "title": "Improving fairness in machine learning systems: What do industry practitioners need?",
+          "authors": "Holstein, Wortman Vaughan, Daumé, Dudík, Wallach",
+          "year": 2019,
+          "venue": "CHI 2019",
+          "url": "https://arxiv.org/abs/1812.05239",
+          "arxiv": "1812.05239",
+          "minutes": 45,
+          "why": "The first systematic study of practitioners' fairness needs; it reveals where research tools and real practice do not match.",
+          "focus": "Read the method (35 interviews, 267 survey respondents) and the findings on data collection, auditing, and the gaps with research.",
+          "optional": false
+        },
+        {
+          "id": "s09m03r02",
+          "kind": "paper",
+          "title": "“Everyone wants to do the model work, not the data work”: Data Cascades in High-Stakes AI",
+          "authors": "Sambasivan, Kapania, Highfill, Akrong, Paritosh, Aroyo",
+          "year": 2021,
+          "venue": "CHI 2021",
+          "url": "https://doi.org/10.1145/3411764.3445518",
+          "minutes": 45,
+          "why": "Named and documented data cascades, showing how undervalued data work causes serious failures in high-stakes AI.",
+          "focus": "Read the definition of data cascades, the types of cascades and their triggers, and the HCI opportunities in the discussion.",
+          "optional": false
+        },
+        {
+          "id": "s09m03r03",
+          "kind": "paper",
+          "title": "Jury Learning: Integrating Dissenting Voices into Machine Learning Models",
+          "authors": "Gordon, Lam, Park, Patel, Hancock, Hashimoto, Bernstein",
+          "year": 2022,
+          "venue": "CHI 2022",
+          "url": "https://arxiv.org/abs/2202.02950",
+          "arxiv": "2202.02950",
+          "minutes": 40,
+          "why": "Makes explicit a hidden choice in supervised learning, whose labels count, and gives practitioners a way to decide it deliberately.",
+          "focus": "Read the motivation (majority vote overrides minority groups) and the jury metaphor; skim the architecture.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What methods did Holstein et al. use to study practitioners' fairness needs?",
+          "choices": [
+            "A lab experiment with students",
+            "35 semi-structured interviews and an anonymous survey of 267 ML practitioners",
+            "Analysis of public GitHub repositories",
+            "A benchmark of fairness toolkits"
+          ],
+          "answer": 1,
+          "explain": "They combined interviews and a survey of commercial product teams to identify alignment and disconnect between practitioners' challenges and fair-ML research.",
+          "ref": "s09m03r01"
+        },
+        {
+          "q": "Which mismatch between fairness research and practice does Holstein et al.'s study highlight?",
+          "choices": [
+            "Practitioners only care about accuracy",
+            "Research focused largely on algorithmic fixes to a fixed dataset, while practitioners often wanted support earlier in the pipeline, such as collecting and curating data",
+            "Practitioners have unlimited demographic data",
+            "Research tools were too easy to use"
+          ],
+          "answer": 1,
+          "explain": "Practitioners often could influence data collection and wanted help there, and frequently lacked the demographic information many fairness tools assume.",
+          "ref": "s09m03r01"
+        },
+        {
+          "q": "What is a 'data cascade' according to Sambasivan et al.?",
+          "choices": [
+            "A fast data pipeline",
+            "A method for data augmentation",
+            "A type of neural network layer",
+            "Compounding events that cause negative downstream effects from data issues"
+          ],
+          "answer": 3,
+          "explain": "Data cascades are triggered by practices that undervalue data quality; they are pervasive (92% of the 53 practitioners interviewed), invisible, delayed, and often avoidable.",
+          "ref": "s09m03r02"
+        },
+        {
+          "q": "Why are data cascades especially dangerous in the high-stakes domains Sambasivan et al. studied?",
+          "choices": [
+            "Because they are always caught immediately",
+            "Because they only affect training speed",
+            "Because they are often invisible and delayed, so problems surface after deployment in areas like health or conservation where errors matter most",
+            "Because high-stakes models never use data"
+          ],
+          "answer": 2,
+          "explain": "Cascades are hard to see and appear late, and in high-stakes AI the downstream impact of poor data quality is magnified.",
+          "ref": "s09m03r02"
+        },
+        {
+          "q": "What problem with standard supervised learning does Jury Learning address?",
+          "choices": [
+            "Label disagreements are resolved implicitly by majority vote, which overrides minority groups' labels",
+            "Models train too slowly",
+            "There are not enough annotators",
+            "Labels are always correct"
+          ],
+          "answer": 0,
+          "explain": "Gordon et al. make the choice explicit: practitioners specify which people or groups, in what proportions, form the 'jury' whose modeled labels determine predictions.",
+          "ref": "s09m03r03"
+        },
+        {
+          "q": "How do Sambasivan et al. and Holstein et al. reach a similar conclusion from different angles?",
+          "choices": [
+            "Both find that practitioners' real difficulties lie heavily in data (collection, quality, documentation) rather than only in model design",
+            "Both say fairness is solved by better algorithms",
+            "Both study only end users",
+            "Both are controlled experiments"
+          ],
+          "answer": 0,
+          "explain": "Holstein et al. find practitioners want help with data collection and curation; Sambasivan et al. show undervalued data work causes cascades. Both argue for treating data as first-class.",
+          "ref": "s09m03r02"
+        }
+      ],
+      "exercise": "Draft an interview guide (8-10 questions) for practitioners building an LLM content-moderation system, aiming to uncover data cascades and annotator disagreement. Mark which questions draw on Sambasivan et al. and which on Gordon et al., and describe how you would recruit a sample that avoids studying only large tech companies."
+    },
+    {
+      "id": "s09m04",
+      "title": "Everyday users and algorithm audits",
+      "goal": "Describe how people reason about invisible algorithms, how algorithm audits are designed, and how everyday users can collectively surface harmful behavior.",
+      "guide": "Start with Eslami et al.: even a feed algorithm used daily by millions can be invisible to its users, and making it visible changes how they react. Then read Sandvig et al., the classic map of audit study designs, adapted from audit studies of housing and employment discrimination. Finish with Shen et al., which argues that everyday users, not just experts, perform audits. Key terms: 'algorithmic awareness' (whether users know an algorithm is shaping what they see); 'audit study' (systematically testing a system's outputs to detect discrimination); 'sock puppet' (a fake account created to test a system); 'scraping' (automatically collecting a platform's outputs); 'everyday algorithm auditing' (users detecting and investigating harmful behavior through normal use).",
+      "resources": [
+        {
+          "id": "s09m04r01",
+          "kind": "paper",
+          "title": "\"I always assumed that I wasn't really that close to [her]\": Reasoning about Invisible Algorithms in News Feeds",
+          "authors": "Eslami, Rickman, Vaccaro, Aleyasen, Vuong, Karahalios, Hamilton, Sandvig",
+          "year": 2015,
+          "venue": "CHI 2015",
+          "url": "https://doi.org/10.1145/2702123.2702556",
+          "minutes": 40,
+          "why": "A landmark study of algorithmic awareness: many daily users did not know their feed was curated, and learning this changed their reactions.",
+          "focus": "Read the FeedVis tool description, the awareness finding, and the follow-up with participants months later.",
+          "optional": false
+        },
+        {
+          "id": "s09m04r02",
+          "kind": "paper",
+          "title": "Auditing Algorithms: Research Methods for Detecting Discrimination on Internet Platforms",
+          "authors": "Sandvig, Hamilton, Karahalios, Langbort",
+          "year": 2014,
+          "venue": "ICA 2014 preconference: Data and Discrimination",
+          "url": "https://websites.umich.edu/~csandvig/research/Auditing%20Algorithms%20--%20Sandvig%20--%20ICA%202014%20Data%20and%20Discrimination%20Preconference.pdf",
+          "minutes": 40,
+          "why": "The classic taxonomy of algorithm audit designs, with their strengths and legal and ethical problems; still the starting point for audit methods.",
+          "focus": "Read the history of audit studies and the five audit designs; note the discussion of terms of service and legal risk.",
+          "optional": false
+        },
+        {
+          "id": "s09m04r03",
+          "kind": "paper",
+          "title": "Everyday algorithm auditing: Understanding the power of everyday users in surfacing harmful algorithmic behaviors",
+          "authors": "Shen, DeVos, Eslami, Holstein",
+          "year": 2021,
+          "venue": "Proceedings of the ACM on Human-Computer Interaction (CSCW)",
+          "url": "https://arxiv.org/abs/2105.02980",
+          "arxiv": "2105.02980",
+          "minutes": 45,
+          "why": "Defines everyday algorithm auditing and argues users can catch harms that formal audits miss, which has implications for platform design.",
+          "focus": "Read the definition, the analysis of real-world cases, and the design implications for tools that support user audits.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What was a key finding of Eslami et al.'s study of Facebook News Feed users?",
+          "choices": [
+            "More than half of participants were not aware that the News Feed was curated by an algorithm",
+            "All participants knew exactly how the feed algorithm worked",
+            "Participants preferred an unfiltered feed and quit Facebook",
+            "The algorithm showed every post from every friend"
+          ],
+          "answer": 0,
+          "explain": "Using FeedVis to compare curated and unfiltered feeds, the study found most participants were initially unaware of curation, and some had drawn wrong conclusions about friendships from what they saw.",
+          "ref": "s09m04r01"
+        },
+        {
+          "q": "Why does the title quote ('I always assumed that I wasn't really that close to [her]') matter for HAI?",
+          "choices": [
+            "It shows users blame themselves or others for outcomes actually caused by an invisible algorithm",
+            "It shows users always understand algorithms",
+            "It shows users dislike their friends",
+            "It shows the algorithm was perfectly accurate"
+          ],
+          "answer": 0,
+          "explain": "Without awareness of curation, users explained missing posts through social reasons. Invisible algorithms shape beliefs about relationships, not just about content.",
+          "ref": "s09m04r01"
+        },
+        {
+          "q": "Which of the following is NOT one of the audit designs described by Sandvig et al.?",
+          "choices": [
+            "Code audit",
+            "Sock puppet audit",
+            "Federated gradient audit",
+            "Scraping audit"
+          ],
+          "answer": 2,
+          "explain": "Sandvig et al. describe code audits, noninvasive user audits, scraping audits, sock puppet audits, and crowdsourced (collaborative) audits. 'Federated gradient audit' is invented.",
+          "ref": "s09m04r02"
+        },
+        {
+          "q": "What is a key drawback Sandvig et al. raise for scraping and sock puppet audits?",
+          "choices": [
+            "They are impossible to run on the internet",
+            "They can violate platforms' terms of service and raise legal risk for researchers",
+            "They produce no data",
+            "They require access to the platform's source code"
+          ],
+          "answer": 1,
+          "explain": "These designs collect data or create fake accounts in ways platforms may prohibit, which Sandvig et al. discuss as a legal and ethical obstacle to auditing.",
+          "ref": "s09m04r02"
+        },
+        {
+          "q": "What do Shen et al. claim about everyday users as auditors?",
+          "choices": [
+            "Users can only audit if they understand the underlying algorithm",
+            "Users should not report problems",
+            "Formal audits make user audits unnecessary",
+            "Users can surface problematic machine behaviors that elude centrally organized audits, regardless of their knowledge of the algorithm"
+          ],
+          "answer": 3,
+          "explain": "Everyday algorithm auditing happens through day-to-day use; because it is grounded in real contexts, it can catch issues formal audits miss, even without technical knowledge.",
+          "ref": "s09m04r03"
+        },
+        {
+          "q": "Which design implication follows most directly from Shen et al.?",
+          "choices": [
+            "Platforms should hide algorithmic outputs from users",
+            "Platforms and tools could support users in detecting, discussing, and reporting problematic behavior, and connect user findings with formal audits",
+            "Only engineers should audit systems",
+            "Audits should happen once before launch"
+          ],
+          "answer": 1,
+          "explain": "Shen et al. draw lessons for designing platforms and tools that facilitate everyday auditing and bridge it with formal auditing approaches.",
+          "ref": "s09m04r03"
+        }
+      ],
+      "exercise": "Pick one of Sandvig et al.'s audit designs and plan an audit of an LLM chatbot for differential treatment by user dialect. Specify the inputs you would vary, what you would hold constant, the outcome measure, how many samples you need to account for randomness in generation, and one legal or ethical issue you would need to resolve."
+    },
+    {
+      "id": "s09m05",
+      "title": "Risks of language models",
+      "goal": "Map the main categories of LLM risk, explain the arguments of the 'stochastic parrots' critique, and evaluate evidence that AI dialogue can durably change beliefs.",
+      "guide": "Read Bender et al. first; it is a short, influential critique that raised environmental, data, and meaning-related concerns before LLMs went mainstream. Then use Weidinger et al. as a systematic map of risk areas; note which ones are human-computer interaction harms. Finish with Costello et al., an experiment in which GPT-4 dialogues reduced conspiracy beliefs. Ask yourself: if dialogue with an AI can durably change beliefs for the better, what does that imply about the manipulation risks in Weidinger et al.'s HCI category? Key terms: 'stochastic parrot' (Bender et al.'s image for a system that strings words together according to statistical patterns of how they co-occur, with no grasp of what they mean); 'information hazard' (harm from true information being revealed or inferred); 'anthropomorphism' (attributing human qualities to a system); 'durable effect' (an effect still measurable weeks or months later).",
+      "resources": [
+        {
+          "id": "s09m05r01",
+          "kind": "paper",
+          "title": "On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?",
+          "authors": "Bender, Gebru, McMillan-Major, Shmitchell",
+          "year": 2021,
+          "venue": "FAccT 2021",
+          "url": "https://doi.org/10.1145/3442188.3445922",
+          "minutes": 45,
+          "why": "One of the most cited critiques of large language models; essential for understanding the debate around scale, data, and meaning.",
+          "focus": "Read the sections on environmental and financial costs, on training data that is too large to document, and on 'stochastic parrots'; read the recommendations.",
+          "optional": false
+        },
+        {
+          "id": "s09m05r02",
+          "kind": "paper",
+          "title": "Ethical and social risks of harm from Language Models",
+          "authors": "Weidinger, Mellor, Rauh, Griffin, Uesato, et al.",
+          "year": 2021,
+          "venue": "arXiv",
+          "url": "https://arxiv.org/abs/2112.04359",
+          "arxiv": "2112.04359",
+          "minutes": 60,
+          "why": "A widely used taxonomy of LM risks (six areas, 21 risks) that many evaluation and policy efforts build on.",
+          "focus": "Read the summary of the six risk areas, then read the Human-Computer Interaction Harms section in full; skim the others.",
+          "optional": false
+        },
+        {
+          "id": "s09m05r03",
+          "kind": "paper",
+          "title": "Durably reducing conspiracy beliefs through dialogues with AI",
+          "authors": "Costello, Pennycook, Rand",
+          "year": 2024,
+          "venue": "Science",
+          "url": "https://doi.org/10.1126/science.adq1814",
+          "minutes": 30,
+          "why": "Strong experimental evidence that personalized AI dialogue can change entrenched beliefs, with direct implications for both beneficial uses and manipulation risks.",
+          "focus": "Read the design (personalized evidence-based dialogues with GPT-4 Turbo), the effect size, the two-month follow-up, and the spillover to unrelated conspiracies.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What does Bender et al.'s phrase 'stochastic parrot' describe?",
+          "choices": [
+            "A model that understands meaning but speaks randomly",
+            "A robot that imitates bird calls",
+            "A system that strings words together according to statistical patterns of how they co-occur, with no grasp of what they mean",
+            "A model trained only on small datasets"
+          ],
+          "answer": 2,
+          "explain": "The metaphor warns that fluent output can mislead people into attributing understanding and intent to a system that models form, not meaning.",
+          "ref": "s09m05r01"
+        },
+        {
+          "q": "Which of these is one of Bender et al.'s recommendations?",
+          "choices": [
+            "Scale models as fast as possible",
+            "Stop all NLP research",
+            "Invest in curating and carefully documenting datasets rather than ingesting everything on the web",
+            "Remove all human evaluation"
+          ],
+          "answer": 2,
+          "explain": "They recommend weighing environmental and financial costs first, curating and documenting data, pre-development exercises tied to stakeholder values, and research beyond ever-larger models.",
+          "ref": "s09m05r01"
+        },
+        {
+          "q": "Which risk area in Weidinger et al. covers risks specific to conversational agents interacting with users, such as unsafe use, manipulation, or deception?",
+          "choices": [
+            "Human-Computer Interaction Harms",
+            "Information Hazards",
+            "Automation, Access, and Environmental Harms",
+            "Discrimination, Exclusion and Toxicity"
+          ],
+          "answer": 0,
+          "explain": "The HCI Harms area focuses on LLM-based conversational agents, including users overtrusting or anthropomorphizing them, and manipulation or deception.",
+          "ref": "s09m05r02"
+        },
+        {
+          "q": "In Weidinger et al.'s taxonomy, a model correctly inferring a user's sensitive health condition from their writing falls under which area?",
+          "choices": [
+            "Information Hazards",
+            "Misinformation Harms",
+            "Malicious Uses",
+            "Environmental Harms"
+          ],
+          "answer": 0,
+          "explain": "Information hazards include private data leaks and LMs correctly inferring sensitive information; the harm comes from true information.",
+          "ref": "s09m05r02"
+        },
+        {
+          "q": "What did Costello, Pennycook & Rand find?",
+          "choices": [
+            "AI dialogues had no effect on conspiracy beliefs",
+            "Personalized evidence-based dialogues with GPT-4 Turbo reduced conspiracy belief by about 20%, and the effect remained two months later",
+            "The effect disappeared within a day",
+            "Only people with weak beliefs changed"
+          ],
+          "answer": 1,
+          "explain": "The reduction persisted at two months, generalized across conspiracy theories, occurred even among deeply entrenched believers, and spilled over to unrelated conspiracies.",
+          "ref": "s09m05r03"
+        },
+        {
+          "q": "What theoretical claim does the Costello et al. result challenge?",
+          "choices": [
+            "That LLMs can generate text",
+            "That people never change their minds",
+            "That GPT-4 is accurate",
+            "That conspiracy beliefs resist counterevidence because they fulfill psychological needs; the results suggest past failures may reflect counterevidence that was not compelling or tailored enough"
+          ],
+          "answer": 3,
+          "explain": "Influential accounts say such beliefs resist evidence because they meet psychological needs. Costello et al. suggest many believers update when evidence is sufficiently compelling and tailored.",
+          "ref": "s09m05r03"
+        },
+        {
+          "q": "Connecting Costello et al. and Jakesch et al. (Stage 8), what is the most defensible conclusion?",
+          "choices": [
+            "LLM persuasion is always beneficial",
+            "LLMs can shift people's beliefs through interaction, so the same capability that corrects misinformation could steer opinions in unintended or harmful directions",
+            "LLMs cannot influence beliefs",
+            "Only explicit arguments change beliefs"
+          ],
+          "answer": 1,
+          "explain": "Jakesch et al. found opinionated suggestions shifted attitudes; Costello et al. found targeted dialogue reduced conspiracy belief. Together they show influence is a capability, which is why Weidinger et al. list manipulation as an HCI harm.",
+          "ref": "s09m05r03"
+        }
+      ],
+      "exercise": "Costello et al. used AI dialogue to reduce false beliefs. Write a short research ethics memo (half a page) for a team that wants to use the same method to increase vaccine uptake. Address consent, which beliefs count as 'false' and who decides, how you would detect if the model itself states false information, and one risk from Weidinger et al.'s taxonomy."
+    }
+  ]
+}

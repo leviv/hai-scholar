@@ -1,0 +1,602 @@
+{
+  "id": "s03",
+  "number": 3,
+  "title": "Language Models and Transformers",
+  "subtitle": "Word vectors, sequence models, attention, and building a GPT",
+  "overview": "Building on Stage 2's picture of networks trained by gradient descent, this stage explains how today's large language models (LLMs) work: words become vectors, sequence models learn to read and write text, attention lets a model look back at relevant context, and the Transformer combines these into the architecture behind GPT-style chatbots. It ends with you building a small GPT in code. Understanding these mechanics is what lets an HAI researcher reason about why chatbots sound fluent yet can be confidently wrong, why outputs vary from run to run, and where explanations of model behavior can and cannot come from.",
+  "modules": [
+    {
+      "id": "s03m01",
+      "title": "Words as vectors",
+      "goal": "Explain how language models represent words as vectors of numbers, why similar words end up with similar vectors, and what 'predicting the next word' means.",
+      "guide": "Start with Lee & Trott, written for non-specialists, which walks through the whole pipeline of an LLM in plain language; then watch 3Blue1Brown's short overview. Next, read Alammar's word2vec essay to see in detail how word vectors are learned from raw text, and finally skim Mikolov et al., the paper that introduced word2vec. Key terms: a 'vector' is a list of numbers that can be treated as a point in a high-dimensional space; an 'embedding' is a learned vector representing an item such as a word, placed so that related items are close together; a 'token' is the unit of text a model processes (a word or a piece of a word); a 'language model' assigns probabilities to the next token given the preceding text.",
+      "resources": [
+        {
+          "id": "s03m01r01",
+          "kind": "essay",
+          "title": "Large language models, explained with a minimum of math and jargon",
+          "authors": "Timothy B. Lee, Sean Trott",
+          "year": 2023,
+          "venue": "Understanding AI",
+          "url": "https://www.understandingai.org/p/large-language-models-explained-with",
+          "listen": "https://www.understandingai.org/p/large-language-models-explained-with",
+          "minutes": 40,
+          "why": "A careful, jargon-free tour of how an LLM works end to end, co-written by a cognitive scientist; it gives you a mental model to hang the rest of this stage on.",
+          "focus": "Read the whole essay. Note the sections on word vectors, attention as information-sharing between words, and the feed-forward step."
+        },
+        {
+          "id": "s03m01r02",
+          "kind": "video",
+          "title": "Large Language Models explained briefly",
+          "authors": "Grant Sanderson (3Blue1Brown)",
+          "year": 2024,
+          "venue": "3Blue1Brown (YouTube)",
+          "url": "https://www.youtube.com/watch?v=LPZh9BOjkQs",
+          "youtube": "LPZh9BOjkQs",
+          "minutes": 8,
+          "why": "A short visual overview of next-word prediction, pretraining, and the extra training that turns a model into a chatbot.",
+          "focus": "Watch for how the model's output is a probability distribution over next words, and why a chatbot's response can differ each time."
+        },
+        {
+          "id": "s03m01r03",
+          "kind": "essay",
+          "title": "The Illustrated Word2vec",
+          "authors": "Jay Alammar",
+          "year": 2019,
+          "venue": "jalammar.github.io",
+          "url": "https://jalammar.github.io/illustrated-word2vec/",
+          "listen": "https://jalammar.github.io/illustrated-word2vec/",
+          "minutes": 35,
+          "why": "Shows step by step how word embeddings are learned from text, building intuition for the vectors every later model uses.",
+          "focus": "Read the personality-embedding analogy, the word-analogy examples, and the sections on skipgram and negative sampling."
+        },
+        {
+          "id": "s03m01r04",
+          "kind": "paper",
+          "title": "Efficient Estimation of Word Representations in Vector Space",
+          "authors": "Tomas Mikolov, Kai Chen, Greg Corrado, Jeffrey Dean",
+          "year": 2013,
+          "venue": "arXiv preprint (ICLR 2013 workshop)",
+          "url": "https://arxiv.org/abs/1301.3781",
+          "arxiv": "1301.3781",
+          "minutes": 30,
+          "why": "The original word2vec paper; its finding that vector arithmetic captures relationships between words shaped how the field thinks about meaning in models.",
+          "focus": "Read the abstract, the descriptions of the CBOW and Skip-gram architectures, and the word-analogy results. Skim complexity analysis.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Lee & Trott describe the word vectors used in the most powerful version of GPT-3. How big are they?",
+          "choices": [
+            "3 numbers, like coordinates in space",
+            "300 numbers, the same as word2vec",
+            "12,288 numbers per word",
+            "One number per word in the dictionary"
+          ],
+          "answer": 2,
+          "explain": "Lee & Trott note GPT-3's word vectors have 12,288 dimensions, about 20 times more than Google's 2013 word2vec vectors (300). They suggest the extra dimensions act as scratch space for notes about each word's context.",
+          "ref": "s03m01r01"
+        },
+        {
+          "q": "In Lee & Trott's explanation, what happens in the attention step versus the feed-forward step?",
+          "choices": [
+            "Attention lets words exchange information with relevant other words; the feed-forward step processes each word's vector on its own, without exchanging information between words",
+            "Attention predicts the next word; the feed-forward step reads the input text",
+            "Both steps exchange information between all words equally",
+            "Attention removes unimportant words from the input; the feed-forward step adds new words"
+          ],
+          "answer": 0,
+          "explain": "They describe words 'looking around' for relevant context in the attention step and each word 'thinking about' what it gathered in the feed-forward step, where no information is exchanged between words.",
+          "ref": "s03m01r01"
+        },
+        {
+          "q": "In word2vec embeddings, the vector for 'king' minus 'man' plus 'woman' lands closest to 'queen'. What does this show?",
+          "choices": [
+            "The model was explicitly programmed with a list of gender relationships",
+            "Relationships between words can correspond to consistent directions in the embedding space, learned only from patterns of word co-occurrence",
+            "Word vectors are random, and this is a coincidence",
+            "The model understands royalty the way humans do"
+          ],
+          "answer": 1,
+          "explain": "Mikolov et al. and Alammar show that offsets between vectors capture relationships learned from text alone. The last option overclaims — the result shows statistical regularities, not human-like understanding.",
+          "ref": "s03m01r03"
+        },
+        {
+          "q": "What is the training task in skipgram, as Alammar explains it?",
+          "choices": [
+            "Translate a word into another language",
+            "Classify whole documents by topic",
+            "Generate a dictionary definition for each word",
+            "Given a word, predict the words that appear near it in a window of text"
+          ],
+          "answer": 3,
+          "explain": "Skipgram uses each word to predict its neighbors within a context window; the embeddings that make this prediction work are the useful by-product. Negative sampling makes this efficient by contrasting real neighbors with random words.",
+          "ref": "s03m01r03"
+        },
+        {
+          "q": "Why can a chatbot give a different answer to the exact same prompt, according to 3Blue1Brown's overview?",
+          "choices": [
+            "Because it searches the internet for a new answer every time",
+            "Because its parameters are retrained after every message",
+            "Because the model outputs a probability for every possible next word, and the chatbot samples from that distribution, sometimes picking less likely words",
+            "Because a human reviewer rewrites some responses"
+          ],
+          "answer": 2,
+          "explain": "The model produces a probability distribution over next words; sampling (rather than always picking the top word) makes text more natural but means outputs vary run to run. This matters for HAI studies that compare responses across participants.",
+          "ref": "s03m01r02"
+        },
+        {
+          "q": "According to 3Blue1Brown's overview, how does a pretrained next-word predictor become a helpful chatbot assistant?",
+          "choices": [
+            "It needs no further training; pretraining alone makes it an assistant",
+            "Through additional training, including reinforcement learning with human feedback, where people flag unhelpful or problematic responses",
+            "By writing a long list of rules for every possible question",
+            "By deleting all its training data"
+          ],
+          "answer": 1,
+          "explain": "The video distinguishes pretraining on vast amounts of text from further training such as RLHF that shapes the model's behavior as an assistant. Stage 4 covers this in depth.",
+          "ref": "s03m01r02"
+        }
+      ]
+    },
+    {
+      "id": "s03m02",
+      "title": "Sequences and attention",
+      "goal": "Explain how recurrent networks process sequences, why squeezing a whole sentence into one vector is a bottleneck, and how attention solves it.",
+      "guide": "Read Olah's LSTM essay first to see how a network can carry information along a sequence, then Alammar's seq2seq essay for the encoder-decoder idea and the arrival of attention. Then skim the two primary papers: Sutskever et al. (sequence-to-sequence translation) and Bahdanau et al. (attention). Weng's survey is an optional map of the many attention variants. Key terms: a 'recurrent neural network' (RNN) processes a sequence one item at a time, passing a 'hidden state' (a vector summarizing what it has seen so far) to the next step; an 'LSTM' is an RNN with gates that control what to keep or forget; an 'encoder' turns the input into vectors and a 'decoder' generates the output from them; 'softmax' turns a list of scores into probabilities that are positive and sum to 1; 'attention' computes a weighted average of a set of vectors, with weights (from a softmax) that say how relevant each one is to the current step.",
+      "resources": [
+        {
+          "id": "s03m02r01",
+          "kind": "essay",
+          "title": "Understanding LSTM Networks",
+          "authors": "Christopher Olah",
+          "year": 2015,
+          "venue": "colah.github.io",
+          "url": "https://colah.github.io/posts/2015-08-Understanding-LSTMs/",
+          "listen": "https://colah.github.io/posts/2015-08-Understanding-LSTMs/",
+          "minutes": 30,
+          "why": "The classic visual explanation of recurrent networks and LSTMs — the dominant sequence models before Transformers, and the context for why attention mattered.",
+          "focus": "Read the sections on RNNs, the problem of long-term dependencies, and the step-by-step LSTM walkthrough. Skim the variants at the end."
+        },
+        {
+          "id": "s03m02r02",
+          "kind": "essay",
+          "title": "Visualizing A Neural Machine Translation Model (Mechanics of Seq2seq Models With Attention)",
+          "authors": "Jay Alammar",
+          "year": 2018,
+          "venue": "jalammar.github.io",
+          "url": "https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/",
+          "listen": "https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/",
+          "minutes": 25,
+          "why": "Animates the encoder-decoder architecture and shows exactly what attention adds — the conceptual bridge to the Transformer.",
+          "focus": "Read the whole essay; pause on the animations of the context vector and of attention scoring."
+        },
+        {
+          "id": "s03m02r03",
+          "kind": "paper",
+          "title": "Sequence to Sequence Learning with Neural Networks",
+          "authors": "Ilya Sutskever, Oriol Vinyals, Quoc V. Le",
+          "year": 2014,
+          "venue": "NeurIPS 2014",
+          "url": "https://arxiv.org/abs/1409.3215",
+          "arxiv": "1409.3215",
+          "minutes": 30,
+          "why": "Showed that a general encoder-decoder network could learn translation end to end, establishing the sequence-to-sequence approach.",
+          "focus": "Read the abstract, introduction, and model section; note the trick of reversing the source sentence."
+        },
+        {
+          "id": "s03m02r04",
+          "kind": "paper",
+          "title": "Neural Machine Translation by Jointly Learning to Align and Translate",
+          "authors": "Dzmitry Bahdanau, Kyunghyun Cho, Yoshua Bengio",
+          "year": 2014,
+          "venue": "ICLR 2015",
+          "url": "https://arxiv.org/abs/1409.0473",
+          "arxiv": "1409.0473",
+          "minutes": 35,
+          "why": "Introduced the attention mechanism for translation; its alignment visualizations were also an early form of model explanation, later debated in HAI work on explainability.",
+          "focus": "Read the abstract, introduction, and the section describing the model's alignment (attention). Look at the alignment figures."
+        },
+        {
+          "id": "s03m02r05",
+          "kind": "essay",
+          "title": "Attention? Attention!",
+          "authors": "Lilian Weng",
+          "year": 2018,
+          "venue": "Lil'Log (lilianweng.github.io)",
+          "url": "https://lilianweng.github.io/posts/2018-06-24-attention/",
+          "listen": "https://lilianweng.github.io/posts/2018-06-24-attention/",
+          "minutes": 40,
+          "why": "A clear survey of attention variants with consistent notation; a handy reference when papers mention different kinds of attention.",
+          "focus": "Read the opening sections on why attention was invented and the summary of attention mechanisms; skim the rest as reference.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "According to Olah, what problem do plain RNNs have that LSTMs were designed to fix?",
+          "choices": [
+            "They cannot process sequences at all",
+            "In practice they struggle to learn long-term dependencies, where relevant information appeared many steps earlier",
+            "They require labeled data for every word",
+            "They only work on images"
+          ],
+          "answer": 1,
+          "explain": "Olah explains that while RNNs can in theory handle long-term dependencies, in practice they fail to learn them as the gap grows; LSTMs add a cell state and gates to make long-range information easier to keep.",
+          "ref": "s03m02r01"
+        },
+        {
+          "q": "In an LSTM, what does the forget gate output, and what does it control?",
+          "choices": [
+            "A number between 0 and 1 for each value in the cell state, controlling how much of it to keep",
+            "A single on/off switch that resets the whole network",
+            "The next word in the output",
+            "The learning rate for the current step"
+          ],
+          "answer": 0,
+          "explain": "Olah describes the forget gate as a sigmoid layer that outputs values between 0 ('completely get rid of this') and 1 ('completely keep this') for each number in the cell state.",
+          "ref": "s03m02r01"
+        },
+        {
+          "q": "Alammar describes a problem with the basic encoder-decoder model. What is it?",
+          "choices": [
+            "The decoder is too large to train",
+            "The encoder only reads the first word",
+            "The model cannot generate output longer than one word",
+            "The whole input sentence must be squeezed into one fixed context vector, which becomes a bottleneck for long sentences"
+          ],
+          "answer": 3,
+          "explain": "The single context vector turned out to be a bottleneck, making long sentences hard. Attention addresses it by letting the decoder look at all the encoder's hidden states rather than only the last one.",
+          "ref": "s03m02r02"
+        },
+        {
+          "q": "How does an attention decoder decide which parts of the input to focus on at each output step?",
+          "choices": [
+            "It always focuses on the input word in the same position",
+            "A human annotator marks the relevant words",
+            "It scores each encoder hidden state, turns the scores into weights with a softmax, and takes a weighted sum of the hidden states",
+            "It randomly selects one input word"
+          ],
+          "answer": 2,
+          "explain": "Alammar walks through scoring each encoder hidden state, applying softmax, and summing the weighted states into a context vector specific to that decoding step.",
+          "ref": "s03m02r02"
+        },
+        {
+          "q": "Sutskever et al. found a simple trick that substantially improved their LSTM translation model. What was it?",
+          "choices": [
+            "Translating one letter at a time",
+            "Reversing the order of the words in the source sentence",
+            "Removing all punctuation",
+            "Training only on very short sentences"
+          ],
+          "answer": 1,
+          "explain": "Reversing the source sentence introduced many short-term dependencies between source and target words, which made optimization easier. The authors report it as one of their key findings.",
+          "ref": "s03m02r03"
+        },
+        {
+          "q": "Bahdanau et al.'s attention produces 'alignment' weights that can be drawn as a heat map between source and target words. An HAI researcher wants to show these to users as explanations. What is a reasonable caution?",
+          "choices": [
+            "Attention weights are random and carry no information",
+            "Attention weights are guaranteed to be a complete and faithful explanation of the model's decision",
+            "Users always prefer no explanation",
+            "The weights show where the model attended when producing each word, which is suggestive but not necessarily a full account of why it produced that output"
+          ],
+          "answer": 3,
+          "explain": "Bahdanau et al. present alignments as an intuitive view of what the model attends to, and they often match human intuitions about translation. Whether attention weights are faithful explanations is a separate question — one that later explainability research debates.",
+          "ref": "s03m02r04"
+        }
+      ]
+    },
+    {
+      "id": "s03m03",
+      "title": "The Transformer",
+      "goal": "Explain the main components of a Transformer — token embeddings, self-attention with queries, keys and values, multi-head attention, and feed-forward layers — and why the architecture replaced RNNs.",
+      "guide": "Watch the two 3Blue1Brown chapters first, then read Alammar's Illustrated Transformer, which covers the same machinery with diagrams of the original encoder-decoder model. Only then open Vaswani et al.; with this preparation the paper's Section 3 should be readable. The optional chapter 7 video looks at where facts might be stored in the network. Key terms: 'self-attention' is attention in which every token in a sequence attends to the other tokens in the same sequence; each token produces a 'query' (what it's looking for), a 'key' (what it offers), and a 'value' (the information it passes on); 'multi-head attention' runs several attention operations in parallel so different heads can capture different relationships; 'positional encoding' adds information about word order, since attention by itself ignores order; 'logits' are the raw scores the model outputs before softmax turns them into probabilities; 'temperature' rescales the logits to make sampling more or less random.",
+      "resources": [
+        {
+          "id": "s03m03r01",
+          "kind": "video",
+          "title": "Transformers, the tech behind LLMs | Deep Learning Chapter 5",
+          "authors": "Grant Sanderson (3Blue1Brown)",
+          "year": 2024,
+          "venue": "3Blue1Brown (YouTube)",
+          "url": "https://www.youtube.com/watch?v=wjZofJX0v4M",
+          "youtube": "wjZofJX0v4M",
+          "minutes": 27,
+          "why": "Builds a concrete picture of the data flow in a GPT-style model — tokens to embeddings, through attention and MLP blocks, to a probability distribution over the next token.",
+          "focus": "Focus on the embedding matrix, the unembedding step, and the explanation of softmax and temperature."
+        },
+        {
+          "id": "s03m03r02",
+          "kind": "video",
+          "title": "Attention in transformers, step-by-step | Deep Learning Chapter 6",
+          "authors": "Grant Sanderson (3Blue1Brown)",
+          "year": 2024,
+          "venue": "3Blue1Brown (YouTube)",
+          "url": "https://www.youtube.com/watch?v=eMlx5fFNoYc",
+          "youtube": "eMlx5fFNoYc",
+          "minutes": 26,
+          "why": "The clearest visual walkthrough of queries, keys, values, and masking — essential for understanding claims about what models 'pay attention to'.",
+          "focus": "Follow the adjective-noun example for queries and keys, then the explanation of masking and multiple heads."
+        },
+        {
+          "id": "s03m03r03",
+          "kind": "essay",
+          "title": "The Illustrated Transformer",
+          "authors": "Jay Alammar",
+          "year": 2018,
+          "venue": "jalammar.github.io",
+          "url": "https://jalammar.github.io/illustrated-transformer/",
+          "listen": "https://jalammar.github.io/illustrated-transformer/",
+          "minutes": 40,
+          "why": "The most widely used illustrated guide to the original Transformer; many researchers learned the architecture from it.",
+          "focus": "Read all sections through 'The Decoder Side'; skim the training section."
+        },
+        {
+          "id": "s03m03r04",
+          "kind": "paper",
+          "title": "Attention Is All You Need",
+          "authors": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin",
+          "year": 2017,
+          "venue": "NeurIPS 2017",
+          "url": "https://arxiv.org/abs/1706.03762",
+          "arxiv": "1706.03762",
+          "minutes": 50,
+          "why": "Introduced the Transformer, the architecture underlying essentially every modern LLM.",
+          "focus": "Read the abstract, introduction, Section 3 (model architecture, especially 3.2 on attention), and Section 4 (why self-attention). Skim results."
+        },
+        {
+          "id": "s03m03r05",
+          "kind": "video",
+          "title": "How might LLMs store facts | Deep Learning Chapter 7",
+          "authors": "Grant Sanderson (3Blue1Brown)",
+          "year": 2024,
+          "venue": "3Blue1Brown (YouTube)",
+          "url": "https://www.youtube.com/watch?v=9-Jl0dxWQs8",
+          "youtube": "9-Jl0dxWQs8",
+          "minutes": 23,
+          "why": "Explores how the feed-forward (MLP) layers could store factual associations, and introduces superposition — background for interpretability research in later stages.",
+          "focus": "Follow the worked example of a fact being retrieved, and the closing discussion of superposition.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In 3Blue1Brown's chapter 5, what does 'temperature' do when sampling the next token?",
+          "choices": [
+            "It changes the number of layers used",
+            "It controls how fast the model runs",
+            "It rescales the scores before softmax: higher temperature spreads probability more evenly (more random), lower temperature concentrates it on the top choices",
+            "It removes rare tokens from the vocabulary permanently"
+          ],
+          "answer": 2,
+          "explain": "Dividing logits by a temperature before softmax flattens (high T) or sharpens (low T) the distribution. At very low temperature the model almost always picks the most likely token.",
+          "ref": "s03m03r01"
+        },
+        {
+          "q": "In self-attention, what roles do the query and key vectors play?",
+          "choices": [
+            "The query encodes what a token is looking for; keys encode what each token offers; their dot product measures how relevant one token is to another",
+            "The query stores the token's spelling and the key stores its position",
+            "Queries and keys are the final output probabilities",
+            "Keys are passwords that prevent tokens from being changed"
+          ],
+          "answer": 0,
+          "explain": "3Blue1Brown's chapter 6 shows each token producing a query and a key; large dot products mean high relevance, and after softmax these become weights for summing the value vectors.",
+          "ref": "s03m03r02"
+        },
+        {
+          "q": "Why do GPT-style models 'mask' attention during training, as explained in chapter 6?",
+          "choices": [
+            "To hide private information in the training data",
+            "To make the model smaller",
+            "To speed up softmax",
+            "So that each token can only attend to earlier tokens, preventing it from seeing the very next tokens it is being trained to predict"
+          ],
+          "answer": 3,
+          "explain": "Masking blocks attention to later positions, so the model can't cheat by looking ahead. This lets training predict every position in a sequence at once.",
+          "ref": "s03m03r02"
+        },
+        {
+          "q": "Why do Vaswani et al. divide the query-key dot products by the square root of the key dimension?",
+          "choices": [
+            "To convert the dot products into probabilities",
+            "Because for large dimensions the dot products grow large, pushing softmax into regions with extremely small gradients",
+            "To make the model use fewer parameters",
+            "To encode word position"
+          ],
+          "answer": 1,
+          "explain": "The paper explains that large dot products make softmax saturate, giving tiny gradients; scaling by 1/sqrt(d_k) counteracts this. Softmax, not the scaling, turns scores into probabilities.",
+          "ref": "s03m03r04"
+        },
+        {
+          "q": "What is a main advantage of the Transformer over recurrent networks, according to Vaswani et al.?",
+          "choices": [
+            "It has no parameters to train",
+            "It processes one word at a time, which is more accurate",
+            "It dispenses with recurrence, so computation across positions can be parallelized, and any two positions are connected by a constant number of operations",
+            "It does not need any training data"
+          ],
+          "answer": 2,
+          "explain": "Removing recurrence lets training run in parallel across the sequence and shortens the path between distant positions, making long-range dependencies easier to learn. The paper's Section 4 compares this with recurrent and convolutional layers.",
+          "ref": "s03m03r04"
+        },
+        {
+          "q": "Alammar notes that the Transformer needs positional encodings. What would go wrong without them?",
+          "choices": [
+            "The model would have no information about word order, so 'dog bites man' and 'man bites dog' would look the same to attention",
+            "The model could not compute softmax",
+            "The vocabulary would be too large",
+            "Training would never start"
+          ],
+          "answer": 0,
+          "explain": "Self-attention treats its inputs as a set; positional encodings are added to the embeddings to inject information about each token's position in the sequence.",
+          "ref": "s03m03r03"
+        }
+      ]
+    },
+    {
+      "id": "s03m04",
+      "title": "Build a GPT",
+      "goal": "Build and explain a small decoder-only Transformer language model, including how text is turned into tokens, and contrast it with encoder models like BERT.",
+      "guide": "This is the capstone of the technical half so far. Code along with Karpathy's 'Let's build GPT' (it builds on the micrograd video from Stage 2), reading Alammar's Illustrated GPT-2 alongside it for diagrams. Then watch the tokenizer video, which explains many surprising LLM failures. The GPT-2 and BERT papers are optional primary sources that show the two main ways Transformers were used before chat assistants. Key terms: 'tokenization' splits text into tokens from a fixed vocabulary; 'byte-pair encoding' (BPE) builds that vocabulary by repeatedly merging the most frequent adjacent pair of symbols; 'decoder-only' means the model uses only masked self-attention blocks and generates text left to right; 'autoregressive' means each new token is generated conditioned on all previous ones and then fed back in; the 'context window' is the maximum number of tokens the model can attend to at once.",
+      "resources": [
+        {
+          "id": "s03m04r01",
+          "kind": "video",
+          "title": "Let's build GPT: from scratch, in code, spelled out.",
+          "authors": "Andrej Karpathy",
+          "year": 2023,
+          "venue": "Andrej Karpathy (YouTube)",
+          "url": "https://www.youtube.com/watch?v=kCc8FmEb1nY",
+          "youtube": "kCc8FmEb1nY",
+          "minutes": 120,
+          "why": "Writing a GPT yourself makes the Transformer concrete and demystifies what a 'language model' is — the object HAI researchers study in every later stage.",
+          "focus": "Code along. Make sure you understand the bigram baseline, how self-attention is built with a triangular mask, and why scores are scaled before softmax."
+        },
+        {
+          "id": "s03m04r02",
+          "kind": "essay",
+          "title": "The Illustrated GPT-2 (Visualizing Transformer Language Models)",
+          "authors": "Jay Alammar",
+          "year": 2019,
+          "venue": "jalammar.github.io",
+          "url": "https://jalammar.github.io/illustrated-gpt2/",
+          "listen": "https://jalammar.github.io/illustrated-gpt2/",
+          "minutes": 40,
+          "why": "Diagrams the decoder-only architecture and masked self-attention, and contrasts GPT-2 with BERT.",
+          "focus": "Read Part 1 and Part 2; Part 3 (beyond language modeling) is optional."
+        },
+        {
+          "id": "s03m04r03",
+          "kind": "video",
+          "title": "Let's build the GPT Tokenizer",
+          "authors": "Andrej Karpathy",
+          "year": 2024,
+          "venue": "Andrej Karpathy (YouTube)",
+          "url": "https://www.youtube.com/watch?v=zduSFxRajkE",
+          "youtube": "zduSFxRajkE",
+          "minutes": 130,
+          "why": "Tokenization explains many odd LLM behaviors users encounter (trouble with spelling, arithmetic, or some languages) — useful for interpreting failures in user studies.",
+          "focus": "Watch the opening on why tokenization matters, the BPE implementation, and the closing discussion of tokenization-related oddities. Skim the middle on specific libraries."
+        },
+        {
+          "id": "s03m04r04",
+          "kind": "paper",
+          "title": "Language Models are Unsupervised Multitask Learners",
+          "authors": "Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya Sutskever",
+          "year": 2019,
+          "venue": "OpenAI technical report",
+          "url": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf",
+          "listen": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf",
+          "minutes": 45,
+          "why": "The GPT-2 paper showed that a large language model trained only to predict the next word could attempt many tasks without task-specific training — the seed of prompting.",
+          "focus": "Read the abstract, introduction, and Section 2 on the approach and the WebText dataset. Skim individual task results.",
+          "optional": true
+        },
+        {
+          "id": "s03m04r05",
+          "kind": "paper",
+          "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+          "authors": "Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova",
+          "year": 2018,
+          "venue": "NAACL 2019",
+          "url": "https://arxiv.org/abs/1810.04805",
+          "arxiv": "1810.04805",
+          "minutes": 40,
+          "why": "The influential encoder-only counterpart to GPT; understanding the contrast clarifies why chat assistants are built on decoder-only models.",
+          "focus": "Read the abstract, introduction, and Section 3 on the pre-training tasks (masked language modeling and next sentence prediction).",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "In 'Let's build GPT', how does Karpathy make sure each position can only use information from earlier positions?",
+          "choices": [
+            "By training on one token at a time with no batching",
+            "By deleting future tokens from the dataset",
+            "By using a lower-triangular mask so that the attention weights to future positions become zero after softmax",
+            "By reversing the input text"
+          ],
+          "answer": 2,
+          "explain": "He builds the mask with a lower-triangular matrix, setting future positions to negative infinity before softmax so their weights become zero — the decoder's masked self-attention.",
+          "ref": "s03m04r01"
+        },
+        {
+          "q": "Karpathy starts with a bigram model before adding attention. What is the limitation of a bigram model?",
+          "choices": [
+            "It predicts the next character using only the current character, ignoring all earlier context",
+            "It can only generate two characters",
+            "It requires labeled data",
+            "It uses too much attention"
+          ],
+          "answer": 0,
+          "explain": "A bigram model looks up the next-token distribution from the current token alone. Self-attention is added precisely so tokens can gather information from the earlier context.",
+          "ref": "s03m04r01"
+        },
+        {
+          "q": "According to Alammar, what is the key architectural difference between GPT-2 and BERT?",
+          "choices": [
+            "GPT-2 uses convolutions; BERT uses recurrence",
+            "GPT-2 is built from Transformer decoder blocks with masked self-attention; BERT uses encoder blocks that can see context on both sides of a word",
+            "GPT-2 has no attention; BERT has attention",
+            "They are identical except for their training data"
+          ],
+          "answer": 1,
+          "explain": "Alammar explains that GPT-2 is auto-regressive and masks future tokens, while BERT gives up auto-regression to incorporate context on both sides — useful for understanding text but not for generating it left to right.",
+          "ref": "s03m04r02"
+        },
+        {
+          "q": "How does byte-pair encoding build a tokenizer's vocabulary, as Karpathy implements it?",
+          "choices": [
+            "By assigning one token to every word in a dictionary",
+            "By choosing random substrings",
+            "By using only single characters",
+            "By starting from bytes and repeatedly merging the most frequent adjacent pair into a new token"
+          ],
+          "answer": 3,
+          "explain": "BPE starts from the raw byte sequence and greedily merges the most common adjacent pair, adding each merge to the vocabulary, until it reaches the target vocabulary size.",
+          "ref": "s03m04r03"
+        },
+        {
+          "q": "A user study finds that an LLM is surprisingly bad at counting the letters in a word. Based on the tokenizer video, what is a likely contributing cause?",
+          "choices": [
+            "The model never saw the word during training",
+            "The model sees text as tokens that often span several characters, so individual letters are not directly visible to it",
+            "The model's temperature was too low",
+            "Counting requires a larger context window"
+          ],
+          "answer": 1,
+          "explain": "Karpathy traces many oddities — spelling, simple arithmetic, some non-English text — to tokenization, because the model operates on multi-character tokens rather than individual characters.",
+          "ref": "s03m04r03"
+        },
+        {
+          "q": "What is the central claim of the GPT-2 paper?",
+          "choices": [
+            "A language model trained on a large, diverse text dataset can begin to perform tasks like question answering and translation in a zero-shot setting, without task-specific training",
+            "Language models must be fine-tuned separately for each task to work at all",
+            "Bidirectional encoders are always better than decoders",
+            "Larger models perform worse on all tasks"
+          ],
+          "answer": 0,
+          "explain": "Radford et al. trained on WebText and showed zero-shot performance on several tasks that improved with model size. The second option is the prevailing assumption the paper challenges.",
+          "ref": "s03m04r04"
+        },
+        {
+          "q": "BERT is pre-trained with a 'masked language model' objective. What does that involve?",
+          "choices": [
+            "Predicting the next word given only the previous words",
+            "Translating sentences between languages",
+            "Hiding some tokens in the input and training the model to predict them using context from both sides",
+            "Classifying whether a sentence is positive or negative"
+          ],
+          "answer": 2,
+          "explain": "Devlin et al. randomly mask a portion of input tokens and predict them from bidirectional context; they also use next sentence prediction. The first option describes GPT-style training.",
+          "ref": "s03m04r05"
+        }
+      ],
+      "exercise": "Using your Karpathy GPT, generate samples from the same prompt at three temperatures. Then design a small user study: what would you ask participants to judge, how many samples per condition would you show, and what confound would arise if different participants saw different random samples?"
+    }
+  ]
+}

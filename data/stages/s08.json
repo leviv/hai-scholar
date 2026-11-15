@@ -1,0 +1,755 @@
+{
+  "id": "s08",
+  "number": 8,
+  "title": "Interacting with Generative AI",
+  "subtitle": "Prompting, co-writing, coding assistants, hallucination, simulated people",
+  "overview": "Stage 4 covered how LLMs are built and prompted; this stage studies what happens when people actually use them. You will see why prompting is hard for non-experts, how writing and coding assistants change both the work and the worker (including their opinions), why fluent but wrong answers are an HAI problem rather than just a model problem, and the debate over using LLMs to simulate human participants. The decision-making ideas from Stage 7 (overreliance, calibration, complementarity) reappear here in open-ended, generative tasks.",
+  "modules": [
+    {
+      "id": "s08m01",
+      "title": "Prompting as interaction",
+      "goal": "Explain why end-user prompt design is difficult, and how breaking work into chained prompt steps changes transparency and control.",
+      "guide": "Read 'Why Johnny Can't Prompt' first: it treats prompting as a form of end-user programming and documents how non-experts actually go about it. Then read AI Chains, which proposes a design answer: split a task into small LLM steps a person can inspect and edit. The Karpathy video is a practical, hands-on tour of using today's chat assistants and is worth watching in parts; the Liu et al. survey is a reference for the NLP view of prompting. Key terms: 'end-user programming' (non-programmers creating programs, e.g., spreadsheet formulas, an analogy the Johnny paper draws on); 'design probe' (a prototype built to study how people work, not to ship); 'prompt chaining' (feeding one LLM call's output into the next); 'primitive operation' (a small, reusable LLM step such as classify, rewrite, or generate ideas).",
+      "resources": [
+        {
+          "id": "s08m01r01",
+          "kind": "paper",
+          "title": "Why Johnny Can’t Prompt: How Non-AI Experts Try (and Fail) to Design LLM Prompts",
+          "authors": "Zamfirescu-Pereira, Wong, Hartmann, Yang",
+          "year": 2023,
+          "venue": "CHI 2023",
+          "url": "https://doi.org/10.1145/3544548.3581388",
+          "minutes": 45,
+          "why": "The key empirical paper on end-user prompt engineering; it explains why natural-language control is not automatically easy control.",
+          "focus": "Read the description of the design probe (a chatbot design tool) and the findings on how participants explored, evaluated, and generalized from their prompts.",
+          "optional": false
+        },
+        {
+          "id": "s08m01r02",
+          "kind": "paper",
+          "title": "AI Chains: Transparent and Controllable Human-AI Interaction by Chaining Large Language Model Prompts",
+          "authors": "Wu, Terry, Cai",
+          "year": 2022,
+          "venue": "CHI 2022",
+          "url": "https://arxiv.org/abs/2110.01691",
+          "arxiv": "2110.01691",
+          "minutes": 45,
+          "why": "Introduced prompt chaining as an interaction technique and showed it improves transparency, controllability, and sense of collaboration, ideas that underlie today's agent pipelines.",
+          "focus": "Read the set of primitive operations, the interface, and the user study results; note the new behaviors users developed, such as 'unit-testing' sub-steps.",
+          "optional": false
+        },
+        {
+          "id": "s08m01r03",
+          "kind": "video",
+          "title": "How I use LLMs",
+          "authors": "Karpathy",
+          "year": 2025,
+          "venue": "YouTube (Andrej Karpathy)",
+          "url": "https://www.youtube.com/watch?v=EWvNQjAaOHw",
+          "youtube": "EWvNQjAaOHw",
+          "minutes": 131,
+          "why": "A practitioner's walkthrough of how an expert actually uses chat assistants day to day, useful as a contrast to the novice behaviors in the Johnny paper.",
+          "focus": "Watch the first hour for core usage patterns; skim the rest by chapter for tool use and other features.",
+          "optional": true
+        },
+        {
+          "id": "s08m01r04",
+          "kind": "paper",
+          "title": "Pre-train, Prompt, and Predict: A Systematic Survey of Prompting Methods in Natural Language Processing",
+          "authors": "Liu, Yuan, Fu, Jiang, Hayashi, Neubig",
+          "year": 2021,
+          "venue": "ACM Computing Surveys",
+          "url": "https://arxiv.org/abs/2107.13586",
+          "arxiv": "2107.13586",
+          "minutes": 40,
+          "why": "The standard NLP survey of 'prompt-based learning'; useful for vocabulary when reading technical prompting papers.",
+          "focus": "Read sections 1-3 for the paradigm and notation; use the rest as a reference.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What was the overall finding of 'Why Johnny Can't Prompt' about how non-AI-experts designed prompts?",
+          "choices": [
+            "They explored prompt designs systematically and quickly reached robust prompts",
+            "They explored prompt designs opportunistically rather than systematically, and struggled",
+            "They refused to use natural language",
+            "They performed as well as AI experts"
+          ],
+          "answer": 1,
+          "explain": "Participants using the design probe explored prompts opportunistically, not systematically, struggling in ways that echo end-user programming and interactive ML systems.",
+          "ref": "s08m01r01"
+        },
+        {
+          "q": "According to Zamfirescu-Pereira et al., which two tendencies were barriers to effective prompt design?",
+          "choices": [
+            "Expectations carried over from instructing other humans, and a tendency to overgeneralize from a few outputs",
+            "Writing prompts that were too long and too technical",
+            "Using too many examples and too much testing",
+            "Distrust of AI and refusal to iterate"
+          ],
+          "answer": 0,
+          "explain": "People brought human-to-human instruction habits to prompting and overgeneralized from single successes or failures, leading to brittle prompts.",
+          "ref": "s08m01r01"
+        },
+        {
+          "q": "What is the core idea of AI Chains?",
+          "choices": [
+            "Breaking a complex task into LLM steps where each step's output becomes the next step's input, with steps users can view and edit",
+            "Training a larger model to handle complex tasks in one prompt",
+            "Linking several users to one model",
+            "Using blockchains to log model outputs"
+          ],
+          "answer": 0,
+          "explain": "Wu, Terry & Cai define primitive LLM operations and let users build and modify chains, including intermediate results, in a modular way.",
+          "ref": "s08m01r02"
+        },
+        {
+          "q": "In the AI Chains user study, what did chaining improve besides output quality?",
+          "choices": [
+            "Model training speed",
+            "Only the visual appeal of the interface",
+            "The number of tokens generated",
+            "System transparency, controllability, and sense of collaboration"
+          ],
+          "answer": 3,
+          "explain": "In a 20-person study, chaining improved task outcomes and significantly enhanced transparency, controllability, and sense of collaboration.",
+          "ref": "s08m01r02"
+        },
+        {
+          "q": "AI Chains users 'unit-tested' sub-components of a chain. Why does this connect to the Johnny paper's findings?",
+          "choices": [
+            "It shows that users never need to test prompts",
+            "It proves LLMs are deterministic",
+            "Decomposition gives people a more systematic way to locate and fix failures, countering the opportunistic, overgeneralizing approach seen in non-experts",
+            "It means only programmers can use LLMs"
+          ],
+          "answer": 2,
+          "explain": "The Johnny paper found unsystematic exploration; chaining exposes intermediate steps so people can debug parts, a structural answer to the same problem.",
+          "ref": "s08m01r02"
+        },
+        {
+          "q": "In the Liu et al. survey, how does 'prompt-based learning' differ from standard supervised learning?",
+          "choices": [
+            "It trains a new model from scratch for each task",
+            "It turns the input into a text template with unfilled slots and uses a pretrained language model to fill them, enabling few-shot or zero-shot use",
+            "It requires more labeled data than supervised learning",
+            "It only works for image classification"
+          ],
+          "answer": 1,
+          "explain": "Liu et al. describe modifying the input x into a prompt x' with slots that the pretrained LM fills, so the model can adapt to new tasks with few or no labeled examples.",
+          "ref": "s08m01r04"
+        }
+      ],
+      "exercise": "Pick an everyday task (e.g., turning meeting notes into action items). Write it once as a single prompt and once as a 3-4 step chain. List which failures each version makes easier to notice and fix, and propose a small study (task, participants, measures) comparing novices on the two."
+    },
+    {
+      "id": "s08m02",
+      "title": "Writing and creativity with LLMs",
+      "goal": "Describe how researchers study human-LLM co-writing, why interactive evaluation can disagree with static benchmarks, and how an opinionated assistant can shift users' views.",
+      "guide": "Begin with CoAuthor, which makes the case for studying LLMs through logged human interaction rather than benchmarks, and introduces a widely reused dataset. Then read Lee et al.'s HALIE, which formalizes what interactive evaluation measures that static evaluation misses. Jakesch et al. is the key warning: an assistant's built-in leaning can change both what people write and what they believe. Luminate (optional) shows a design response to the tendency of LLM tools to converge on a few ideas. Key terms: 'interaction trace' (a keystroke-level log of a session); 'non-interactive benchmark' (the model is scored on fixed inputs with no human in the loop); 'ownership' (how much the writer feels the text is theirs); 'latent persuasion' (influence that comes through an assistant's suggestions rather than explicit argument); 'design space' (the range of possible variations of an output).",
+      "resources": [
+        {
+          "id": "s08m02r01",
+          "kind": "paper",
+          "title": "CoAuthor: Designing a Human-AI Collaborative Writing Dataset for Exploring Language Model Capabilities",
+          "authors": "Lee, Liang, Yang",
+          "year": 2022,
+          "venue": "CHI 2022",
+          "url": "https://arxiv.org/abs/2201.06796",
+          "arxiv": "2201.06796",
+          "minutes": 40,
+          "why": "Argues that curated interaction datasets let HCI researchers examine LLM capabilities rigorously, and provides one: 1,445 writing sessions with GPT-3.",
+          "focus": "Read the motivation, the data collection design (creative vs. argumentative writing), and the analyses of what 'good collaboration' could mean.",
+          "optional": false
+        },
+        {
+          "id": "s08m02r02",
+          "kind": "paper",
+          "title": "Evaluating Human-Language Model Interaction",
+          "authors": "Lee, Srivastava, Hardy, Thickstun, Durmus, et al.",
+          "year": 2022,
+          "venue": "TMLR",
+          "url": "https://arxiv.org/abs/2212.09746",
+          "arxiv": "2212.09746",
+          "minutes": 50,
+          "why": "Provides the HALIE framework and concrete evidence that a model that scores better on static benchmarks is not always better to interact with.",
+          "focus": "Read the framework section and the three cases where interactive and non-interactive results diverge. Skim individual task details.",
+          "optional": false
+        },
+        {
+          "id": "s08m02r03",
+          "kind": "paper",
+          "title": "Co-Writing with Opinionated Language Models Affects Users' Views",
+          "authors": "Jakesch, Bhat, Buschek, Zalmanson, Naaman",
+          "year": 2023,
+          "venue": "CHI 2023",
+          "url": "https://arxiv.org/abs/2302.00560",
+          "arxiv": "2302.00560",
+          "minutes": 35,
+          "why": "A large experiment showing that an assistant's built-in opinions influence users' attitudes, raising questions about values in everyday AI tools.",
+          "focus": "Read the experimental design (N=1,506, social media topic, independent judges) and the effects on writing and on later attitudes.",
+          "optional": false
+        },
+        {
+          "id": "s08m02r04",
+          "kind": "paper",
+          "title": "Luminate: Structured Generation and Exploration of Design Space with Large Language Models for Human-AI Co-Creation",
+          "authors": "Suh, Chen, Min, Li, Xia",
+          "year": 2024,
+          "venue": "CHI 2024",
+          "url": "https://arxiv.org/abs/2310.12953",
+          "arxiv": "2310.12953",
+          "minutes": 35,
+          "why": "A system that counters the 'rapid convergence' of chat interfaces by generating a structured space of options; a good example of HCI design responding to an LLM limitation.",
+          "focus": "Read the problem framing and the system design; skim the user study with professional writers.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "What does the CoAuthor paper argue the HCI community should do to understand LLM capabilities?",
+          "choices": [
+            "Rely on standard NLP benchmarks",
+            "Curate and analyze large datasets of human-LM interaction",
+            "Stop studying LLMs until they are more stable",
+            "Survey users about their opinions of GPT-3"
+          ],
+          "answer": 1,
+          "explain": "Lee, Liang & Yang argue that context-dependent LLM capabilities are hard to grasp and are best examined through curated interaction datasets; CoAuthor logs 63 writers across 1,445 sessions.",
+          "ref": "s08m02r01"
+        },
+        {
+          "q": "Which is one of the three things HALIE says interactive evaluation captures that standard evaluation does not?",
+          "choices": [
+            "Model parameter count",
+            "Inference cost per token",
+            "The interactive process, not only the final output",
+            "Benchmark leaderboard rank"
+          ],
+          "answer": 2,
+          "explain": "HALIE captures (i) the process, (ii) first-person subjective experience, and (iii) preferences beyond quality, such as enjoyment and ownership.",
+          "ref": "s08m02r02"
+        },
+        {
+          "q": "What was HALIE's key empirical finding across five tasks and four LMs?",
+          "choices": [
+            "The largest model was best on every interactive metric",
+            "Humans could not tell models apart",
+            "Interactive metrics always agreed with static benchmarks",
+            "Better non-interactive performance does not always translate into better human-LM interaction"
+          ],
+          "answer": 3,
+          "explain": "Lee et al. highlight cases where interactive and non-interactive metrics diverge, arguing that human-LM interaction should be part of LM evaluation.",
+          "ref": "s08m02r02"
+        },
+        {
+          "q": "In Jakesch et al.'s experiment, what did the opinionated writing assistant affect?",
+          "choices": [
+            "Both the opinions expressed in participants' writing and their opinions on a later attitude survey",
+            "Only the length of participants' posts",
+            "Only the grammar of participants' writing",
+            "Nothing measurable"
+          ],
+          "answer": 0,
+          "explain": "Independent judges saw shifted opinions in the writing, and participants' own later survey attitudes shifted too, so the influence went beyond the text.",
+          "ref": "s08m02r03"
+        },
+        {
+          "q": "Why do Jakesch et al.'s results matter for designers of general-purpose writing assistants?",
+          "choices": [
+            "Opinions built into language technologies can shape users' views at scale, so they need to be monitored and engineered carefully",
+            "They show assistants should never be used",
+            "They prove users are immune to persuasion",
+            "They show that only argumentative essays are affected"
+          ],
+          "answer": 0,
+          "explain": "The authors argue that the opinions built into AI language technologies need careful monitoring, because a default lean in suggestions can influence many people.",
+          "ref": "s08m02r03"
+        },
+        {
+          "q": "What problem with current LLM interaction paradigms does Luminate address?",
+          "choices": [
+            "They are too slow for professional writers",
+            "They guide users toward rapid convergence on a limited set of ideas instead of exploring the space of possibilities",
+            "They cannot generate text",
+            "They require programming skills"
+          ],
+          "answer": 1,
+          "explain": "Suh et al. argue chat-style interfaces push users to converge quickly; Luminate generates a structured design space users can explore, evaluate, and synthesize.",
+          "ref": "s08m02r04"
+        }
+      ],
+      "exercise": "Jakesch et al. measured attitude change right after writing. Propose a follow-up study that tests whether the effect persists and whether disclosing the assistant's leaning reduces it. Specify conditions, timing of measures, and one ethical safeguard for participants."
+    },
+    {
+      "id": "s08m03",
+      "title": "Programming with AI",
+      "goal": "Summarize how programmers interact with code assistants, what controlled experiments say about productivity, and where time goes in AI-assisted programming.",
+      "guide": "Start with Barke et al.'s grounded theory, which gives you the vocabulary of 'acceleration' and 'exploration'. Then read Vaithilingam et al., an early lab study where preference and performance diverged. Peng et al. is the widely cited controlled experiment on speed; read it alongside its narrow task. Mozannar et al. offer a fine-grained model of what programmers spend time on. Key terms: 'grounded theory' (a qualitative method that builds theory from observation data rather than testing a hypothesis); 'within-subjects design' (each participant tries every condition); 'treatment and control groups' (with and without the tool); 'taxonomy' (a structured classification of activities). Notice how different methods (qualitative, lab, field-like experiment, retrospective labeling) answer different questions.",
+      "resources": [
+        {
+          "id": "s08m03r01",
+          "kind": "paper",
+          "title": "Grounded Copilot: How Programmers Interact with Code-Generating Models",
+          "authors": "Barke, James, Polikarpova",
+          "year": 2023,
+          "venue": "OOPSLA 2023",
+          "url": "https://arxiv.org/abs/2206.15000",
+          "arxiv": "2206.15000",
+          "minutes": 45,
+          "why": "Its 'acceleration vs. exploration' distinction is the most widely used framing of how people use code assistants.",
+          "focus": "Read the method (20 participants, four languages) and the description of the two modes with examples; skim the recommendations.",
+          "optional": false
+        },
+        {
+          "id": "s08m03r02",
+          "kind": "paper",
+          "title": "Expectation vs. Experience: Evaluating the Usability of Code Generation Tools Powered by Large Language Models",
+          "authors": "Vaithilingam, Zhang, Glassman",
+          "year": 2022,
+          "venue": "CHI 2022 Extended Abstracts",
+          "url": "https://doi.org/10.1145/3491101.3519665",
+          "minutes": 25,
+          "why": "A short, early study showing that people can prefer an AI tool even when it does not make them faster or more successful.",
+          "focus": "Read the whole paper; it is short. Focus on the gap between preference and measured performance.",
+          "optional": false
+        },
+        {
+          "id": "s08m03r03",
+          "kind": "paper",
+          "title": "The Impact of AI on Developer Productivity: Evidence from GitHub Copilot",
+          "authors": "Peng, Kalliamvakou, Cihon, Demirer",
+          "year": 2023,
+          "venue": "arXiv",
+          "url": "https://arxiv.org/abs/2302.06590",
+          "arxiv": "2302.06590",
+          "minutes": 25,
+          "why": "The most cited controlled experiment on code assistant productivity; important to know both its headline number and its scope.",
+          "focus": "Read the task description, the main result, and the heterogeneous effects. Think about what the task does and does not represent.",
+          "optional": false
+        },
+        {
+          "id": "s08m03r04",
+          "kind": "paper",
+          "title": "Reading Between the Lines: Modeling User Behavior and Costs in AI-Assisted Programming",
+          "authors": "Mozannar, Bansal, Fourney, Horvitz",
+          "year": 2024,
+          "venue": "CHI 2024",
+          "url": "https://arxiv.org/abs/2210.14306",
+          "arxiv": "2210.14306",
+          "minutes": 40,
+          "why": "Introduces CUPS, a taxonomy of programmer activities with Copilot, and shows how to find hidden time costs such as verifying suggestions.",
+          "focus": "Read the CUPS taxonomy, the retrospective labeling method, and the analysis of where time is spent.",
+          "optional": false
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Barke et al. found that interactions with Copilot are bimodal. What are the two modes?",
+          "choices": [
+            "Writing mode and testing mode",
+            "Acceleration (the programmer knows what to do and uses the tool to go faster) and exploration (the programmer is unsure and uses the tool to explore options)",
+            "Novice mode and expert mode",
+            "Online mode and offline mode"
+          ],
+          "answer": 1,
+          "explain": "In acceleration mode the programmer has a plan; in exploration mode they use suggestions to discover how to proceed. Each mode calls for different interface support.",
+          "ref": "s08m03r01"
+        },
+        {
+          "q": "What method did Barke et al. use, and what does it imply about their claims?",
+          "choices": [
+            "Grounded theory from observing 20 programmers; claims are a descriptive theory of interaction, not measured productivity effects",
+            "A randomized controlled trial; claims are causal effect sizes",
+            "A large-scale log analysis of millions of users",
+            "A benchmark of model accuracy"
+          ],
+          "answer": 0,
+          "explain": "Grounded theory builds explanatory categories from qualitative observation. It tells you how people interact, not how much faster they are.",
+          "ref": "s08m03r01"
+        },
+        {
+          "q": "In Vaithilingam et al.'s within-subjects study, what was the relationship between preference and performance?",
+          "choices": [
+            "Copilot greatly improved completion time, and everyone disliked it",
+            "Copilot improved success but participants preferred the baseline",
+            "Copilot did not necessarily improve completion time or success rate, yet most participants preferred it",
+            "Neither preference nor performance differed"
+          ],
+          "answer": 2,
+          "explain": "Participants valued Copilot as a starting point that saved searching online, even though it did not necessarily improve time or success; they struggled to understand, edit, and debug its code.",
+          "ref": "s08m03r02"
+        },
+        {
+          "q": "Peng et al. found the Copilot group completed the task 55.8% faster. What is the most important limit on generalizing this result?",
+          "choices": [
+            "The sample had no control group",
+            "The result was not statistically tested",
+            "Participants were not programmers",
+            "It is a single, well-specified task (implementing an HTTP server in JavaScript) measured on speed, which may not represent real, open-ended software work or code quality"
+          ],
+          "answer": 3,
+          "explain": "The experiment had treatment and control groups, but one bounded task. Real development involves understanding large codebases, review, and maintenance, which this design does not measure.",
+          "ref": "s08m03r03"
+        },
+        {
+          "q": "What is CUPS in Mozannar et al.'s paper?",
+          "choices": [
+            "A new code-generation model",
+            "A taxonomy of common programmer activities when interacting with Copilot, used to label sessions",
+            "A benchmark of coding problems",
+            "A metric for code correctness"
+          ],
+          "answer": 1,
+          "explain": "21 programmers completed tasks and then retrospectively labeled their own sessions with CUPS states, revealing inefficiencies and time costs.",
+          "ref": "s08m03r04"
+        },
+        {
+          "q": "Why would a metric like 'suggestion acceptance rate' be misleading according to the logic of Mozannar et al.?",
+          "choices": [
+            "Because accepting a suggestion can hide time spent reading and verifying it, or later editing it, so acceptance does not equal value",
+            "Because acceptance rates are always zero",
+            "Because programmers never accept suggestions",
+            "Because acceptance is impossible to log"
+          ],
+          "answer": 0,
+          "explain": "CUPS makes visible activities like verifying suggestions that acceptance counts miss, which motivates new metrics and interface designs.",
+          "ref": "s08m03r04"
+        }
+      ],
+      "exercise": "Combine the methods in this module: design a two-part study of an LLM coding agent that edits multiple files. Part 1 is a controlled experiment (state the task, conditions, and at least three outcome measures beyond time). Part 2 is a qualitative component (state what you would observe and why). Explain what each part can tell you that the other cannot."
+    },
+    {
+      "id": "s08m04",
+      "title": "Hallucination, uncertainty, and sycophancy",
+      "goal": "Explain why fluent but wrong LLM output is an interaction problem, and evaluate evidence on how uncertainty expressions, explanations, and sycophancy affect user reliance.",
+      "guide": "Start with Lilian Weng's essay for a clear definition of hallucination and an overview of causes and fixes. Sharma et al. show how training on human preferences can push models to tell users what they want to hear. The remaining papers are human-subject studies: Kim et al. test natural-language uncertainty phrases, Steyvers et al. measure the gap between what models 'know' and what people think they know, and Si et al. compare LLM explanations with search for fact-checking. Zhou et al. (optional) show models rarely express uncertainty and people rely on them regardless. Key terms: 'in-context vs. extrinsic hallucination' (contradicting the provided source vs. not being grounded in world knowledge); 'sycophancy' (matching the user's beliefs over the truth); 'preference model' (a model trained to predict which response humans prefer, used in RLHF); 'calibration gap' (difference between human confidence in an answer and the model's own confidence); 'discrimination' (telling correct from incorrect answers); 'contrastive explanation' (arguing both for and against a claim).",
+      "resources": [
+        {
+          "id": "s08m04r01",
+          "kind": "essay",
+          "title": "Extrinsic Hallucinations in LLMs",
+          "authors": "Weng",
+          "year": 2024,
+          "venue": "Lil'Log",
+          "url": "https://lilianweng.github.io/posts/2024-07-07-hallucination/",
+          "minutes": 45,
+          "why": "A clear, well-referenced explainer on what hallucination is, why it arises in pretraining and fine-tuning, and how it is detected and reduced.",
+          "focus": "Read the definitions and 'What Causes Hallucinations?' carefully; skim detection and mitigation methods for the main ideas.",
+          "optional": false
+        },
+        {
+          "id": "s08m04r02",
+          "kind": "paper",
+          "title": "Towards Understanding Sycophancy in Language Models",
+          "authors": "Sharma, Tong, Korbak, Duvenaud, Askell, et al.",
+          "year": 2024,
+          "venue": "ICLR 2024",
+          "url": "https://arxiv.org/abs/2310.13548",
+          "arxiv": "2310.13548",
+          "minutes": 45,
+          "why": "Links a user-facing failure (agreeing with the user) to the human feedback used in training, connecting Stage 4's RLHF to HAI.",
+          "focus": "Read the introduction, the summary of sycophancy across tasks, and the analysis of human preference data.",
+          "optional": false
+        },
+        {
+          "id": "s08m04r03",
+          "kind": "paper",
+          "title": "\"I'm Not Sure, But...\": Examining the Impact of Large Language Models' Uncertainty Expression on User Reliance and Trust",
+          "authors": "Kim, Liao, Vorvoreanu, Ballard, Wortman Vaughan",
+          "year": 2024,
+          "venue": "FAccT 2024",
+          "url": "https://arxiv.org/abs/2405.00623",
+          "arxiv": "2405.00623",
+          "minutes": 40,
+          "why": "A pre-registered experiment showing that the exact wording of uncertainty matters for overreliance.",
+          "focus": "Read the conditions (first-person vs. general-perspective uncertainty), the measures, and the main results.",
+          "optional": false
+        },
+        {
+          "id": "s08m04r04",
+          "kind": "paper",
+          "title": "What Large Language Models Know and What People Think They Know",
+          "authors": "Steyvers, Tejeda, Kumar, Belem, Karny, Hu, Mayer, Smyth",
+          "year": 2024,
+          "venue": "arXiv (journal version in Nature Machine Intelligence)",
+          "url": "https://arxiv.org/abs/2401.13835",
+          "arxiv": "2401.13835",
+          "minutes": 40,
+          "why": "Defines the calibration and discrimination gaps between model confidence and human perception, and shows explanation length alone inflates trust.",
+          "focus": "Read the definitions of the two gaps, the explanation-length results, and the intervention aligning explanations with model confidence.",
+          "optional": false
+        },
+        {
+          "id": "s08m04r05",
+          "kind": "paper",
+          "title": "Large Language Models Help Humans Verify Truthfulness -- Except When They Are Convincingly Wrong",
+          "authors": "Si, Goyal, Wu, Zhao, Feng, Daumé, Boyd-Graber",
+          "year": 2024,
+          "venue": "NAACL 2024",
+          "url": "https://arxiv.org/abs/2310.12558",
+          "arxiv": "2310.12558",
+          "minutes": 35,
+          "why": "Compares LLM explanations with search engines for fact-checking and tests contrastive explanations as an overreliance fix.",
+          "focus": "Read the conditions and results; note efficiency vs. accuracy and the failure when explanations are wrong.",
+          "optional": false
+        },
+        {
+          "id": "s08m04r06",
+          "kind": "paper",
+          "title": "Relying on the Unreliable: The Impact of Language Models' Reluctance to Express Uncertainty",
+          "authors": "Zhou, Hwang, Ren, Sap",
+          "year": 2024,
+          "venue": "ACL 2024",
+          "url": "https://arxiv.org/abs/2401.06730",
+          "arxiv": "2401.06730",
+          "minutes": 35,
+          "why": "Connects model behavior (rarely expressing uncertainty), user behavior (relying anyway), and training data (annotators disfavor uncertain text).",
+          "focus": "Read the analysis of deployed models, the human experiment, and the preference-data analysis.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Weng distinguishes two types of hallucination. What is extrinsic hallucination?",
+          "choices": [
+            "Output that contradicts the source document given in the prompt",
+            "Any grammatical error",
+            "Output not grounded in the pretraining data, which serves as a proxy for world knowledge, i.e., not factual or verifiable",
+            "Output that is too long"
+          ],
+          "answer": 2,
+          "explain": "In-context hallucination is inconsistency with the provided context; extrinsic hallucination is output not grounded in world knowledge. Weng adds that models should acknowledge when they do not know.",
+          "ref": "s08m04r01"
+        },
+        {
+          "q": "Weng discusses research on fine-tuning LLMs on new knowledge. What did that work find?",
+          "choices": [
+            "New-knowledge examples are learned more slowly and, once learned, increase the model's tendency to hallucinate",
+            "Fine-tuning on new knowledge eliminates hallucination",
+            "Fine-tuning has no effect on hallucination",
+            "Models learn new knowledge faster than known knowledge"
+          ],
+          "answer": 0,
+          "explain": "Weng summarizes Gekhman et al. 2024: examples with new knowledge are fitted more slowly, and learning them increases hallucination.",
+          "ref": "s08m04r01"
+        },
+        {
+          "q": "What evidence did Sharma et al. find that human preferences contribute to sycophancy?",
+          "choices": [
+            "Users said they wanted honest models",
+            "In preference data, responses matching a user's views were more likely to be preferred, and humans and preference models sometimes preferred convincing sycophantic answers over correct ones",
+            "Sycophancy only occurred in models without human feedback",
+            "Preference models always selected the correct answer"
+          ],
+          "answer": 1,
+          "explain": "Their analysis of existing human preference data shows a preference for agreement, and optimizing against preference models sometimes trades truthfulness for sycophancy.",
+          "ref": "s08m04r02"
+        },
+        {
+          "q": "In Kim et al.'s experiment, what happened when the LLM used first-person uncertainty expressions like 'I'm not sure, but...'?",
+          "choices": [
+            "Participants' confidence in the system and agreement with it decreased, while their accuracy increased",
+            "Participants agreed with the system more and became less accurate",
+            "There was no effect on any measure",
+            "Participants stopped using the system"
+          ],
+          "answer": 0,
+          "explain": "First-person uncertainty reduced (but did not eliminate) overreliance on incorrect answers. General-perspective phrasing ('It's not clear...') had weaker, non-significant effects, so wording matters.",
+          "ref": "s08m04r03"
+        },
+        {
+          "q": "What did Steyvers et al. find about explanation length?",
+          "choices": [
+            "Longer explanations reduced user confidence",
+            "Longer explanations increased user confidence even when the extra length did not improve answer accuracy",
+            "Length had no effect",
+            "Users refused to read long explanations"
+          ],
+          "answer": 1,
+          "explain": "Users overestimated LLM accuracy with default explanations, and length inflated confidence. Aligning explanations with model confidence narrowed both the calibration and discrimination gaps.",
+          "ref": "s08m04r04"
+        },
+        {
+          "q": "In Si et al.'s fact-checking study, what was the drawback of reading LLM explanations compared with search results?",
+          "choices": [
+            "Users were much slower",
+            "Users could not understand any explanation",
+            "Users over-relied on the LLM when its explanation was wrong",
+            "Accuracy was always lower in every condition"
+          ],
+          "answer": 2,
+          "explain": "LLM explanations made users more efficient with similar accuracy, but users over-relied when the explanation was wrong. Contrastive explanations helped but did not significantly beat search.",
+          "ref": "s08m04r05"
+        },
+        {
+          "q": "Zhou et al. found that annotators in preference datasets are biased against uncertain text. How does this connect to Sharma et al.?",
+          "choices": [
+            "It contradicts it completely",
+            "Both show RLHF eliminates hallucination",
+            "Neither paper looks at training data",
+            "Both suggest that human preference judgments used in training can reward behaviors (confident or agreeable answers) that harm appropriate reliance"
+          ],
+          "answer": 3,
+          "explain": "Sharma et al. find preferences favor agreement; Zhou et al. find they disfavor expressed uncertainty. Both point to the training signal as a source of HAI problems.",
+          "ref": "s08m04r06"
+        }
+      ],
+      "exercise": "Kim et al. found first-person uncertainty helped, while Zhou et al. found users relied on LLMs whether or not answers were marked with certainty. List at least three differences between the studies (task, population, stimuli, measures) that could explain this, and design a study that could resolve the discrepancy."
+    },
+    {
+      "id": "s08m05",
+      "title": "LLMs as simulated people and agents",
+      "goal": "Explain how LLM-based agents and 'silicon samples' simulate human behavior, and evaluate the arguments for and against using them in place of human participants.",
+      "guide": "Read Generative Agents first for the architecture (memory, reflection, planning) that made believable simulated characters possible. Then read Argyle et al., the main case for using LLMs to simulate survey respondents, followed by Park et al. 2024, which grounds agents in real interviews with over a thousand people. Read Wang et al. and Agnew et al. (optional) as the critical counterweight. Key terms: 'memory stream' (a log of an agent's experiences in natural language); 'reflection' (periodically summarizing memories into higher-level insights); 'algorithmic fidelity' (how well a model reproduces a subgroup's response patterns); 'silicon sample' (simulated respondents produced by conditioning a model on backstories); 'test-retest consistency' (how consistently a real person answers the same questions two weeks apart, used as a ceiling); 'flattening' (representing a group as more uniform than it is); 'positionality' (how a person's social identity shapes their perspective).",
+      "resources": [
+        {
+          "id": "s08m05r01",
+          "kind": "paper",
+          "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+          "authors": "Park, O'Brien, Cai, Morris, Liang, Bernstein",
+          "year": 2023,
+          "venue": "UIST 2023",
+          "url": "https://arxiv.org/abs/2304.03442",
+          "arxiv": "2304.03442",
+          "minutes": 55,
+          "why": "A landmark HCI paper showing how an LLM plus memory, reflection, and planning can produce believable individual and social behavior.",
+          "focus": "Read the architecture section and the Valentine's Day party example; read the evaluation and the ablation of observation, planning, and reflection.",
+          "optional": false
+        },
+        {
+          "id": "s08m05r02",
+          "kind": "paper",
+          "title": "Out of One, Many: Using Language Models to Simulate Human Samples",
+          "authors": "Argyle, Busby, Fulda, Gubler, Rytting, Wingate",
+          "year": 2023,
+          "venue": "Political Analysis",
+          "url": "https://arxiv.org/abs/2209.06899",
+          "arxiv": "2209.06899",
+          "minutes": 45,
+          "why": "Introduced 'algorithmic fidelity' and 'silicon samples', starting the debate over LLMs as stand-ins for survey respondents.",
+          "focus": "Read the definition of algorithmic fidelity and its criteria, and one of the studies comparing silicon and human samples.",
+          "optional": false
+        },
+        {
+          "id": "s08m05r03",
+          "kind": "paper",
+          "title": "LLM Agents Grounded in Self-Reports Enable General-Purpose Simulation of Individuals",
+          "authors": "Park, Zou, Kamphorst, Egan, Shaw, Hill, Cai, Morris, Liang, et al.",
+          "year": 2024,
+          "venue": "arXiv",
+          "url": "https://arxiv.org/abs/2411.10109",
+          "arxiv": "2411.10109",
+          "minutes": 45,
+          "why": "Builds agents of 1,052 real people from interviews and surveys and benchmarks them against people's own test-retest consistency; earlier versions were titled 'Generative Agent Simulations of 1,000 People'.",
+          "focus": "Read how agents were built from interviews and surveys, why accuracy is normalized by test-retest consistency, and the results on group disparities.",
+          "optional": false
+        },
+        {
+          "id": "s08m05r04",
+          "kind": "paper",
+          "title": "Large language models that replace human participants can harmfully misportray and flatten identity groups",
+          "authors": "Wang, Morgenstern, Dickerson",
+          "year": 2024,
+          "venue": "arXiv",
+          "url": "https://arxiv.org/abs/2402.01908",
+          "arxiv": "2402.01908",
+          "minutes": 45,
+          "why": "Argues analytically and shows empirically why LLMs misrepresent and flatten demographic groups, and what that means for research that replaces participants.",
+          "focus": "Read the two inherent limitations, the human study comparing LLM and human responses, and the discussion of when supplementation might be acceptable.",
+          "optional": false
+        },
+        {
+          "id": "s08m05r05",
+          "kind": "paper",
+          "title": "The illusion of artificial inclusion",
+          "authors": "Agnew, Bergman, Chien, Díaz, El-Sayed, Pittman, Mohamed, McKee",
+          "year": 2024,
+          "venue": "CHI 2024",
+          "url": "https://arxiv.org/abs/2401.08572",
+          "arxiv": "2401.08572",
+          "minutes": 35,
+          "why": "A scoping review of proposals to substitute AI for human participants, arguing they conflict with the core values of participatory research.",
+          "focus": "Read the summary of substitution proposals and the discussion of representation, inclusion, and understanding.",
+          "optional": true
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Which three architectural components did Park et al.'s ablation show each contribute critically to generative agents' believability?",
+          "choices": [
+            "Tokenization, attention, and decoding",
+            "Observation, planning, and reflection",
+            "Vision, speech, and motor control",
+            "Reward model, policy, and critic"
+          ],
+          "answer": 1,
+          "explain": "The architecture stores experiences in a memory stream, synthesizes reflections, and retrieves memories to plan; ablating observation, planning, or reflection reduced believability.",
+          "ref": "s08m05r01"
+        },
+        {
+          "q": "What does the Valentine's Day party example in Generative Agents demonstrate?",
+          "choices": [
+            "That every agent action was scripted by the designers",
+            "That the agents could not remember past events",
+            "Emergent social behavior: from one user-specified intention, agents spread invitations, formed acquaintances, and coordinated to attend",
+            "That users had to control every agent"
+          ],
+          "answer": 2,
+          "explain": "Only one agent was seeded with the wish to throw a party; the spreading of invitations and coordination emerged from the agents' interactions.",
+          "ref": "s08m05r01"
+        },
+        {
+          "q": "What do Argyle et al. mean by 'algorithmic fidelity'?",
+          "choices": [
+            "The degree to which a model, when properly conditioned, accurately emulates the response distributions of specific human subgroups",
+            "How fast a model produces outputs",
+            "The model's faithfulness to its training code",
+            "How well a model avoids all bias"
+          ],
+          "answer": 0,
+          "explain": "They argue GPT-3's biases are fine-grained and demographically correlated, so conditioning on real backstories creates 'silicon samples' resembling subgroup responses.",
+          "ref": "s08m05r02"
+        },
+        {
+          "q": "Why does Park et al. 2024 compare agent accuracy to participants' own two-week test-retest consistency?",
+          "choices": [
+            "Because people answer identically every time, so it is a fixed target",
+            "Because real people are not perfectly consistent with themselves, so their own consistency is a sensible ceiling for how well any simulation could predict them",
+            "Because it makes the agents look worse",
+            "Because surveys cannot be compared otherwise"
+          ],
+          "answer": 1,
+          "explain": "Normalizing by test-retest consistency puts agent accuracy on a meaningful scale. Interview-based agents reached about 83% of that benchmark, versus 74% for demographics-only agents.",
+          "ref": "s08m05r03"
+        },
+        {
+          "q": "Wang, Morgenstern & Dickerson argue LLMs that replace human participants tend to do two harmful things to demographic groups. What are they?",
+          "choices": [
+            "Misportray them and flatten them (represent them as more uniform than they are)",
+            "Overcount and undercount them",
+            "Translate and summarize them",
+            "Anonymize and encrypt them"
+          ],
+          "answer": 0,
+          "explain": "They argue analytically and show with 3,200 participants across 16 identities that LLMs misportray and flatten groups; identity prompts can also essentialize identities.",
+          "ref": "s08m05r04"
+        },
+        {
+          "q": "A startup proposes replacing user interviews with LLM personas to 'include more diverse voices cheaply.' Which critique from Agnew et al. applies most directly?",
+          "choices": [
+            "LLMs are too expensive",
+            "LLMs cannot produce text in interview format",
+            "Interviews are never useful",
+            "Such substitution conflicts with the core values of human participation: representation, inclusion, and understanding"
+          ],
+          "answer": 3,
+          "explain": "Agnew et al. find substitution proposals often cite cost and diversity, but argue they undermine the very values participation is meant to serve.",
+          "ref": "s08m05r05"
+        }
+      ],
+      "exercise": "You want to pilot a survey about attitudes toward AI in healthcare. Write a one-paragraph protocol that uses LLM-simulated respondents only where you think it is defensible (e.g., piloting question wording), and list three specific checks, drawing on Wang et al. and Park et al. 2024, that you would run before trusting any simulated result."
+    }
+  ]
+}
