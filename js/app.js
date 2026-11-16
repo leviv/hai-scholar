@@ -210,6 +210,7 @@ function viewPath() {
   let total = 0;
   let got = 0;
   for (const s of C.stages) { total += 1; got += stageStatus(s).frac; }
+  const curStage = next ? next.m.stage.id : null;
   if (!openStages) { openStages = new Set([currentStageId()]); }
 
   // ---- Today's plan
@@ -259,7 +260,7 @@ function viewPath() {
     </div>
     ${standalone ? "" : `<div class="card install-tip small"><b>Install on iPhone:</b> in Safari tap <b>Share</b> → <b>Add to Home Screen</b>.</div>`}
     <div class="card plan">
-      ${steps.map((s, i) => `<div class="step ${s.state}">
+      ${steps.map((s, i) => `<div class="step ${s.state}${s === steps.find((x) => x.state === "todo") ? " now" : ""}">
         <span class="dot">${s.state === "done" ? ICONS.check : i + 1}</span>
         <div class="step-body"><div class="step-t">${esc(s.title)}</div><div class="step-s">${esc(s.sub)}</div></div>
         ${s.href ? `<a class="step-cta" href="${s.href}">${s.cta}</a>` : ""}
@@ -268,12 +269,12 @@ function viewPath() {
     </div>
     ${upcoming.length ? `<div class="section-label">Coming up</div><div class="list">${upcoming.map((r) => `<a class="li" href="#/lesson/${r.id}">${kindIcon(r)}<span class="li-body"><div class="li-title">${esc(r.title)}</div><div class="li-sub">${esc(r.module.title)} · ${fmtMin(r.minutes)}</div></span>${ICONS.chev}</a>`).join("")}</div>` : ""}
     <div class="section-label">The path</div>
-    ${C.stages.map((s) => {
+    <div class="path">${C.stages.map((s) => {
       const st = stageStatus(s);
       const done = st.complete === st.modules;
       const ex = store.s.exams[s.id];
       const allRes = s.modules.flatMap((m) => m.resources);
-      return `<details class="stage-group" data-sid="${s.id}" ${openStages.has(s.id) ? "open" : ""}>
+      return `<details class="stage-group ${s.id === curStage ? "current" : ""}" data-sid="${s.id}" ${openStages.has(s.id) ? "open" : ""}>
         <summary>
           <span class="stage-num ${done ? "done" : ""}">${done ? ICONS.check : s.number}</span>
           <span class="sg-body"><span class="stage-title">${esc(s.title)}</span>
@@ -287,15 +288,15 @@ function viewPath() {
           const here = next && next.m === m;
           return `<a class="li ${here ? "here" : ""}" href="#/module/${m.id}">
             <span class="mod-num ${ms.complete ? "done" : ""}">${ms.complete ? ICONS.check : `${s.number}.${i + 1}`}</span>
-            <span class="li-body"><div class="li-title">${esc(m.title)}${here ? ' <span class="pill">You are here</span>' : ""}</div>
-            <div class="li-sub">${ms.done}/${ms.total} lessons · ${ms.quiz ? `check-in ${ms.quiz.best}%` : "check-in not taken"}</div></span>${ICONS.chev}</a>`;
+            <span class="li-body"><div class="li-title">${esc(m.title)}</div>
+            <div class="li-sub">${here ? "You are here · " : ""}${ms.done}/${ms.total} lessons · ${ms.quiz ? `check-in ${ms.quiz.best}%` : "check-in not taken"}</div></span>${ICONS.chev}</a>`;
         }).join("")}</div>
         <div class="sg-actions">
           <a class="btn secondary" href="#/exam/${s.id}">Stage exam${ex ? ` · best ${ex.best}%` : ""}</a>
           ${downloadButton(allRes, "Save stage offline", `stage:${s.id}`, true)}
         </div>
       </details>`;
-    }).join("")}
+    }).join("")}</div>
   `;
   view.querySelectorAll(".stage-group").forEach((d) => {
     d.addEventListener("toggle", () => { if (d.open) { openStages.add(d.dataset.sid); } else { openStages.delete(d.dataset.sid); } });
@@ -499,7 +500,7 @@ function viewLesson(id) {
   const n = req.indexOf(r);
   const top = () => ({
     title: n >= 0 ? `Lesson ${n + 1} of ${req.length}` : "Optional lesson",
-    back: { label: m.title, href: `#/module/${m.id}` },
+    back: { label: "Module", href: `#/module/${m.id}` },
     right: [{ label: store.isDone(r.id) ? "Recall" : "Done", onClick: () => (store.isDone(r.id) ? (location.hash = `#/recall/${r.id}`) : finishSource(r)) }],
   });
   setTop(top());
@@ -896,7 +897,7 @@ function viewQuiz(id) {
   const items = m.quiz.map((q, qi) => ({ q, m, qi, key: `${m.id}:${qi}` }));
   runSession({
     title: "Check-in",
-    back: { label: m.title, href: `#/module/${m.id}` },
+    back: { label: "Module", href: `#/module/${m.id}` },
     items,
     onFinish: (score, total, results) => {
       store.recordQuiz(m.id, score, total);
@@ -919,7 +920,7 @@ function viewPre(id) {
   const m = C.modules.get(id);
   if (!m) { return notFound(); }
   setTab("path");
-  setTop({ title: "Prequestions", back: { label: m.title, href: `#/module/${m.id}` } });
+  setTop({ title: "Prequestions", back: { label: "Module", href: `#/module/${m.id}` } });
   // Spread prequestions across different sources in the module.
   const byRef = new Map();
   m.quiz.forEach((q, qi) => { if (!byRef.has(q.ref)) { byRef.set(q.ref, qi); } });
@@ -1115,7 +1116,7 @@ async function viewSettings() {
       ${sw("freeRecall", "Free recall after each source", "A 2-minute brain dump when you finish a source, then scheduled for review (retrieval practice).")}
       <div class="setting"><label for="limit">Max cards per review session</label><select id="limit" style="width:auto">${[15, 20, 30, 50, 100].map((n) => `<option ${n === s.dailyLimit ? "selected" : ""}>${n}</option>`).join("")}</select></div>
     </div>
-    <a class="card stage-card" href="#/module/s00m02" style="display:block"><b>The science behind these features →</b><div class="small muted">Stage 0 covers the research on retrieval practice, spacing, prequestions, hypercorrection and successive relearning, with sources.</div></a>
+    <a class="card stage-card" href="#/module/s00m02" style="display:block"><b>The science behind these features</b><div class="small muted">Stage 0 covers the research on retrieval practice, spacing, prequestions, hypercorrection and successive relearning, with sources.</div></a>
     <div class="section-label">Listening</div>
     <div class="list">
       <div class="setting" style="flex-direction:column;align-items:stretch">
@@ -1254,7 +1255,7 @@ async function viewSettings() {
 }
 
 function notFound() {
-  setTop({ title: "Not found", back: { label: "Path", href: "#/" } });
+  setTop({ title: "Not found", back: { label: "Today", href: "#/" } });
   view.innerHTML = `<div class="empty">That page doesn't exist.</div>`;
 }
 
