@@ -1,6 +1,7 @@
 import { store, textCache } from "./store.js";
 import { extractResource } from "./extract.js";
 import { player, englishVoices, pickVoice } from "./player.js";
+import { natural, NATURAL_VOICES } from "./natural.js";
 import { grade as srsGrade, outcomeFrom, dueKeys, forecast, cardCount, matureCount } from "./srs.js";
 import { loadSavedIndex, isSaved, markSaved, downloadable, savedCount, downloadAll, storageEstimate, importLibrary } from "./offline.js";
 
@@ -461,6 +462,30 @@ function viewRecall(id) {
   };
 }
 
+// Spoken introduction before the reading: stage overview (first lesson of a stage), module overview
+// (first lesson of a module) and why this lesson matters.
+function introBlocks(r) {
+  const m = r.module;
+  const req = required(m);
+  const first = req[0] === r;
+  const stageFirst = first && m.stage.modules[0] === m;
+  const out = [];
+  if (stageFirst) {
+    out.push({ type: "h", text: `Stage ${m.stage.number}: ${m.stage.title}`, intro: true });
+    out.push({ type: "p", text: m.stage.overview, intro: true });
+  }
+  if (first) {
+    out.push({ type: "h", text: `Module overview: ${m.title}`, intro: true });
+    out.push({ type: "p", text: `Goal: ${m.goal}`, intro: true });
+    for (const p of String(m.guide).split(/\n\s*\n/)) { out.push({ type: "p", text: p, intro: true }); }
+  }
+  out.push({ type: "h", text: "Why this matters", intro: true });
+  out.push({ type: "p", text: r.why, intro: true });
+  if (r.focus) { out.push({ type: "p", text: `What to focus on: ${r.focus}`, intro: true }); }
+  out.push({ type: "h", text: `Now the reading: ${r.title}`, intro: true });
+  return out;
+}
+
 // ---- lesson: overview + read-along player (or video) on one page
 let listenCleanup = null;
 
@@ -491,7 +516,7 @@ function viewLesson(id) {
       ${r.kind !== "video" && isSaved(r) ? `<span class="pill good">${ICONS.down} Offline</span>` : ""}
       <a class="pill gray" href="${esc(r.url)}" target="_blank" rel="noopener">Original ↗</a>
     </div>
-    <details class="guide why" ${store.isDone(r.id) || store.pos(r.id) ? "" : "open"}><summary><h3 style="display:inline">Why this matters</h3></summary>${paras(r.why)}${r.focus ? `<p><b>Focus:</b> ${esc(r.focus)}</p>` : ""}</details>`;
+    ${r.kind === "video" ? `<details class="guide why" open><summary><h3 style="display:inline">Why this matters</h3></summary>${paras(r.why)}${r.focus ? `<p><b>Focus:</b> ${esc(r.focus)}</p>` : ""}</details>` : ""}`;
   const footer = () => `
     <div class="card lesson-end">
       <b>${store.isDone(r.id) ? "Lesson done" : "Finished?"}</b>
@@ -530,6 +555,7 @@ function viewLesson(id) {
   controls.className = "controls";
   controls.innerHTML = `<div class="controls-inner">
       <div id="sheet"></div>
+      <div class="voice-status" id="vstat" hidden></div>
       <div class="scrub"><span id="c-pos">0%</span><input id="c-range" type="range" min="0" max="0" value="0" aria-label="Position"><span id="c-left"></span></div>
       <div class="ctrl-row">
         <button class="ctrl txt" id="c-rate" aria-label="Speed">1×</button>
@@ -569,8 +595,20 @@ function viewLesson(id) {
       }
     }
     if (player.playing && sheet.innerHTML) { sheet.innerHTML = ""; }
+    voiceStatus();
     setTop(top());
   };
+  const vstat = $("#vstat", controls);
+  const voiceStatus = () => {
+    let msg = "";
+    if (player.wantsNatural && natural.state === "loading") { msg = `Downloading natural voice… ${Math.round(natural.progress * 100)}% · one time · using iPhone voice meanwhile`; }
+    else if (player.wantsNatural && natural.state === "error") { msg = "Natural voice couldn't load on this device, so using the iPhone voice."; }
+    else if (player.wantsNatural && player.naturalTooSlow) { msg = "Natural voice is too slow on this device, so using the iPhone voice."; }
+    else if (player.playing && player.buffering) { msg = "Preparing audio…"; }
+    vstat.hidden = !msg;
+    vstat.textContent = msg;
+  };
+  natural.addEventListener("change", voiceStatus);
 
   // Interpolated recall at section breaks (Szpunar et al. 2013).
   const onCheckpoint = (e) => {
@@ -600,11 +638,16 @@ function viewLesson(id) {
   const renderText = () => {
     const groups = [];
     player.items.forEach((it, i) => {
-      if (!groups[it.b]) { groups[it.b] = { h: it.h, parts: [] }; }
+      if (!groups[it.b]) { groups[it.b] = { h: it.h, intro: it.intro, parts: [] }; }
       groups[it.b].parts.push(`<span class="s" data-i="${i}">${esc(it.text)}</span> `);
     });
-    area.innerHTML = `<div class="reader-source">Text: ${esc(player.source)} · tap any sentence to start there${store.settings().recallPauses ? " · pauses for a quick recall at section breaks" : ""}</div>
-      <div class="reader">${groups.filter(Boolean).map((g) => (g.h ? `<h2 class="rh">${g.parts.join("")}</h2>` : `<p>${g.parts.join("")}</p>`)).join("")}</div>
+    const g2h = (g) => (g.h ? `<h2 class="rh">${g.parts.join("")}</h2>` : `<p>${g.parts.join("")}</p>`);
+    const all = groups.filter(Boolean);
+    const intro = all.filter((g) => g.intro);
+    const body = all.filter((g) => !g.intro);
+    area.innerHTML = `<div class="reader">${intro.length ? `<div class="intro-read">${intro.map(g2h).join("")}</div>` : ""}
+      <div class="reader-source">Text: ${esc(player.source)} · tap any sentence to start there${store.settings().recallPauses ? " · pauses for a quick recall at section breaks" : ""}</div>
+      ${body.map(g2h).join("")}</div>
       ${footer()}`;
     wireFooter();
     area.querySelector(".reader").addEventListener("click", (e) => {
@@ -647,6 +690,7 @@ function viewLesson(id) {
     player.removeEventListener("change", sync);
     player.removeEventListener("checkpoint", onCheckpoint);
     player.removeEventListener("completed", onCompleted);
+    natural.removeEventListener("change", voiceStatus);
     window.removeEventListener("touchmove", onScroll);
     window.removeEventListener("wheel", onScroll);
     controls.remove();
@@ -664,7 +708,7 @@ function viewLesson(id) {
     .then((out) => {
       markSaved(r);
       if (location.hash !== token) { return; }
-      player.load(r, out.blocks, out.source);
+      player.load(r, [...introBlocks(r), ...out.blocks], out.source);
       renderText();
     })
     .catch((err) => {
@@ -1075,12 +1119,20 @@ async function viewSettings() {
     <div class="section-label">Listening</div>
     <div class="list">
       <div class="setting" style="flex-direction:column;align-items:stretch">
-        <label for="voice">Voice</label>
+        <label>Voice type</label>
+        <div class="seg"><button data-eng="natural" class="${s.voiceEngine === "natural" ? "on" : ""}">Natural (neural)</button><button data-eng="system" class="${s.voiceEngine === "system" ? "on" : ""}">iPhone voices</button></div>
+        ${s.voiceEngine === "natural" ? `
+        <label for="nvoice" style="margin-top:6px">Natural voice</label>
+        <select id="nvoice">${NATURAL_VOICES.map(([id, l]) => `<option value="${id}" ${id === s.naturalVoice ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>
+        <div class="tiny muted" id="nstate"></div>
+        <div class="btn-row" style="margin:4px 0 0"><button class="btn secondary" id="nload">Download voice</button><button class="btn ghost" id="npreview">Preview</button></div>
+        <div class="tiny muted">Kokoro, an open-source neural speech model, runs entirely on your iPhone. It's free, needs no account, and nothing is sent anywhere. There's a one-time download: about 330 MB on phones with GPU support (iOS 26+, fast), otherwise 90 MB. After that it works offline. On older phones, if it can't keep up, switch to iPhone voices.</div>` : `
+        <label for="voice" style="margin-top:6px">iPhone voice</label>
         <select id="voice"><option value="">Automatic${auto ? ` (${esc(auto.name)})` : ""}</option>${voices.map((v) => `<option value="${esc(v.voiceURI)}" ${v.voiceURI === s.voiceURI ? "selected" : ""}>${esc(v.name)} — ${esc(v.lang)}</option>`).join("")}</select>
-        <div class="tiny muted">For a much more natural voice, download one on iPhone: Settings → Accessibility → Spoken Content → Voices → English → pick an “Enhanced” or “Premium” voice. Then choose it here.</div>
+        <div class="tiny muted">For a better iPhone voice: Settings → Accessibility → Spoken Content → Voices → English → download an “Enhanced” or “Premium” voice, then choose it here.</div>`}
       </div>
       <div class="setting"><label for="rate">Speed</label><select id="rate" style="width:auto">${[0.8, 0.9, 1, 1.1, 1.2, 1.35, 1.5, 1.75, 2].map((r) => `<option value="${r}" ${r === s.rate ? "selected" : ""}>${r}×</option>`).join("")}</select></div>
-      <div class="setting"><button class="btn secondary" id="test-voice">Test voice</button></div>
+      ${s.voiceEngine === "system" ? `<div class="setting"><button class="btn secondary" id="test-voice">Test voice</button></div>` : ""}
       ${sw("skipCitations", "Skip citations when speaking", "Silences “[12]” and “(Smith et al., 2019)” in audio; they stay visible in the text.")}
       ${sw("includeAppendix", "Include appendices", "Papers stop at the references by default.")}
       ${sw("keepAwake", "Keep screen on while listening", "iOS pauses speech when a web app's screen locks, so this keeps it awake.")}
@@ -1113,16 +1165,49 @@ async function viewSettings() {
     $(`#sw-${key}`).onchange = (e) => store.setSetting(key, e.target.checked);
   }
   $("#limit").onchange = (e) => store.setSetting("dailyLimit", Number(e.target.value));
-  $("#voice").onchange = (e) => store.setSetting("voiceURI", e.target.value);
+  view.querySelectorAll("[data-eng]").forEach((b) => { b.onclick = () => { store.setSetting("voiceEngine", b.dataset.eng); player.stop(); viewSettings(); }; });
+  const vSel = $("#voice");
+  if (vSel) { vSel.onchange = (e) => store.setSetting("voiceURI", e.target.value); }
+  const nSel = $("#nvoice");
+  if (nSel) {
+    nSel.onchange = (e) => store.setSetting("naturalVoice", e.target.value);
+    const nstate = $("#nstate");
+    const showState = () => {
+      if (!nstate.isConnected) { natural.removeEventListener("change", showState); return; }
+      const st = natural.state;
+      nstate.textContent = st === "ready" ? `Ready (${natural.device === "gpu" ? "GPU" : "CPU"})${natural.rtf ? ` · generates ${natural.rtf < 1 ? `${(1 / natural.rtf).toFixed(1)}× faster than real time` : `${natural.rtf.toFixed(1)}× slower than real time (try iPhone voices)`}` : ""}`
+        : st === "loading" ? `Downloading… ${Math.round(natural.progress * 100)}%`
+        : st === "error" ? `Couldn't load on this device: ${natural.error}` : "Not downloaded yet (downloads automatically the first time you press play).";
+      $("#nload").hidden = st === "ready";
+      $("#nload").disabled = st === "loading";
+    };
+    natural.addEventListener("change", showState);
+    showState();
+    $("#nload").onclick = () => { natural.load().catch(() => {}); };
+    $("#npreview").onclick = async () => {
+      natural.unlock();
+      try {
+        await natural.load();
+        const c = await natural.synth("This is how papers will sound. Human-AI interaction studies how people and AI systems work together.", store.settings().naturalVoice);
+        natural.el.src = c.url;
+        natural.el.playbackRate = store.settings().rate;
+        natural.el.play();
+        showState();
+      } catch (err) { toast(`Natural voice unavailable: ${err.message}`); }
+    };
+  }
   $("#rate").onchange = (e) => store.setSetting("rate", Number(e.target.value));
-  $("#test-voice").onclick = () => {
-    const u = new SpeechSynthesisUtterance("This is how papers will sound. Human-AI interaction studies how people and AI systems work together.");
-    const v = pickVoice();
-    if (v) { u.voice = v; u.lang = v.lang; }
-    u.rate = store.settings().rate;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(u);
-  };
+  const testBtn = $("#test-voice");
+  if (testBtn) {
+    testBtn.onclick = () => {
+      const u = new SpeechSynthesisUtterance("This is how papers will sound. Human-AI interaction studies how people and AI systems work together.");
+      const v = pickVoice();
+      if (v) { u.voice = v; u.lang = v.lang; }
+      u.rate = store.settings().rate;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+    };
+  }
   wireDownloads(() => viewSettings());
   $("#export").onclick = async () => {
     const blob = new Blob([store.exportJSON()], { type: "application/json" });

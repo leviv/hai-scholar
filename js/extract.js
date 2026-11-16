@@ -7,10 +7,11 @@
 // Nothing is bundled: text is always fetched from the original source at read time.
 
 import { textCache } from "./store.js";
+import { cleanBlocks } from "./clean.js";
 
 const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
 const PDFJS_WORKER = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-const CACHE_VERSION = 4;
+const CACHE_VERSION = 5;
 
 export async function extractResource(res, { includeAppendix = false, onStatus = () => {}, fresh = false } = {}) {
   const cacheKey = `${res.textId || res.id}|${includeAppendix ? 1 : 0}`;
@@ -43,7 +44,7 @@ export async function extractResource(res, { includeAppendix = false, onStatus =
     try {
       onStatus(`Fetching text · ${label}…`);
       const raw = await fn();
-      const blocks = tidy(raw);
+      const blocks = raw.label ? tidy(raw) : cleanBlocks(tidy(raw), { title: res.title, includeAppendix });
       const shown = raw.label || label;
       if (wordCount(blocks) < 150) { throw new Error("too little text"); }
       if (!looksLikeProse(blocks)) { throw new Error("text looks garbled"); }
@@ -291,7 +292,9 @@ async function fromJina(url, includeAppendix) {
   const body = md.split(/\nMarkdown Content:\n/)[1] || md;
   const blocks = [];
   let inCode = false;
-  for (const chunk of body.split(/\n\s*\n/)) {
+  // Some pages come back with single newlines between paragraphs; split very long chunks on those too.
+  const chunks = body.split(/\n\s*\n/).flatMap((c) => (c.split(/\s+/).length > 400 && c.includes("\n") ? c.split(/\n/) : [c]));
+  for (const chunk of chunks) {
     let t = chunk.trim();
     if (t.startsWith("```")) { inCode = !inCode; continue; }
     if (inCode || !t) { continue; }

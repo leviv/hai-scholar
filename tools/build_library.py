@@ -14,6 +14,7 @@ import json
 import os
 import re
 import sys
+import subprocess
 import time
 
 LIB = os.path.expanduser(sys.argv[1])
@@ -68,15 +69,17 @@ def clean(blocks, source):
 
 
 def main():
+    # Clean with the same JS cleaner the app uses (js/clean.js).
+    subprocess.run(["node", "tools/clean_cli.mjs", os.path.join(LIB, "raw"), os.path.join(LIB, "clean")], check=True, stdout=subprocess.DEVNULL)
     public, personal, report = {}, {}, []
     os.makedirs("data/texts", exist_ok=True)
-    for f in sorted(glob.glob(os.path.join(LIB, "raw", "*.json"))):
+    for f in sorted(glob.glob(os.path.join(LIB, "clean", "*.json"))):
         d = json.load(open(f))
         rid = d["id"]
         r = res.get(rid)
         if not r:
             continue
-        blocks = clean(d["blocks"], d["source"])
+        blocks = d["blocks"]
         n = sum(words(b["text"]) for b in blocks)
         if r["kind"] in ("course", "tool") or n < 800:
             continue  # landing pages of courses/tools/books are meant to be visited, not read aloud

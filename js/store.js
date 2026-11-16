@@ -19,6 +19,8 @@ const DEFAULTS = {
   settings: {
     rate: 1.0,
     voiceURI: "",
+    voiceEngine: "natural",   // "natural" (Kokoro neural voice, on-device) | "system" (iOS voices)
+    naturalVoice: "af_heart",
     skipCitations: true,
     includeAppendix: false,
     keepAwake: true,

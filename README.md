@@ -30,6 +30,16 @@ the app under **Settings → Voice**. The difference is large.
   **personal library file** built on your Mac (`~/Desktop/hai-scholar-library/hai-scholar-personal-library.json`, never
   published). AirDrop it to your iPhone, save it to Files, then use *Settings → Import personal library file*. Anything else
   is fetched live.
+- **Natural voice:** by default the app reads with **Kokoro-82M**, an open-source neural text-to-speech model
+  (Apache-2.0) that runs *on your iPhone* through WebGPU. It's free, needs no account or API key, and no text leaves
+  the device. The model downloads once (~330 MB with GPU support on iOS 26+, otherwise ~90 MB) and then works offline.
+  If a phone can't run it faster than real time, the app falls back to the built-in iPhone voices. You can switch voices
+  under Settings → Listening.
+- **Each lesson opens with a spoken introduction:** the stage overview (first lesson of a stage), the module overview and
+  goal (first lesson of a module), then *why this matters* and *what to focus on*, before the reading itself.
+- **Clean text:** `js/clean.js` (used both at build time and for live-loaded pages) removes site navigation, cookie and
+  subscribe prompts, author affiliations, journal boilerplate, figure and table captions, reference lists,
+  acknowledgements, inline citations, figure pointers and URLs, and it re-joins paragraphs that PDFs split.
 - **Listen & read along:** the app fetches the source's full text live and reads it aloud with your iPhone's voice,
   highlighting each sentence. Tap any sentence to jump there. You can change the speed (0.8×–2×) and the text size.
   - arXiv papers use arXiv's own HTML version, or the PDF if there's no HTML.
