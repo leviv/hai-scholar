@@ -22,6 +22,14 @@ the app under **Settings → Voice**. The difference is large.
 
 - **Path:** Stage 0 (how to learn) plus 11 stages of modules and sources. Each module has a short *Guide*, 3–6 core
   sources plus optional "go deeper" ones, a check-in (pass with 80%), and in later stages a *research exercise*.
+- **Navigation:** *Today* (your plan for the day: due reviews → next lesson → check-in, plus what's coming up and the
+  whole path grouped by stage) → *module* (guide, prequestions, lessons, check-in) → *lesson* (why it matters, the
+  read-along text and player, or the video, then free recall and notes). Three levels, no more.
+- **Paper texts:** openly licensed papers and essays (Creative Commons) ship *with the app* (`data/texts/`, with license
+  and attribution) and load instantly, offline too. Papers whose licenses don't allow public redistribution are in a
+  **personal library file** built on your Mac (`~/Desktop/hai-scholar-library/hai-scholar-personal-library.json`, never
+  published). AirDrop it to your iPhone, save it to Files, then use *Settings → Import personal library file*. Anything else
+  is fetched live.
 - **Listen & read along:** the app fetches the source's full text live and reads it aloud with your iPhone's voice,
   highlighting each sentence. Tap any sentence to jump there. You can change the speed (0.8×–2×) and the text size.
   - arXiv papers use arXiv's own HTML version, or the PDF if there's no HTML.
@@ -82,6 +90,10 @@ It's a static site with no build step: `index.html`, `css/`, `js/` and `data/sta
 python3 -m http.server 8791      # then open http://localhost:8791
 python3 tools/verify_refs.py     # re-verify every reference
 python3 tools/build_index.py     # after adding/removing a stage file
+# rebuilding the text library (see the docstrings in each script):
+python3 tools/licenses.py ~/Desktop/hai-scholar-library/licenses.json
+python3 tools/collect_server.py ~/Desktop/hai-scholar-library/raw 8792   # then run the collector in a browser
+python3 tools/build_library.py ~/Desktop/hai-scholar-library
 ```
 
 GitHub Pages deploys the `main` branch automatically.

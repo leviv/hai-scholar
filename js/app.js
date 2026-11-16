@@ -2,7 +2,7 @@ import { store, textCache } from "./store.js";
 import { extractResource } from "./extract.js";
 import { player, englishVoices, pickVoice } from "./player.js";
 import { grade as srsGrade, outcomeFrom, dueKeys, forecast, cardCount, matureCount } from "./srs.js";
-import { loadSavedIndex, isSaved, markSaved, downloadable, savedCount, downloadAll, storageEstimate } from "./offline.js";
+import { loadSavedIndex, isSaved, markSaved, downloadable, savedCount, downloadAll, storageEstimate, importLibrary } from "./offline.js";
 
 // ---------------------------------------------------------------- data
 const C = { stages: [], modules: new Map(), resources: new Map(), order: [] };
@@ -23,10 +23,15 @@ async function loadCurriculum() {
         C.resources.set(r.id, r);
         const key = r.arxiv || r.youtube || r.url;
         if (seen.has(key)) { store.alias(r.id, seen.get(key)); } else { seen.set(key, r.id); }
+        r.textId = seen.get(key);
       }
     }
   }
   C.stages = stages;
+  try {
+    const hosted = new Set((await (await fetch("data/texts/index.json", { cache: "no-cache" })).json()).ids);
+    for (const r of C.resources.values()) { r.hosted = hosted.has(r.textId); }
+  } catch { /* no bundled texts */ }
 }
 
 // ---------------------------------------------------------------- helpers
@@ -144,7 +149,7 @@ function setTab(name) {
 
 function updateMini() {
   const mini = $("#miniplayer");
-  const onListen = location.hash === `#/listen/${player.res?.id}`;
+  const onListen = location.hash === `#/lesson/${player.res?.id}`;
   const show = !!player.res && player.items.length > 0 && !onListen;
   mini.hidden = !show;
   document.body.classList.toggle("has-mini", show);
@@ -154,9 +159,9 @@ function updateMini() {
   $("#mini-toggle").querySelector("svg").setAttribute("width", "22");
 }
 $("#mini-toggle").onclick = () => player.toggle();
-$("#mini-open").onclick = () => { location.hash = `#/listen/${player.res.id}`; };
+$("#mini-open").onclick = () => { location.hash = `#/lesson/${player.res.id}`; };
 player.addEventListener("change", updateMini);
-player.addEventListener("completed", () => { if (!location.hash.startsWith("#/listen")) { toast("Marked as done ✓"); } });
+player.addEventListener("completed", () => { if (!location.hash.startsWith("#/lesson")) { toast("Marked as done ✓"); } });
 
 // ---------------------------------------------------------------- views
 function offlineTag(r) {
@@ -164,7 +169,7 @@ function offlineTag(r) {
 }
 
 function resRow(r, sub = "") {
-  return `<a class="li" href="#/res/${r.id}">${kindIcon(r)}
+  return `<a class="li" href="#/lesson/${r.id}">${kindIcon(r)}
     <span class="li-body"><div class="li-title">${esc(r.title)}</div>
     <div class="li-sub">${resMeta(r)}${r.minutes ? ` · ${fmtMin(r.minutes)}` : ""}${offlineTag(r)}${sub}</div></span>${ICONS.chev}</a>`;
 }
@@ -179,140 +184,178 @@ function cardExists(key) {
   return !!C.modules.get(mid)?.quiz[qi];
 }
 
+function flatLessons() { return C.order.flatMap((m) => m.resources); }
+
+function nextLessonAfter(r) {
+  const list = flatLessons().filter((x) => !x.optional || x.module === r.module);
+  const i = list.indexOf(r);
+  return list.slice(i + 1).find((x) => !store.isDone(x.id)) || null;
+}
+
+function currentStageId() {
+  const n = nextStep();
+  return n ? n.m.stage.id : C.stages[C.stages.length - 1]?.id;
+}
+
+let openStages = null; // stage ids expanded on the home screen (per session)
+
 function viewPath() {
   setTab("path");
   setTop({ title: "" });
   const next = nextStep();
+  const due = dueCount();
+  const t = store.today();
+  const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone;
   let total = 0;
   let got = 0;
-  for (const s of C.stages) { const st = stageStatus(s); total += 1; got += st.frac; }
-  const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone;
-  const due = dueCount();
+  for (const s of C.stages) { total += 1; got += stageStatus(s).frac; }
+  if (!openStages) { openStages = new Set([currentStageId()]); }
 
-  let cont = "";
-  if (next?.kind === "res") {
-    const pos = store.pos(next.r.id);
-    const started = pos && pos.i > 0;
-    const pre = store.pre(next.m.id);
-    const fresh = !pre && required(next.m).every((r) => !store.isDone(r.id));
-    const href = fresh ? `#/pre/${next.m.id}` : `#/res/${next.r.id}`;
-    cont = `<a class="continue" href="${href}">
-      <div class="k">${fresh ? "Start module" : started ? "Continue listening" : "Up next"} · Stage ${next.m.stage.number}</div>
-      <div class="t">${esc(fresh ? next.m.title : next.r.title)}</div>
-      <div class="s">${fresh ? "Begins with 3 quick prequestions" : `${esc(next.m.title)} · ${esc(KIND_LABEL[next.r.kind])} · ${fmtMin(next.r.minutes)}`}</div></a>`;
-  } else if (next?.kind === "quiz") {
-    cont = `<a class="continue" href="#/quiz/${next.m.id}">
-      <div class="k">Check your understanding · Stage ${next.m.stage.number}</div>
-      <div class="t">${esc(next.m.title)}</div>
-      <div class="s">${next.m.quiz.length} questions · pass with ${PASS}%</div></a>`;
+  // ---- Today's plan
+  const steps = [];
+  const reviewMin = Math.max(1, Math.round(Math.min(due, store.settings().dailyLimit) * 0.4));
+  if (due) {
+    steps.push({ state: "todo", title: `Review ${due} card${due === 1 ? "" : "s"}`, sub: `~${reviewMin} min · spaced retrieval of earlier material. Do this first.`, href: "#/review", cta: "Start" });
+  } else if (t.reviews) {
+    steps.push({ state: "done", title: `Review done · ${t.reviews} card${t.reviews === 1 ? "" : "s"}`, sub: "Missed ones come back tomorrow." });
   } else {
-    cont = `<div class="continue"><div class="k">Path complete</div><div class="t">You've finished every module.</div><div class="s">Keep it fresh with the daily review.</div></div>`;
+    steps.push({ state: "done", title: cardCount() ? "No reviews due today" : "Reviews start after your first check-in", sub: cardCount() ? `${cardCount()} cards in rotation · ${matureCount()} in long-term memory` : "Every question you answer joins a spaced schedule." });
+  }
+  if (next?.kind === "res") {
+    const m = next.m;
+    const fresh = !store.pre(m.id) && required(m).every((r) => !store.isDone(r.id));
+    const req = required(m);
+    const left = req.filter((r) => !store.isDone(r.id));
+    const pos = store.pos(next.r.id);
+    if (fresh) {
+      steps.push({ state: "todo", title: `Start “${m.title}”`, sub: `Stage ${m.stage.number} · 3 prequestions, then ${req.length} lesson${req.length === 1 ? "" : "s"} (~${fmtMin(req.reduce((n, r) => n + (r.minutes || 0), 0))})`, href: `#/pre/${m.id}`, cta: "Begin" });
+    } else {
+      steps.push({ state: "todo", title: `${pos && pos.i > 0 ? "Continue" : "Lesson"}: ${next.r.title}`, sub: `${KIND_LABEL[next.r.kind]} · ${fmtMin(next.r.minutes)}${pos && pos.n ? ` · ${Math.round((pos.i / pos.n) * 100)}% done` : ""} · lesson ${req.indexOf(next.r) + 1} of ${req.length} in “${m.title}”`, href: `#/lesson/${next.r.id}`, cta: pos && pos.i > 0 ? "Resume" : "Open" });
+    }
+    steps.push({ state: "later", title: `Then: check-in for “${m.title}”`, sub: `${left.length} lesson${left.length === 1 ? "" : "s"} left · ~${fmtMin(left.reduce((n, r) => n + (r.minutes || 0), 0))} · pass with ${PASS}%` });
+  } else if (next?.kind === "quiz") {
+    steps.push({ state: "todo", title: `Check-in: ${next.m.title}`, sub: `${next.m.quiz.length} questions · pass with ${PASS}% to finish the module`, href: `#/quiz/${next.m.id}`, cta: "Start" });
+  } else {
+    steps.push({ state: "done", title: "Path complete", sub: "Keep it fresh with the daily review and stage exams." });
+  }
+  const pace = t.lessons >= 2 ? `<div class="pace">You've finished ${t.lessons} lessons today. Stopping here is fine: spaced sessions beat one long one.</div>` : "";
+
+  // ---- Upcoming lessons
+  const upcoming = [];
+  if (next?.r) {
+    for (const r of flatLessons()) {
+      if (upcoming.length >= 4) { break; }
+      if (r.optional || store.isDone(r.id) || r === next.r) { continue; }
+      if (flatLessons().indexOf(r) < flatLessons().indexOf(next.r)) { continue; }
+      upcoming.push(r);
+    }
   }
 
-  const reviewCard = due ? `<a class="card review-card" href="#/review">
-      <div class="row-gap" style="justify-content:space-between"><div><div class="k">Daily review · do this first</div>
-      <div class="t">${due} card${due === 1 ? "" : "s"} due</div>
-      <div class="small muted">Spaced retrieval of what you've already learned, about ${Math.max(1, Math.round(Math.min(due, store.settings().dailyLimit) * 0.4))} min</div></div>
-      <span class="pill">${ICONS.play.replace("<svg", '<svg width="14" height="14"')} Start</span></div></a>` : "";
-
   view.innerHTML = `
-    <div class="large-title">HAI Scholar</div>
-    <p class="lede">From zero to research-level Human-AI Interaction, using only established papers, lectures and essays. ${Math.round((got / Math.max(total, 1)) * 100)}% complete${store.streak() ? ` · ${store.streak()}-day streak` : ""}.</p>
-    ${standalone ? "" : `<div class="card install-tip small"><b>Install on iPhone:</b> in Safari tap <b>Share</b> → <b>Add to Home Screen</b>. It then opens full-screen like an app and keeps your progress.</div>`}
-    ${reviewCard}
-    ${cont}
+    <div class="home-head">
+      <div><div class="large-title">Today</div>
+      <div class="muted small">${new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}${store.streak() ? ` · ${store.streak()}-day streak` : ""} · ${Math.round((got / Math.max(total, 1)) * 100)}% of the path</div></div>
+    </div>
+    ${standalone ? "" : `<div class="card install-tip small"><b>Install on iPhone:</b> in Safari tap <b>Share</b> → <b>Add to Home Screen</b>.</div>`}
+    <div class="card plan">
+      ${steps.map((s, i) => `<div class="step ${s.state}">
+        <span class="dot">${s.state === "done" ? ICONS.check : i + 1}</span>
+        <div class="step-body"><div class="step-t">${esc(s.title)}</div><div class="step-s">${esc(s.sub)}</div></div>
+        ${s.href ? `<a class="step-cta" href="${s.href}">${s.cta}</a>` : ""}
+      </div>`).join("")}
+      ${pace}
+    </div>
+    ${upcoming.length ? `<div class="section-label">Coming up</div><div class="list">${upcoming.map((r) => `<a class="li" href="#/lesson/${r.id}">${kindIcon(r)}<span class="li-body"><div class="li-title">${esc(r.title)}</div><div class="li-sub">${esc(r.module.title)} · ${fmtMin(r.minutes)}</div></span>${ICONS.chev}</a>`).join("")}</div>` : ""}
     <div class="section-label">The path</div>
     ${C.stages.map((s) => {
       const st = stageStatus(s);
       const done = st.complete === st.modules;
-      return `<a class="card stage-card" href="#/stage/${s.id}">
-        <div class="stage-head">
-          <div class="stage-num ${done ? "done" : ""}">${done ? ICONS.check : s.number}</div>
-          <div><div class="stage-title">${esc(s.title)}</div><div class="stage-sub">${esc(s.subtitle)}</div></div>
+      const ex = store.s.exams[s.id];
+      const allRes = s.modules.flatMap((m) => m.resources);
+      return `<details class="stage-group" data-sid="${s.id}" ${openStages.has(s.id) ? "open" : ""}>
+        <summary>
+          <span class="stage-num ${done ? "done" : ""}">${done ? ICONS.check : s.number}</span>
+          <span class="sg-body"><span class="stage-title">${esc(s.title)}</span>
+            <span class="sg-meta">${st.complete}/${st.modules} modules · ~${fmtMin(st.minutes)}</span>
+            <span class="progress ${done ? "good" : ""}"><i style="width:${Math.round(st.frac * 100)}%"></i></span></span>
+          <span class="sg-chev">${ICONS.chev}</span>
+        </summary>
+        <p class="sg-overview small muted">${esc(s.overview)}</p>
+        <div class="list">${s.modules.map((m, i) => {
+          const ms = moduleStatus(m);
+          const here = next && next.m === m;
+          return `<a class="li ${here ? "here" : ""}" href="#/module/${m.id}">
+            <span class="mod-num ${ms.complete ? "done" : ""}">${ms.complete ? ICONS.check : `${s.number}.${i + 1}`}</span>
+            <span class="li-body"><div class="li-title">${esc(m.title)}${here ? ' <span class="pill">You are here</span>' : ""}</div>
+            <div class="li-sub">${ms.done}/${ms.total} lessons · ${ms.quiz ? `check-in ${ms.quiz.best}%` : "check-in not taken"}</div></span>${ICONS.chev}</a>`;
+        }).join("")}</div>
+        <div class="sg-actions">
+          <a class="btn secondary" href="#/exam/${s.id}">Stage exam${ex ? ` · best ${ex.best}%` : ""}</a>
+          ${downloadButton(allRes, "Save stage offline", `stage:${s.id}`, true)}
         </div>
-        <div class="stage-meta"><span>${st.complete}/${st.modules} modules</span><span>~${fmtMin(st.minutes)} of core material</span></div>
-        <div class="progress ${done ? "good" : ""}"><i style="width:${Math.round(st.frac * 100)}%"></i></div>
-      </a>`;
+      </details>`;
     }).join("")}
   `;
+  view.querySelectorAll(".stage-group").forEach((d) => {
+    d.addEventListener("toggle", () => { if (d.open) { openStages.add(d.dataset.sid); } else { openStages.delete(d.dataset.sid); } });
+  });
+  wireDownloads(() => viewPath());
 }
 
-// Download button shared by stage, module and settings screens.
-function downloadButton(resources, label) {
+// Download buttons: data-scope = "all" | "stage:<id>" | "module:<id>".
+function downloadButton(resources, label, scope, compact = false) {
   const list = downloadable(resources);
   const n = savedCount(list);
   const all = n === list.length;
-  return `<button class="btn ${all ? "ghost" : "secondary"} dl-btn" ${all ? "disabled" : ""}>${ICONS.down} ${all ? `All ${list.length} texts saved offline` : `${label} (${n}/${list.length} saved)`}</button>`;
+  const text = all ? (compact ? "Saved offline" : `All ${list.length} texts saved offline`) : compact ? `${label} (${n}/${list.length})` : `${label} (${n}/${list.length} saved)`;
+  return `<button class="btn ${all ? "ghost" : "secondary"} dl-btn" data-scope="${scope}" ${all ? "disabled" : ""}>${ICONS.down} ${text}</button>`;
 }
 
-function wireDownload(resources, rerender) {
-  const btn = view.querySelector(".dl-btn");
-  if (!btn) { return; }
-  btn.onclick = async () => {
-    if (!navigator.onLine) { toast("Connect to the internet to download"); return; }
-    btn.disabled = true;
-    const state = await downloadAll(resources, (p) => {
-      if (btn.isConnected) { btn.innerHTML = `${ICONS.down} Saving ${p.done}/${p.total}…`; }
-    });
-    toast(state.failed.length ? `Saved ${state.ok}. ${state.failed.length} couldn't be saved (publisher blocks apps).` : `Saved ${state.ok} text${state.ok === 1 ? "" : "s"} for offline listening`);
-    rerender();
-  };
+function scopeResources(scope) {
+  const [kind, id] = scope.split(":");
+  if (kind === "stage") { return C.stages.find((s) => s.id === id).modules.flatMap((m) => m.resources); }
+  if (kind === "module") { return C.modules.get(id).resources; }
+  return [...C.resources.values()];
 }
 
-function viewStage(id) {
-  const s = C.stages.find((x) => x.id === id);
-  if (!s) { return notFound(); }
-  setTab("path");
-  setTop({ title: `Stage ${s.number}`, back: { label: "Path", href: "#/" } });
-  const allRes = s.modules.flatMap((m) => m.resources);
-  const qN = s.modules.reduce((n, m) => n + m.quiz.length, 0);
-  const tried = s.modules.filter((m) => store.quiz(m.id)).length;
-  const ex = store.s.exams[s.id];
-  view.innerHTML = `
-    <div class="large-title">${esc(s.title)}</div>
-    <p class="lede">${esc(s.subtitle)}</p>
-    <div class="guide"><h3>Stage overview</h3>${paras(s.overview)}</div>
-    <div class="section-label">Modules</div>
-    <div class="list">
-      ${s.modules.map((m, i) => {
-        const st = moduleStatus(m);
-        const q = st.quiz ? `${st.quiz.best}%` : "not taken";
-        return `<a class="li" href="#/module/${m.id}">
-          <span class="stage-num ${st.complete ? "done" : ""}" style="width:32px;height:32px;font-size:15px;border-radius:9px">${st.complete ? ICONS.check : i + 1}</span>
-          <span class="li-body"><div class="li-title">${esc(m.title)}</div>
-          <div class="li-sub">${st.done}/${st.total} sources · check-in ${q}</div></span>${ICONS.chev}</a>`;
-      }).join("")}
-    </div>
-    <div class="section-label">Cumulative stage exam</div>
-    <div class="card">
-      <div class="row-gap" style="justify-content:space-between">
-        <div><b>${Math.min(EXAM_N, qN)} mixed questions</b><div class="small muted">Questions from every module, shuffled together. Mixing topics (interleaving) makes you work out which idea applies, not just recall the latest one.</div></div>
-        ${ex ? `<span class="pill ${ex.best >= PASS ? "good" : "bad"}">Best ${ex.best}%</span>` : ""}
-      </div>
-      <div class="btn-stack"><a class="btn ${tried === s.modules.length ? "" : "secondary"}" href="#/exam/${s.id}">${tried === s.modules.length ? "Take the stage exam" : `Take it anyway (${tried}/${s.modules.length} check-ins done)`}</a></div>
-    </div>
-    <div class="section-label">Offline</div>
-    ${downloadButton(allRes, "Download this stage for offline")}
-    <p class="tiny muted" style="margin:6px 4px">Saves the full text of every paper and essay in this stage so you can listen without a connection. Videos stream only.</p>`;
-  wireDownload(allRes, () => viewStage(id));
+function wireDownloads(rerender) {
+  view.querySelectorAll(".dl-btn").forEach((btn) => {
+    btn.onclick = async (e) => {
+      e.preventDefault();
+      if (!navigator.onLine) { toast("Connect to the internet to download"); return; }
+      btn.disabled = true;
+      const state = await downloadAll(scopeResources(btn.dataset.scope), (p) => {
+        if (btn.isConnected) { btn.innerHTML = `${ICONS.down} Saving ${p.done}/${p.total}…`; }
+      });
+      toast(state.failed.length ? `Saved ${state.ok}. ${state.failed.length} couldn't be saved (publisher blocks apps).` : `Saved ${state.ok} text${state.ok === 1 ? "" : "s"} for offline listening`);
+      rerender();
+    };
+  });
 }
 
 function viewModule(id) {
   const m = C.modules.get(id);
   if (!m) { return notFound(); }
   setTab("path");
-  setTop({ title: m.title, back: { label: `Stage ${m.stage.number}`, href: `#/stage/${m.stage.id}` } });
+  setTop({ title: `Stage ${m.stage.number}.${m.stage.modules.indexOf(m) + 1}`, back: { label: "Today", href: "#/" } });
+  openStages = openStages || new Set();
+  openStages.add(m.stage.id);
   const st = moduleStatus(m);
   const core = m.resources.filter((r) => !r.optional);
   const extra = m.resources.filter((r) => r.optional);
   const pre = store.pre(m.id);
-  const recalled = (r) => (store.recall(r.id) ? ' · <span style="color:var(--accent)">recalled</span>' : "");
+  const idx = C.order.indexOf(m);
+  const prevM = C.order[idx - 1];
+  const nextM = C.order[idx + 1];
+  const row = (r, i) => `<a class="li" href="#/lesson/${r.id}">${kindIcon(r)}
+    <span class="li-body"><div class="li-title">${i !== undefined ? `${i + 1}. ` : ""}${esc(r.title)}</div>
+    <div class="li-sub">${resMeta(r)}${r.minutes ? ` · ${fmtMin(r.minutes)}` : ""}${offlineTag(r)}${store.recall(r.id) ? ' · <span style="color:var(--accent)">recalled</span>' : ""}</div></span>${ICONS.chev}</a>`;
 
   const preCard = pre
-    ? `<div class="card"><b>Listen for</b><div class="small muted" style="margin:2px 0 8px">Your prequestions. Answers are revealed in the check-in.</div>
-        <ol class="small" style="margin:0;padding-left:20px">${pre.qs.map((qi) => `<li style="margin-bottom:6px">${esc(m.quiz[qi]?.q)}</li>`).join("")}</ol></div>`
-    : `<a class="card prequest" href="#/pre/${m.id}"><b>Before you start: 3 prequestions</b>
-        <div class="small muted" style="margin-top:4px">Commit to a guess before learning. Getting them wrong is fine and expected. Guessing first primes you to notice the answers as you listen (Pan &amp; Carpenter 2023).</div>
+    ? `<details class="card listen-for"><summary><b>Listen for</b> <span class="small muted">your 3 prequestions</span></summary>
+        <ol class="small" style="margin:8px 0 0;padding-left:20px">${pre.qs.map((qi) => `<li style="margin-bottom:6px">${esc(m.quiz[qi]?.q)}</li>`).join("")}</ol></details>`
+    : `<a class="card prequest" href="#/pre/${m.id}"><b>Step 1 · 3 prequestions</b>
+        <div class="small muted" style="margin-top:4px">Commit to a guess before learning; wrong guesses are expected. It primes you to notice the answers (Pan &amp; Carpenter 2023).</div>
         <div class="btn-stack" style="margin-bottom:0"><span class="btn">Answer prequestions</span></div></a>`;
 
   view.innerHTML = `
@@ -320,14 +363,14 @@ function viewModule(id) {
     <div class="large-title" style="font-size:28px">${esc(m.title)}</div>
     <p class="lede goal">${esc(m.goal)}</p>
     ${preCard}
-    <div class="guide"><h3>Guide</h3>${paras(m.guide)}</div>
-    <div class="section-label">Core sources · ${st.done}/${st.total} done</div>
-    <div class="list">${core.map((r) => resRow(r, recalled(r))).join("")}</div>
-    ${extra.length ? `<div class="section-label">Go deeper (optional)</div><div class="list">${extra.map((r) => resRow(r, recalled(r))).join("")}</div>` : ""}
-    <div class="section-label">Check your understanding</div>
+    <details class="guide" ${st.done ? "" : "open"}><summary><h3 style="display:inline">Guide</h3></summary>${paras(m.guide)}</details>
+    <div class="section-label">Lessons · ${st.done}/${st.total} done</div>
+    <div class="list">${core.map((r, i) => row(r, i)).join("")}</div>
+    ${extra.length ? `<div class="section-label">Go deeper (optional)</div><div class="list">${extra.map((r) => row(r)).join("")}</div>` : ""}
+    <div class="section-label">Check-in</div>
     <div class="card">
       <div class="row-gap" style="justify-content:space-between">
-        <div><b>${m.quiz.length} questions</b><div class="small muted">Pass with ${PASS}% to complete the module. Every question then joins your spaced daily review.</div></div>
+        <div><b>${m.quiz.length} questions</b><div class="small muted">Pass with ${PASS}% to complete the module. The questions then join your daily review.</div></div>
         ${st.quiz ? `<span class="pill ${st.passed ? "good" : "bad"}">Best ${st.quiz.best}%</span>` : `<span class="pill gray">Not taken</span>`}
       </div>
       <div class="btn-stack"><a class="btn" href="#/quiz/${m.id}">${st.quiz ? "Retake check-in" : "Start check-in"}</a></div>
@@ -335,81 +378,40 @@ function viewModule(id) {
     ${m.exercise ? `<div class="section-label">Research exercise</div>
       <div class="guide" style="border-left-color:var(--warn)"><h3 style="color:var(--warn)">Try this</h3>${paras(m.exercise)}</div>
       <textarea id="ex-note" placeholder="Work through the exercise here (saved on this device)…">${esc(store.note(m.id))}</textarea>` : ""}
-    <div class="section-label">Offline</div>
-    ${downloadButton(m.resources, "Download module for offline")}
+    <div class="btn-stack">${downloadButton(m.resources, "Save module offline", `module:${m.id}`)}</div>
+    <div class="mod-nav">
+      ${prevM ? `<a href="#/module/${prevM.id}">‹ ${esc(prevM.title)}</a>` : "<span></span>"}
+      ${nextM ? `<a href="#/module/${nextM.id}">${esc(nextM.title)} ›</a>` : "<span></span>"}
+    </div>
   `;
   const ta = $("#ex-note");
   if (ta) { ta.oninput = () => store.setNote(m.id, ta.value); }
-  wireDownload(m.resources, () => viewModule(id));
+  wireDownloads(() => viewModule(id));
 }
 
-function viewResource(id) {
-  const r = C.resources.get(id);
-  if (!r) { return notFound(); }
-  setTab("path");
-  setTop({ title: KIND_LABEL[r.kind], back: { label: r.module.title, href: `#/module/${r.module.id}` } });
-  store.setLast(r.id);
-  const done = store.isDone(r.id);
-  const pos = store.pos(r.id);
-  const listenable = r.kind !== "video";
-  const pct = pos && pos.n ? Math.round((pos.i / pos.n) * 100) : 0;
-  const rec = store.recall(r.id);
-  const yt = r.youtube ? `<div class="video-wrap"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(r.youtube)}?playsinline=1&rel=0&modestbranding=1" title="${esc(r.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>` : "";
-
-  view.innerHTML = `
-    <div class="tiny muted" style="margin:0 2px">Stage ${r.stage.number} · ${esc(r.module.title)}${r.optional ? " · optional" : ""}</div>
-    <div class="res-title">${esc(r.title)}</div>
-    <div class="meta-line">${esc(r.authors)}${r.year ? ` (${esc(r.year)})` : ""}${r.venue ? ` · ${esc(r.venue)}` : ""}</div>
-    <div class="row-gap" style="margin:10px 2px 4px">
-      <span class="pill">${esc(KIND_LABEL[r.kind])}</span>
-      ${r.minutes ? `<span class="pill gray">${fmtMin(r.minutes)}</span>` : ""}
-      ${done ? `<span class="pill good">Done</span>` : pct ? `<span class="pill gray">${pct}% listened</span>` : ""}
-      ${listenable && isSaved(r) ? `<span class="pill good">${ICONS.down} Offline</span>` : ""}
-    </div>
-    ${yt}
-    <div class="btn-stack">
-      ${listenable ? `<a class="btn" href="#/listen/${r.id}">${ICONS.play.replace("<svg", '<svg width="18" height="18"')} ${pct && !done ? "Resume listening" : "Listen & read along"}</a>` : ""}
-      <div class="btn-row" style="margin:0">
-        <a class="btn secondary" href="${esc(r.url)}" target="_blank" rel="noopener">${r.kind === "video" ? "Open in YouTube" : "Open original"}</a>
-        <button class="btn ${done ? "ghost" : "secondary"}" id="toggle-done">${done ? "Mark not done" : "Done → recall"}</button>
-      </div>
-      ${done ? `<a class="btn ghost" href="#/recall/${r.id}">${rec ? "Redo free recall" : "Free recall (2 min)"}</a>` : ""}
-    </div>
-    <div class="guide"><h3>Why this matters</h3>${paras(r.why)}${r.focus ? `<p><b>Focus:</b> ${esc(r.focus)}</p>` : ""}</div>
-    ${r.arxiv ? `<p class="small muted" style="margin:0 2px 14px">arXiv ${esc(r.arxiv)} · <a href="https://arxiv.org/pdf/${esc(r.arxiv)}" target="_blank" rel="noopener">PDF</a> · <a href="https://arxiv.org/html/${esc(r.arxiv)}" target="_blank" rel="noopener">HTML</a></p>` : ""}
-    ${rec ? `<div class="section-label">Your free recall</div><div class="card small" style="white-space:pre-wrap">${esc(rec.text) || "<span class='muted'>(recalled out loud)</span>"}</div>` : ""}
-    <div class="section-label">Your notes</div>
-    <textarea id="note" placeholder="Key claims, methods, questions, how it connects to other work…">${esc(store.note(r.id))}</textarea>
-  `;
-  $("#toggle-done").onclick = () => {
-    if (store.isDone(r.id)) { store.setDone(r.id, false); viewResource(id); return; }
-    finishSource(r);
-  };
-  const ta = $("#note");
-  ta.oninput = () => store.setNote(r.id, ta.value);
-}
-
-// Marking a source done leads into free recall (Karpicke & Blunt 2011) unless turned off.
+// Marking a lesson done leads into free recall (Karpicke & Blunt 2011) unless turned off.
 function finishSource(r) {
+  player.pause();
   store.setDone(r.id, true);
   if (store.settings().freeRecall) { location.hash = `#/recall/${r.id}`; return; }
   toast("Marked as done ✓");
-  render();
+  const nx = nextLessonAfter(r);
+  location.hash = nx && nx.module === r.module ? `#/lesson/${nx.id}` : `#/module/${r.module.id}`;
 }
 
 function prevSource(r) {
-  const flat = C.order.flatMap((m) => m.resources);
+  const flat = flatLessons();
   const i = flat.indexOf(r);
   for (let j = i - 1; j >= 0; j--) { if (store.isDone(flat[j].id)) { return flat[j]; } }
   return i > 0 ? flat[i - 1] : null;
 }
 
-// ---- free recall after a source
+// ---- free recall after a lesson
 function viewRecall(id) {
   const r = C.resources.get(id);
   if (!r) { return notFound(); }
   setTab("path");
-  setTop({ title: "Free recall", back: { label: "Source", href: `#/res/${r.id}` } });
+  setTop({ title: "Free recall", back: { label: "Lesson", href: `#/lesson/${r.id}` } });
   const prev = prevSource(r);
   const existing = store.recall(r.id);
   view.innerHTML = `
@@ -426,49 +428,103 @@ function viewRecall(id) {
       </ol></div>
     <textarea id="recall-text" style="min-height:200px" placeholder="Start typing or dictating…">${esc(existing?.text || "")}</textarea>
     <div class="btn-stack"><button class="btn" id="check">Check against the source</button>
-    <a class="btn ghost" href="#/module/${r.module.id}">Skip for now</a></div>
+    <button class="btn ghost" id="skip">Skip for now</button></div>
     <div id="compare"></div>`;
   const ta = $("#recall-text");
+  const goNext = () => {
+    const nx = nextLessonAfter(r);
+    location.hash = nx && nx.module === r.module ? `#/lesson/${nx.id}` : `#/module/${r.module.id}`;
+  };
+  $("#skip").onclick = goNext;
   $("#check").onclick = () => {
     $("#check").hidden = true;
     $("#compare").innerHTML = `
       <div class="section-label">Compare</div>
       <div class="guide"><h3>What this source is for</h3>${paras(r.why)}${r.focus ? `<p><b>Focus:</b> ${esc(r.focus)}</p>` : ""}</div>
-      <div class="small muted" style="margin:0 4px 10px">Skim the source to check what you missed: ${r.kind === "video" ? `<a href="#/res/${r.id}">rewatch</a>` : `<a href="#/listen/${r.id}">open the read-along text</a>`}. Notice anything you got wrong, not just what you left out.</div>
+      <div class="small muted" style="margin:0 4px 10px">Skim <a href="#/lesson/${r.id}">the lesson</a> to check what you missed. Notice anything you got wrong, not just what you left out.</div>
       ${store.note(r.id) ? `<div class="card small" style="white-space:pre-wrap"><b>Your notes</b><br>${esc(store.note(r.id))}</div>` : ""}
       <div class="section-label">How complete was your recall?</div>
       <div class="grade-row">
         <button data-g="0">Missed most</button><button data-g="1">Got some</button><button data-g="2">Got most</button><button data-g="3">Nailed it</button>
       </div>
-      <p class="tiny muted" style="margin:8px 4px">This schedules a recall prompt for this source in your daily review: sooner if it was patchy, later if it was solid.</p>`;
+      <p class="tiny muted" style="margin:8px 4px">This schedules a recall prompt for this lesson in your daily review: sooner if it was patchy, later if it was solid.</p>`;
     $("#compare").querySelectorAll("[data-g]").forEach((b) => {
       b.onclick = () => {
         const g = Number(b.dataset.g);
         store.setRecall(r.id, ta.value.trim(), g);
         srsGrade(`r:${r.id}`, "r", g);
-        const next = required(r.module).find((x) => !store.isDone(x.id));
         toast("Recall saved and scheduled for review");
-        location.hash = next ? `#/res/${next.id}` : `#/module/${r.module.id}`;
+        goNext();
       };
     });
     $("#compare").scrollIntoView({ behavior: "smooth", block: "start" });
   };
 }
 
-// ---- listen / read-along
+// ---- lesson: overview + read-along player (or video) on one page
 let listenCleanup = null;
 
-function viewListen(id) {
+function viewLesson(id) {
   const r = C.resources.get(id);
   if (!r) { return notFound(); }
   setTab("path");
-  document.body.classList.add("listening");
-  const doneBtn = () => ({ label: store.isDone(r.id) ? "Recall →" : "Done", onClick: () => { player.pause(); finishSource(r); } });
-  const top = () => ({ title: r.title, back: { label: "Back", href: `#/res/${r.id}` }, right: [doneBtn()] });
+  store.setLast(r.id);
+  const m = r.module;
+  const req = required(m);
+  const n = req.indexOf(r);
+  const top = () => ({
+    title: n >= 0 ? `Lesson ${n + 1} of ${req.length}` : "Optional lesson",
+    back: { label: m.title, href: `#/module/${m.id}` },
+    right: [{ label: store.isDone(r.id) ? "Recall" : "Done", onClick: () => (store.isDone(r.id) ? (location.hash = `#/recall/${r.id}`) : finishSource(r)) }],
+  });
   setTop(top());
-  document.documentElement.style.setProperty("--reader-size", `${store.settings().textSize}px`);
+  const nx = nextLessonAfter(r);
+  const rec = store.recall(r.id);
+  const header = `
+    <div class="tiny muted" style="margin:0 2px"><a href="#/module/${m.id}">Stage ${r.stage.number} · ${esc(m.title)}</a>${r.optional ? " · optional" : ""}</div>
+    <div class="res-title">${esc(r.title)}</div>
+    <div class="meta-line">${esc(r.authors)}${r.year ? ` (${esc(r.year)})` : ""}${r.venue ? ` · ${esc(r.venue)}` : ""}</div>
+    <div class="row-gap" style="margin:10px 2px 8px">
+      <span class="pill">${esc(KIND_LABEL[r.kind])}</span>
+      ${r.minutes ? `<span class="pill gray">${fmtMin(r.minutes)}</span>` : ""}
+      ${store.isDone(r.id) ? `<span class="pill good">Done</span>` : ""}
+      ${r.kind !== "video" && isSaved(r) ? `<span class="pill good">${ICONS.down} Offline</span>` : ""}
+      <a class="pill gray" href="${esc(r.url)}" target="_blank" rel="noopener">Original ↗</a>
+    </div>
+    <details class="guide why" ${store.isDone(r.id) || store.pos(r.id) ? "" : "open"}><summary><h3 style="display:inline">Why this matters</h3></summary>${paras(r.why)}${r.focus ? `<p><b>Focus:</b> ${esc(r.focus)}</p>` : ""}</details>`;
+  const footer = () => `
+    <div class="card lesson-end">
+      <b>${store.isDone(r.id) ? "Lesson done" : "Finished?"}</b>
+      <div class="small muted">${store.isDone(r.id) ? (rec ? "You've done a free recall for this lesson." : "Do a 2-minute free recall to lock it in.") : "Mark it done, then do a 2-minute free recall. Writing down what you remember roughly doubles what sticks compared with relistening (Roediger & Karpicke 2006)."}</div>
+      <div class="btn-stack" style="margin-bottom:0">
+        ${store.isDone(r.id) ? `<a class="btn" href="#/recall/${r.id}">${rec ? "Redo free recall" : "Free recall"}</a>` : `<button class="btn" id="end-done">Done → free recall</button>`}
+        ${nx ? `<a class="btn ghost" href="#/lesson/${nx.id}">Next: ${esc(nx.title)}</a>` : ""}
+        ${!nx || nx.module !== m ? `<a class="btn secondary" href="#/quiz/${m.id}">Module check-in</a>` : ""}
+      </div>
+    </div>
+    ${rec ? `<div class="section-label">Your free recall</div><div class="card small" style="white-space:pre-wrap">${esc(rec.text) || "<span class='muted'>(recalled out loud)</span>"}</div>` : ""}
+    <div class="section-label">Your notes</div>
+    <textarea id="note" placeholder="Key claims, methods, questions, how it connects to other work…">${esc(store.note(r.id))}</textarea>`;
+  const wireFooter = () => {
+    const d = $("#end-done");
+    if (d) { d.onclick = () => finishSource(r); }
+    const ta = $("#note");
+    if (ta) { ta.oninput = () => store.setNote(r.id, ta.value); }
+  };
 
-  view.innerHTML = `<div class="reader-status"><div class="spinner"></div><div id="status">Fetching text…</div></div>`;
+  // ---- video lessons
+  if (r.kind === "video") {
+    view.innerHTML = `${header}
+      <div class="video-wrap"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(r.youtube)}?playsinline=1&rel=0&modestbranding=1" title="${esc(r.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+      ${footer()}`;
+    wireFooter();
+    return;
+  }
+
+  // ---- text lessons: read-along
+  document.body.classList.add("listening");
+  document.documentElement.style.setProperty("--reader-size", `${store.settings().textSize}px`);
+  view.innerHTML = `${header}<div id="reader-area"><div class="reader-status"><div class="spinner"></div><div id="status">Loading text…</div></div></div>`;
 
   const controls = document.createElement("div");
   controls.className = "controls";
@@ -483,6 +539,7 @@ function viewListen(id) {
         <button class="ctrl txt" id="c-size" aria-label="Text size">Aa</button>
       </div></div>`;
   document.body.appendChild(controls);
+  const area = $("#reader-area");
 
   const RATES = [0.8, 0.9, 1, 1.1, 1.2, 1.35, 1.5, 1.75, 2];
   const range = $("#c-range", controls);
@@ -500,8 +557,8 @@ function viewListen(id) {
     range.value = String(player.i);
     $("#c-pos", controls).textContent = `${Math.round((player.i / Math.max(1, player.items.length - 1)) * 100)}%`;
     $("#c-left", controls).textContent = `${fmtMin(player.minutesLeft()) || "0 min"} left`;
-    const prev = view.querySelector(".s.cur");
-    const cur = view.querySelector(`.s[data-i="${player.i}"]`);
+    const prev = area.querySelector(".s.cur");
+    const cur = area.querySelector(`.s[data-i="${player.i}"]`);
     if (prev && prev !== cur) { prev.classList.remove("cur"); }
     if (cur) {
       cur.classList.add("cur");
@@ -534,10 +591,9 @@ function viewListen(id) {
   };
 
   const onCompleted = () => {
-    if (!store.settings().freeRecall) { toast("Marked as done ✓"); return; }
     sheet.innerHTML = `<div class="sheet"><div class="k">Finished</div>
       <div class="sheet-t">Now do a 2-minute free recall</div>
-      <div class="small muted">Writing down what you remember right after listening roughly doubles what sticks compared with relistening (Roediger &amp; Karpicke 2006; Karpicke &amp; Blunt 2011).</div>
+      <div class="small muted">Retrieval right after listening is what turns it into memory.</div>
       <div class="btn-stack" style="margin-bottom:0"><a class="btn" href="#/recall/${r.id}">Start free recall</a></div></div>`;
   };
 
@@ -547,20 +603,22 @@ function viewListen(id) {
       if (!groups[it.b]) { groups[it.b] = { h: it.h, parts: [] }; }
       groups[it.b].parts.push(`<span class="s" data-i="${i}">${esc(it.text)}</span> `);
     });
-    view.innerHTML = `<div class="reader-source">Text from: ${esc(player.source)} · tap any sentence to start there${store.settings().recallPauses ? " · pauses for a quick recall at section breaks" : ""}</div>
-      <div class="reader">${groups.filter(Boolean).map((g) => (g.h ? `<h2 class="rh">${g.parts.join("")}</h2>` : `<p>${g.parts.join("")}</p>`)).join("")}</div>`;
-    view.querySelector(".reader").addEventListener("click", (e) => {
+    area.innerHTML = `<div class="reader-source">Text: ${esc(player.source)} · tap any sentence to start there${store.settings().recallPauses ? " · pauses for a quick recall at section breaks" : ""}</div>
+      <div class="reader">${groups.filter(Boolean).map((g) => (g.h ? `<h2 class="rh">${g.parts.join("")}</h2>` : `<p>${g.parts.join("")}</p>`)).join("")}</div>
+      ${footer()}`;
+    wireFooter();
+    area.querySelector(".reader").addEventListener("click", (e) => {
       const s = e.target.closest(".s");
       if (!s) { return; }
       sheet.innerHTML = "";
       player.play(Number(s.dataset.i));
     });
     sync();
-    const cur = view.querySelector(".s.cur");
+    const cur = area.querySelector(".s.cur");
     if (cur && player.i > 0) { cur.scrollIntoView({ block: "center" }); }
   };
 
-  $("#c-play", controls).onclick = () => { sheet.innerHTML = ""; player.toggle(); };
+  $("#c-play", controls).onclick = () => { sheet.innerHTML = ""; if (player.isLoaded(r)) { player.toggle(); } };
   $("#c-back", controls).onclick = () => player.skip(-3);
   $("#c-fwd", controls).onclick = () => player.skip(3);
   $("#c-rate", controls).onclick = () => {
@@ -578,7 +636,7 @@ function viewListen(id) {
   range.oninput = () => { $("#c-pos", controls).textContent = `${Math.round((range.value / Math.max(1, player.items.length - 1)) * 100)}%`; };
   range.onchange = () => {
     player.seek(Number(range.value));
-    const cur = view.querySelector(`.s[data-i="${player.i}"]`);
+    const cur = area.querySelector(`.s[data-i="${player.i}"]`);
     if (cur) { cur.scrollIntoView({ block: "center" }); }
   };
 
@@ -596,10 +654,9 @@ function viewListen(id) {
   };
 
   if (!player.supported) {
-    view.innerHTML = `<div class="reader-status">This browser doesn't support speech. Open in Safari on iPhone.</div>`;
+    area.innerHTML = `<div class="reader-status">This browser doesn't support speech. Open in Safari on iPhone.</div>`;
     return;
   }
-
   if (player.isLoaded(r)) { renderText(); return; }
 
   const token = location.hash;
@@ -607,20 +664,23 @@ function viewListen(id) {
     .then((out) => {
       markSaved(r);
       if (location.hash !== token) { return; }
-      player.load(r, out.blocks, out.source + (out.cached ? " (saved on device)" : ""));
+      player.load(r, out.blocks, out.source);
       renderText();
     })
     .catch((err) => {
       if (location.hash !== token) { return; }
       controls.remove();
+      document.body.classList.remove("listening");
       const offline = !navigator.onLine;
-      view.innerHTML = `<div class="card" style="margin-top:20px">
-        <b>${offline ? "You're offline and this source isn't downloaded." : esc(err.message)}</b>
-        ${offline ? `<p class="small muted">Next time you're online, use “Download for offline” on the module or stage page.</p>` : `<p class="small muted">Some publishers block other apps from reading their pages. You can still listen with Safari's built-in reader:</p>
-        <ol class="small"><li>Tap <b>Open original</b> below.</li><li>In Safari, tap the <b>page menu</b> (aA / ☰ in the address bar) → <b>Listen to Page</b>.</li><li>Come back and tap <b>Done → recall</b>.</li></ol>`}
+      area.innerHTML = `<div class="card">
+        <b>${offline ? "You're offline and this lesson isn't saved on your phone." : "This text isn't in the app yet."}</b>
+        ${offline ? `<p class="small muted">Next time you're online, use “Save module offline” on the module page.</p>` : `<p class="small muted">The publisher blocks other apps. If you've imported your personal library (Settings → Offline), it will be there. Otherwise use Safari's built-in reader:</p>
+        <ol class="small"><li>Tap <b>Open original</b>.</li><li>In Safari, tap the <b>page menu</b> (aA / ☰ in the address bar) → <b>Listen to Page</b>.</li><li>Come back and tap <b>Done</b>.</li></ol>`}
         <div class="btn-stack"><a class="btn" href="${esc(r.listen || r.url)}" target="_blank" rel="noopener">Open original</a>
         <button class="btn ghost" id="retry">Try again</button></div>
-        <details class="tiny muted"><summary>Details</summary>${(err.details || []).map(esc).join("<br>")}</details></div>`;
+        <details class="tiny muted"><summary>Details</summary>${(err.details || []).map(esc).join("<br>")}</details></div>
+        ${footer()}`;
+      wireFooter();
       $("#retry").onclick = () => render();
     });
 }
@@ -668,7 +728,7 @@ function askQuestion({ q, header, reveal = true, confidence = true, onAnswered, 
     if (reveal && ok && conf === "guess") { note = `<div class="small muted" style="margin-bottom:6px">Right, but a guess. It'll come back soon in review.</div>`; }
     $("#after").innerHTML = reveal
       ? `<div class="explain"><b style="color:var(${ok ? "--good" : "--bad"})">${ok ? "Correct" : "Not quite"}</b>${note}${esc(q.explain)}
-          ${ref ? `<div class="small" style="margin-top:8px">Source: <a href="#/res/${ref.id}">${esc(ref.title)}</a></div>` : ""}</div>
+          ${ref ? `<div class="small" style="margin-top:8px">Source: <a href="#/lesson/${ref.id}">${esc(ref.title)}</a></div>` : ""}</div>
           <button class="btn" id="next">${nextLabel}</button>`
       : `<div class="explain small muted">Guess recorded. The answer is in this module's sources, so listen for it.</div><button class="btn" id="next">${nextLabel}</button>`;
     $("#next").onclick = onNext;
@@ -690,7 +750,7 @@ function askQuestion({ q, header, reveal = true, confidence = true, onAnswered, 
 
 // Run a list of question items. Missed items can be re-queued later in the same session
 // (successive relearning: keep going until each item is recalled once).
-function runSession({ title, back, items, relearn = false, graded = true, onFinish }) {
+function runSession({ title, back, items, relearn = false, graded = true, countToday = false, onFinish }) {
   setTop({ title, back });
   const queue = items.slice();
   const firstTry = new Map();
@@ -720,6 +780,7 @@ function runSession({ title, back, items, relearn = false, graded = true, onFini
           if (ok) { correct++; }
           results.push({ ...it, ok, conf });
           if (graded) { srsGrade(it.key, "q", outcomeFrom(ok, conf)); }
+          if (graded && countToday) { store.bumpToday("reviews"); }
         }
         if (!ok && relearn && (requeued.get(it.key) || 0) < 2) {
           requeued.set(it.key, (requeued.get(it.key) || 0) + 1);
@@ -743,7 +804,7 @@ function runSession({ title, back, items, relearn = false, graded = true, onFini
       $("#reveal").hidden = true;
       $("#after").innerHTML = `<div class="guide"><h3>Why it matters</h3>${paras(it.r.why)}</div>
         ${rec?.text ? `<div class="card small" style="white-space:pre-wrap"><b>Your earlier recall</b><br>${esc(rec.text)}</div>` : ""}
-        <div class="small" style="margin:0 4px 8px"><a href="#/res/${it.r.id}">Open the source</a> to check details.</div>
+        <div class="small" style="margin:0 4px 8px"><a href="#/lesson/${it.r.id}">Open the source</a> to check details.</div>
         <div class="grade-row"><button data-g="0">Missed most</button><button data-g="1">Got some</button><button data-g="2">Got most</button><button data-g="3">Nailed it</button></div>`;
       $("#after").querySelectorAll("[data-g]").forEach((b) => {
         b.onclick = () => {
@@ -751,6 +812,7 @@ function runSession({ title, back, items, relearn = false, graded = true, onFini
           const t = $("#rc").value.trim();
           if (t) { store.setRecall(it.r.id, t, g); }
           srsGrade(it.key, "r", g);
+          if (countToday) { store.bumpToday("reviews"); }
           if (g >= 2) { correct++; }
           results.push({ ...it, ok: g >= 2 });
           advance();
@@ -837,7 +899,7 @@ function viewPre(id) {
         if (k < qs.length) { show(); window.scrollTo(0, 0); return; }
         store.setPre(m.id, qs, picks);
         const first = required(m).find((r) => !store.isDone(r.id));
-        location.hash = first ? `#/res/${first.id}` : `#/module/${m.id}`;
+        location.hash = first ? `#/lesson/${first.id}` : `#/module/${m.id}`;
       },
     });
   };
@@ -858,14 +920,14 @@ function viewExam(id) {
   }
   runSession({
     title: `Stage ${s.number} exam`,
-    back: { label: `Stage ${s.number}`, href: `#/stage/${s.id}` },
+    back: { label: "Today", href: "#/" },
     items: shuffle(picked),
     onFinish: (score, total, results) => {
       const pct = Math.round((score / total) * 100);
       store.recordExam(s.id, pct);
       resultsScreen(score, total, results, {
         passMsg: "Stage exam passed. Retrieval across mixed topics is the strongest sign the material has stuck.",
-        actions: `<a class="btn" href="#/stage/${s.id}">Back to stage</a><button class="btn ghost" id="retake">New exam</button>`,
+        actions: `<a class="btn" href="#/">Back to Today</a><button class="btn ghost" id="retake">New exam</button>`,
       });
       $("#retake").onclick = () => viewExam(id);
     },
@@ -911,12 +973,13 @@ function viewReview(ahead = false) {
     items,
     relearn: true,
     graded: !ahead,
+    countToday: !ahead,
     onFinish: (score, total, results) => {
       const left = dueCount();
       resultsScreen(score, total, results, {
         pass: 0,
         passMsg: left ? `${left} more due. Keep going or come back later.` : "All caught up. Missed items return tomorrow, solid ones in days to weeks.",
-        actions: `${left ? `<a class="btn" href="#/review" id="again">Continue review</a>` : ""}<a class="btn secondary" href="#/">Back to path</a>`,
+        actions: `${left ? `<a class="btn" href="#/review" id="again">Continue review</a>` : ""}<a class="btn secondary" href="#/">Back to Today</a>`,
       });
       const again = $("#again");
       if (again) { again.onclick = (e) => { e.preventDefault(); viewReview(); }; }
@@ -987,7 +1050,7 @@ function viewProgress() {
       ${CONF.map(([k, l]) => { const c = calib[k]; if (!c) { return ""; } const p = Math.round((c.c / c.n) * 100); return `<div class="calib"><span>${l}</span><div class="progress ${p >= 80 ? "good" : ""}"><i style="width:${p}%"></i></div><span>${p}% <em>(${c.n})</em></span></div>`; }).join("")}</div>` : ""}
     <div class="section-label">By stage</div>
     <div class="list">${C.stages.map((s) => { const st = stageStatus(s); const ex = store.s.exams[s.id]; return `<a class="li" href="#/stage/${s.id}"><span class="li-body"><div class="li-title">${s.number}. ${esc(s.title)}</div><div class="progress ${st.complete === st.modules ? "good" : ""}" style="margin-top:8px"><i style="width:${Math.round(st.frac * 100)}%"></i></div>${ex ? `<div class="li-sub">Stage exam best ${ex.best}%</div>` : ""}</span><span class="small muted">${Math.round(st.frac * 100)}%</span></a>`; }).join("")}</div>
-    ${noted.length ? `<div class="section-label">Your notes</div><div class="list">${noted.map((x) => `<a class="li" href="${x.resources ? `#/module/${x.id}` : `#/res/${x.id}`}"><span class="li-body"><div class="li-title">${esc(x.title)}</div><div class="li-sub">${esc(store.note(x.id).slice(0, 110))}${store.note(x.id).length > 110 ? "…" : ""}</div></span>${ICONS.chev}</a>`).join("")}</div>` : ""}
+    ${noted.length ? `<div class="section-label">Your notes</div><div class="list">${noted.map((x) => `<a class="li" href="${x.resources ? `#/module/${x.id}` : `#/lesson/${x.id}`}"><span class="li-body"><div class="li-title">${esc(x.title)}</div><div class="li-sub">${esc(store.note(x.id).slice(0, 110))}${store.note(x.id).length > 110 ? "…" : ""}</div></span>${ICONS.chev}</a>`).join("")}</div>` : ""}
   `;
 }
 
@@ -1008,7 +1071,7 @@ async function viewSettings() {
       ${sw("freeRecall", "Free recall after each source", "A 2-minute brain dump when you finish a source, then scheduled for review (retrieval practice).")}
       <div class="setting"><label for="limit">Max cards per review session</label><select id="limit" style="width:auto">${[15, 20, 30, 50, 100].map((n) => `<option ${n === s.dailyLimit ? "selected" : ""}>${n}</option>`).join("")}</select></div>
     </div>
-    <a class="card stage-card" href="#/stage/s00" style="display:block"><b>The science behind these features →</b><div class="small muted">Stage 0 covers the research on retrieval practice, spacing, prequestions, hypercorrection and successive relearning, with sources.</div></a>
+    <a class="card stage-card" href="#/module/s00m02" style="display:block"><b>The science behind these features →</b><div class="small muted">Stage 0 covers the research on retrieval practice, spacing, prequestions, hypercorrection and successive relearning, with sources.</div></a>
     <div class="section-label">Listening</div>
     <div class="list">
       <div class="setting" style="flex-direction:column;align-items:stretch">
@@ -1026,9 +1089,11 @@ async function viewSettings() {
     <div class="list">
       <div class="setting" style="flex-direction:column;align-items:stretch">
         <div class="small muted" id="storage">Checking storage…</div>
-        ${downloadButton(allRes, "Download everything")}
+        ${downloadButton(allRes, "Download everything", "all")}
         <div class="tiny muted">Saves the full text of every paper and essay (about ${downloadable(allRes).length}) so you can listen anywhere. iPhone voices run on-device, so audio works offline. Videos need a connection. Some publisher pages block apps and can't be saved.</div>
       </div>
+      <div class="setting" style="flex-direction:column;align-items:stretch"><label class="btn secondary" style="cursor:pointer">Import personal library file<input type="file" id="import-lib" accept="application/json,.json" hidden></label>
+        <div class="tiny muted">For papers whose licenses don't allow public hosting. AirDrop <code>hai-scholar-personal-library.json</code> from your Mac to your iPhone, save it to Files, then pick it here.</div></div>
       <div class="setting"><button class="btn ghost" id="clear-cache">Clear saved paper texts</button></div>
     </div>
     <div class="section-label">Your data</div>
@@ -1058,7 +1123,7 @@ async function viewSettings() {
     speechSynthesis.cancel();
     speechSynthesis.speak(u);
   };
-  wireDownload(allRes, () => viewSettings());
+  wireDownloads(() => viewSettings());
   $("#export").onclick = async () => {
     const blob = new Blob([store.exportJSON()], { type: "application/json" });
     const file = new File([blob], `hai-scholar-backup-${new Date().toLocaleDateString("en-CA")}.json`, { type: "application/json" });
@@ -1074,6 +1139,15 @@ async function viewSettings() {
     const f = e.target.files[0];
     if (!f) { return; }
     try { store.importJSON(await f.text()); toast("Progress restored"); } catch (err) { toast(err.message); }
+  };
+  $("#import-lib").onchange = async (e) => {
+    const f = e.target.files[0];
+    if (!f) { return; }
+    try {
+      const n = await importLibrary(await f.text());
+      toast(`Imported ${n} paper texts`);
+      viewSettings();
+    } catch (err) { toast(err.message); }
   };
   $("#clear-cache").onclick = async () => {
     if (!confirm("Delete all saved paper texts from this device? Your progress and notes are kept.")) { return; }
@@ -1109,10 +1183,9 @@ function render() {
   const [, route, arg] = hash.match(/^#\/([^/]*)\/?(.*)$/) || [];
   switch (route) {
     case "": case undefined: viewPath(); break;
-    case "stage": viewStage(arg); break;
+    case "stage": openStages = openStages || new Set([currentStageId()]); openStages.add(arg); location.replace("#/"); return;
     case "module": viewModule(arg); break;
-    case "res": viewResource(arg); break;
-    case "listen": viewListen(arg); break;
+    case "res": case "listen": case "lesson": viewLesson(arg); break;
     case "recall": viewRecall(arg); break;
     case "quiz": viewQuiz(arg); break;
     case "pre": viewPre(arg); break;
@@ -1124,7 +1197,7 @@ function render() {
     default: notFound();
   }
   updateMini();
-  if (!["listen", "quiz", "pre", "exam", "review", "recall"].includes(route)) { window.scrollTo(0, scrollMem.get(hash) || 0); } else if (route !== "listen") { window.scrollTo(0, 0); }
+  if (!["lesson", "res", "listen", "quiz", "pre", "exam", "review", "recall"].includes(route)) { window.scrollTo(0, scrollMem.get(hash) || 0); } else { window.scrollTo(0, 0); }
 }
 
 window.addEventListener("hashchange", () => {

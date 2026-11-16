@@ -15,6 +15,7 @@ const DEFAULTS = {
   notes: {},       // resourceId or moduleId -> text
   days: [],        // ISO dates with activity (for streaks)
   last: null,      // last opened resource id
+  todayLog: null,  // { date, reviews, lessons } activity today
   settings: {
     rate: 1.0,
     voiceURI: "",
@@ -65,7 +66,18 @@ function touchDay() {
   }
 }
 
+function bump(kind) {
+  const d = new Date().toLocaleDateString("en-CA");
+  if (!state.todayLog || state.todayLog.date !== d) { state.todayLog = { date: d, reviews: 0, lessons: 0 }; }
+  state.todayLog[kind]++;
+}
+
 export const store = {
+  bumpToday(kind) { bump(kind); touchDay(); save(); },
+  today() {
+    const d = new Date().toLocaleDateString("en-CA");
+    return state.todayLog && state.todayLog.date === d ? state.todayLog : { date: d, reviews: 0, lessons: 0 };
+  },
   get s() { return state; },
   save() { save(); },
   settings() { return state.settings; },
@@ -74,6 +86,7 @@ export const store = {
   alias(id, canonical) { aliases[id] = canonical; },
   isDone(id) { return !!state.done[k(id)]; },
   setDone(id, on = true) {
+    if (on && !state.done[k(id)]) { bump("lessons"); }
     if (on) { state.done[k(id)] = Date.now(); touchDay(); } else { delete state.done[k(id)]; }
     save();
   },

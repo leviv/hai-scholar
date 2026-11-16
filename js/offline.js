@@ -8,7 +8,7 @@ import { store, textCache } from "./store.js";
 const saved = new Set();
 let loaded = false;
 
-const keyFor = (r) => `${r.id}|${store.settings().includeAppendix ? 1 : 0}`;
+const keyFor = (r) => `${r.textId || r.id}|${store.settings().includeAppendix ? 1 : 0}`;
 
 export async function loadSavedIndex() {
   for (const k of await textCache.keys()) { saved.add(k); }
@@ -74,4 +74,20 @@ export async function downloadAll(resources, onProgress = () => {}) {
   };
   running = Promise.all([worker(), worker(), worker()]).then(() => { running = null; return state; });
   return running;
+}
+
+// Personal library file (built on your Mac by tools/build_library.py, never published):
+// { kind: "hai-scholar-library", texts: { id: { blocks, source } } }
+export async function importLibrary(json, resources) {
+  const data = JSON.parse(json);
+  if (data.kind !== "hai-scholar-library" || !data.texts) { throw new Error("Not a HAI Scholar library file"); }
+  let n = 0;
+  for (const [id, t] of Object.entries(data.texts)) {
+    if (!t.blocks?.length) { continue; }
+    await textCache.set(`${id}|0`, { v: 0, hosted: true, blocks: t.blocks, source: `${t.source} · your library`, ts: Date.now() });
+    saved.add(`${id}|0`);
+    n++;
+  }
+  requestPersistence();
+  return n;
 }

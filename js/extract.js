@@ -12,14 +12,17 @@ const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js
 const PDFJS_WORKER = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 const CACHE_VERSION = 4;
 
-export async function extractResource(res, { includeAppendix = false, onStatus = () => {} } = {}) {
-  const cacheKey = `${res.id}|${includeAppendix ? 1 : 0}`;
-  const cached = await textCache.get(cacheKey);
-  if (cached && cached.v === CACHE_VERSION && cached.blocks?.length) {
+export async function extractResource(res, { includeAppendix = false, onStatus = () => {}, fresh = false } = {}) {
+  const cacheKey = `${res.textId || res.id}|${includeAppendix ? 1 : 0}`;
+  const cached = fresh ? null : await textCache.get(cacheKey);
+  if (cached && cached.blocks?.length && (cached.v === CACHE_VERSION || cached.hosted)) {
     return { ...cached, cached: true };
   }
 
   const attempts = [];
+  if (res.hosted && !includeAppendix) {
+    attempts.push(["HAI Scholar library", () => fromHosted(res)]);
+  }
   if (res.arxiv) {
     attempts.push(["arXiv HTML", () => fromArxivHTML(res.arxiv, includeAppendix)]);
     attempts.push(["arXiv PDF", () => fromPDF(`https://arxiv.org/pdf/${res.arxiv}`, includeAppendix)]);
@@ -39,9 +42,12 @@ export async function extractResource(res, { includeAppendix = false, onStatus =
   for (const [label, fn] of attempts) {
     try {
       onStatus(`Fetching text · ${label}…`);
-      const blocks = tidy(await fn());
+      const raw = await fn();
+      const blocks = tidy(raw);
+      const shown = raw.label || label;
       if (wordCount(blocks) < 150) { throw new Error("too little text"); }
-      const out = { v: CACHE_VERSION, blocks, source: label, ts: Date.now() };
+      if (!looksLikeProse(blocks)) { throw new Error("text looks garbled"); }
+      const out = { v: CACHE_VERSION, blocks, source: shown, ts: Date.now() };
       textCache.set(cacheKey, out);
       return out;
     } catch (e) {
@@ -51,6 +57,24 @@ export async function extractResource(res, { includeAppendix = false, onStatus =
   const err = new Error("Couldn't load the text of this source in-app.");
   err.details = errors;
   throw err;
+}
+
+// Rejects PDF extractions that came out as symbol soup or broken encodings.
+export function looksLikeProse(blocks) {
+  const words = blocks.map((b) => b.text).join(" ").split(/\s+/).filter(Boolean);
+  if (!words.length) { return false; }
+  const alpha = words.filter((w) => /^[A-Za-z][A-Za-z'’-]*[.,;:!?)]*$/.test(w)).length / words.length;
+  const avg = words.reduce((n, w) => n + w.length, 0) / words.length;
+  return alpha > 0.6 && avg > 3 && avg < 9;
+}
+
+// Texts bundled with the app (openly licensed works only; see tools/build_library.py).
+async function fromHosted(res) {
+  const data = await (await fetchOK(`data/texts/${res.textId || res.id}.json`)).json();
+  const lic = (data.license || "").match(/licenses\/([a-z-]+)\/([\d.]+)/);
+  const blocks = data.blocks;
+  blocks.label = `Bundled with the app · ${lic ? `CC ${lic[1].toUpperCase()} ${lic[2]}` : "open license"} · © the authors`;
+  return blocks;
 }
 
 function isDOI(url) { return /doi\.org\//.test(url); }
