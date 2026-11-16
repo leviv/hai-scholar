@@ -1,8 +1,8 @@
 // Offline support: network-first for the app's own files (so updates show up quickly),
 // falling back to cache when offline. The PDF reader library from cdnjs is cached on first use.
-const CACHE = "hai-scholar-v1";
+const CACHE = "hai-scholar-v2";
 const SHELL = [
-  "./", "index.html", "css/app.css", "js/app.js", "js/store.js", "js/extract.js", "js/player.js",
+  "./", "index.html", "css/app.css", "js/app.js", "js/store.js", "js/extract.js", "js/player.js", "js/srs.js", "js/offline.js",
   "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png",
 ];
 

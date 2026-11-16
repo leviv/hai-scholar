@@ -20,28 +20,44 @@ the app under **Settings → Voice**. The difference is large.
 
 ## How it works
 
-- **Path:** 11 stages → modules → sources. Each module has a short *Guide* that tells you what to look for and
-  defines new terms. It has 3–6 core sources plus optional "go deeper" ones, a check-in quiz (pass with 70%), and
-  in later stages a *research exercise*.
+- **Path:** Stage 0 (how to learn) plus 11 stages of modules and sources. Each module has a short *Guide*, 3–6 core
+  sources plus optional "go deeper" ones, a check-in (pass with 80%), and in later stages a *research exercise*.
 - **Listen & read along:** the app fetches the source's full text live and reads it aloud with your iPhone's voice,
   highlighting each sentence. Tap any sentence to jump there. You can change the speed (0.8×–2×) and the text size.
-  Papers stop at the references, and citations like "[12]" are skipped in the audio but still shown in the text.
   - arXiv papers use arXiv's own HTML version, or the PDF if there's no HTML.
-  - Open essays (Distill, Alammar, Olah, Weng…) are read straight from the author's site.
+  - Open essays are read straight from the author's site.
   - Publisher pages that block other apps go through the public reader service `r.jina.ai`. If that fails too, the app
     tells you how to use Safari's built-in **Listen to Page**.
-  - Any paper you've opened is saved on the device, so it plays offline later.
+- **Offline:** "Download for offline" on any module or stage, or "Download everything" in Settings, saves the full
+  text of every paper and essay to the phone. iPhone voices run on-device, so you can listen with no connection.
+  The app itself is cached too. Videos still need a connection.
 - **Videos** (3Blue1Brown, Karpathy…) play inside the app.
-- **Review:** questions you miss come back later, mixed with earlier material (spaced retrieval).
-- **Notes:** each source and exercise has a notes field. Use **Settings → Export** to back up your progress.
 
-**Limitation:** iOS pauses speech from web apps when the screen locks. The app keeps the screen on while you listen,
-which you can turn off in Settings. If you want true lock-screen audio, the option is a native build (see below).
+## How it helps you learn (and remember)
+
+Listening alone is close to rereading, which is a low-utility study technique. So the app wraps every source in the techniques with the
+strongest evidence from cognitive psychology. Stage 0 teaches the research, with sources:
+
+| Feature | Technique | Evidence |
+|---|---|---|
+| 3 **prequestions** before each module (you guess; answers are revealed in the check-in) | Pretesting / prequestions | Pan & Carpenter 2023 |
+| **Recall pauses** at section breaks while listening | Interpolated testing | Szpunar, Khan & Schacter 2013 |
+| **Free recall** after each source: main claim, evidence, connection to an earlier source, open question | Retrieval practice + elaboration / self-explanation | Roediger & Karpicke 2006; Karpicke & Blunt 2011; Chi et al. 1994 |
+| **Answer in your head before choices appear** | Generation effect / recall over recognition | Slamecka & Graf 1978 |
+| **Confidence rating** on every answer; confident errors are flagged; calibration chart | Hypercorrection, metacognitive calibration | Butterfield & Metcalfe 2001 |
+| Explanatory **feedback** naming the source | Feedback after retrieval | Weinstein et al. 2018 |
+| **Daily spaced review** of every question and every free-recall prompt; missed items repeat in-session until correct | Spacing + successive relearning | Carpenter, Pan & Butler 2022; Rawson & Dunlosky 2011; Latimier et al. 2021 |
+| **Cumulative stage exams** mixing all modules | Interleaving, cumulative testing | Weinstein et al. 2018 |
+| **80% mastery threshold** before a module counts as done | Mastery learning | Bloom 1984 |
+
+A suggested routine: do the **daily review first** (it's on the home screen when cards are due), then one new source. Don't
+binge a whole stage in one day. The gaps between sessions are where spacing does its work.
 
 ## Curriculum
 
 | # | Stage |
 |---|-------|
+| 0 | Learning how to learn (the science behind the app) |
 | 1 | Orientation: what is Human-AI Interaction? |
 | 2 | Machine learning from zero |
 | 3 | Language models and Transformers |

@@ -65,6 +65,8 @@ class Player extends EventTarget {
     });
     const saved = store.pos(res.id);
     this.i = saved && saved.n === this.items.length && saved.i < this.items.length ? saved.i : 0;
+    this.lastCheck = this.i;
+    this.noPauses = false;
     this.blocks = blocks;
     this.updateMediaMetadata();
     this.emit();
@@ -74,6 +76,7 @@ class Player extends EventTarget {
 
   play(i = this.i) {
     if (!synth || !this.items.length) { return; }
+    if (i !== this.i) { this.lastCheck = i; }
     this.i = Math.max(0, Math.min(i, this.items.length - 1));
     this.playing = true;
     this.gen++;
@@ -117,7 +120,25 @@ class Player extends EventTarget {
       this.dispatchEvent(new Event("completed"));
     }
     this.emit();
+    if (this.shouldCheckpoint()) { this.checkpoint(); return; }
     this.speakCurrent(gen);
+  }
+
+  // Interpolated recall (Szpunar, Khan & Schacter 2013): at a section break after a substantial
+  // stretch of listening, pause and ask the listener to recall the section before moving on.
+  shouldCheckpoint() {
+    if (!store.settings().recallPauses || this.noPauses) { return false; }
+    const it = this.items[this.i];
+    return !!it && it.h && this.i - this.lastCheck >= 12;
+  }
+
+  checkpoint() {
+    let j = this.i - 1;
+    while (j >= 0 && !this.items[j].h) { j--; }
+    const section = j >= 0 ? this.items[j].text : this.res.title;
+    this.lastCheck = this.i;
+    this.pause();
+    this.dispatchEvent(new CustomEvent("checkpoint", { detail: { section } }));
   }
 
   finish() {
@@ -153,6 +174,7 @@ class Player extends EventTarget {
   seek(i) {
     const was = this.playing;
     this.i = Math.max(0, Math.min(i, this.items.length - 1));
+    this.lastCheck = this.i;
     if (this.res) { store.setPos(this.res.id, this.i, this.items.length); }
     if (was) { this.play(this.i); } else { this.emit(); }
   }

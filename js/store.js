@@ -5,7 +5,12 @@ const KEY = "hai-scholar:v1";
 const DEFAULTS = {
   done: {},        // resourceId -> timestamp
   quiz: {},        // moduleId -> { best, last, attempts, ts }
-  missed: {},      // "moduleId:qIndex" -> timestamp (questions to review)
+  missed: {},      // legacy (v1): "moduleId:qIndex" -> timestamp; migrated into cards
+  cards: {},       // spaced-repetition cards: "moduleId:qIndex" or "r:resourceId" -> schedule
+  calib: {},       // confidence -> { n, c } answers / correct (calibration)
+  recalls: {},     // resourceId -> { text, ts, outcome } free recall
+  pre: {},         // moduleId -> { qs: [qIndex], picks: { qIndex: choiceIndex }, ts } prequestions
+  exams: {},       // stageId -> { best, last, attempts }
   pos: {},         // resourceId -> { i, n } sentence index / total
   notes: {},       // resourceId or moduleId -> text
   days: [],        // ISO dates with activity (for streaks)
@@ -17,7 +22,10 @@ const DEFAULTS = {
     includeAppendix: false,
     keepAwake: true,
     textSize: 19,
-    autoAdvance: false,
+    recallPauses: true,   // pause at section breaks for a quick recall (interpolated testing)
+    recallFirst: true,    // answer in your head before choices appear (generation)
+    freeRecall: true,     // free-recall prompt after finishing a source
+    dailyLimit: 30,       // max cards per review session
   },
 };
 
@@ -30,10 +38,19 @@ function load() {
     const raw = localStorage.getItem(KEY);
     if (!raw) { return structuredClone(DEFAULTS); }
     const parsed = JSON.parse(raw);
-    return { ...structuredClone(DEFAULTS), ...parsed, settings: { ...DEFAULTS.settings, ...(parsed.settings || {}) } };
+    return migrate({ ...structuredClone(DEFAULTS), ...parsed, settings: { ...DEFAULTS.settings, ...(parsed.settings || {}) } });
   } catch {
     return structuredClone(DEFAULTS);
   }
+}
+
+function migrate(st) {
+  // v1 kept a flat "missed" list; turn those into review cards that are due now.
+  for (const key of Object.keys(st.missed || {})) {
+    if (!st.cards[key]) { st.cards[key] = { type: "q", ivl: 0, ease: 2.3, reps: 0, lapses: 1, seen: 1, due: Date.now() }; }
+  }
+  st.missed = {};
+  return st;
 }
 
 function save() {
@@ -50,6 +67,7 @@ function touchDay() {
 
 export const store = {
   get s() { return state; },
+  save() { save(); },
   settings() { return state.settings; },
   setSetting(k, v) { state.settings[k] = v; save(); },
 
@@ -61,19 +79,30 @@ export const store = {
   },
 
   quiz(mid) { return state.quiz[mid]; },
-  recordQuiz(mid, score, total, missedIdx, correctIdx) {
+  recordQuiz(mid, score, total) {
     const pct = total ? Math.round((score / total) * 100) : 0;
     const prev = state.quiz[mid] || { best: 0, attempts: 0 };
     state.quiz[mid] = { best: Math.max(prev.best, pct), last: pct, attempts: prev.attempts + 1, ts: Date.now() };
-    for (const i of missedIdx) { state.missed[`${mid}:${i}`] = Date.now(); }
-    for (const i of correctIdx) { delete state.missed[`${mid}:${i}`]; }
     touchDay();
     save();
   },
-  resolveMissed(key, correct) {
-    if (correct) { delete state.missed[key]; } else { state.missed[key] = Date.now(); }
+  recordExam(sid, pct) {
+    const prev = state.exams[sid] || { best: 0, attempts: 0 };
+    state.exams[sid] = { best: Math.max(prev.best, pct), last: pct, attempts: prev.attempts + 1, ts: Date.now() };
+    touchDay();
     save();
   },
+  recordConfidence(conf, correct) {
+    const c = state.calib[conf] || { n: 0, c: 0 };
+    c.n++;
+    if (correct) { c.c++; }
+    state.calib[conf] = c;
+    save();
+  },
+  recall(id) { return state.recalls[k(id)]; },
+  setRecall(id, text, outcome) { state.recalls[k(id)] = { text, outcome, ts: Date.now() }; touchDay(); save(); },
+  pre(mid) { return state.pre[mid]; },
+  setPre(mid, qs, picks) { state.pre[mid] = { qs, picks, ts: Date.now() }; touchDay(); save(); },
 
   pos(id) { return state.pos[k(id)]; },
   setPos(id, i, n) { state.pos[k(id)] = { i, n }; state.last = id; save(); },
@@ -99,7 +128,7 @@ export const store = {
   importJSON(text) {
     const parsed = JSON.parse(text);
     if (typeof parsed !== "object" || !parsed.done) { throw new Error("Not a HAI Scholar backup"); }
-    state = { ...structuredClone(DEFAULTS), ...parsed, settings: { ...DEFAULTS.settings, ...(parsed.settings || {}) } };
+    state = migrate({ ...structuredClone(DEFAULTS), ...parsed, settings: { ...DEFAULTS.settings, ...(parsed.settings || {}) } });
     save();
   },
   reset() { state = structuredClone(DEFAULTS); save(); },
@@ -134,6 +163,16 @@ export const textCache = {
       const d = await db();
       d.transaction("texts", "readwrite").objectStore("texts").put(value, key);
     } catch { /* ignore */ }
+  },
+  async keys() {
+    try {
+      const d = await db();
+      return await new Promise((resolve) => {
+        const r = d.transaction("texts").objectStore("texts").getAllKeys();
+        r.onsuccess = () => resolve(r.result || []);
+        r.onerror = () => resolve([]);
+      });
+    } catch { return []; }
   },
   async clear() {
     try {
