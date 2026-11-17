@@ -3,13 +3,13 @@
   "number": 0,
   "title": "Learning How to Learn",
   "subtitle": "The evidence behind retrieval, spacing and self-explanation, and how this app uses it",
-  "overview": "Before the HAI material, spend an hour or two on how durable learning actually happens. Decades of cognitive-psychology research converge on a few techniques that work: retrieving from memory, spacing that retrieval over days and weeks, and explaining ideas in your own words. Comfortable techniques like rereading or relistening work poorly. Every feature in this app is built around that research: prequestions, recall pauses while you listen, free recall after each source, confidence-rated check-ins, and a spaced daily review. This stage shows you the evidence so you know why the app asks you to do slightly harder things.",
+  "overview": "How durable learning works: retrieval practice, spacing, and self-explanation beat rereading. Every feature in this app (prequestions, recall pauses, free recall, confidence ratings, spaced review) rests on this evidence. Knowing it explains why the app asks you to do harder things.",
   "modules": [
     {
       "id": "s00m01",
       "title": "What makes learning stick",
-      "goal": "Explain why retrieval practice and spacing beat rereading, and why the feeling of fluency is a poor guide to what you have learned.",
-      "guide": "Start with Weinstein, Madan & Sumeracki, a short open-access overview of six strategies with strong evidence. Then read Carpenter, Pan & Butler's review, which goes deeper on the two strongest: spacing and retrieval practice. Roediger & Karpicke (2006) is the classic experiment behind the 'testing effect'. Look at how results 5 minutes later differ from results a week later. Key terms: 'retrieval practice' (pulling information out of memory, e.g. by answering questions, rather than putting it back in by rereading); 'spacing' (spreading practice over time instead of cramming); 'desirable difficulty' (a learning condition that feels harder and slower but produces better long-term retention); 'fluency illusion' (mistaking how easily something feels familiar right now for how well you will remember it later).",
+      "goal": "Explain why retrieval practice and spacing beat rereading, and why feeling fluent is a poor guide to what you have learned.",
+      "guide": "Start with Weinstein, Madan & Sumeracki's overview of six strategies, then Carpenter, Pan & Butler on spacing and retrieval practice. Finish with Roediger & Karpicke (2006), the classic 'testing effect' experiment; compare results at 5 minutes versus one week. Key terms: 'retrieval practice' (recalling from memory instead of rereading); 'spacing' (spreading practice over time); 'desirable difficulty' (harder practice that lasts longer); 'fluency illusion' (mistaking easy familiarity now for later memory).",
       "resources": [
         {
           "id": "s00m01r01",
@@ -21,8 +21,8 @@
           "url": "https://doi.org/10.1186/s41235-017-0087-y",
           "listen": "https://cognitiveresearchjournal.springeropen.com/articles/10.1186/s41235-017-0087-y",
           "minutes": 35,
-          "why": "A compact, open-access tour of the six learning strategies with the strongest evidence: spaced practice, interleaving, retrieval practice, elaboration, concrete examples and dual coding. Each comes with a note on how to use it.",
-          "focus": "Read the sections on each of the six strategies; skim the discussion of the gap between research and teaching practice."
+          "why": "Six well-supported strategies (spacing, interleaving, retrieval, elaboration, concrete examples, dual coding), each with practical advice.",
+          "focus": "Read the sections on the six strategies; skim the research-to-practice gap discussion."
         },
         {
           "id": "s00m01r02",
@@ -34,8 +34,8 @@
           "url": "https://doi.org/10.1038/s44159-022-00089-1",
           "listen": "https://sc-pan.github.io/pdf/NRP_2022.pdf",
           "minutes": 45,
-          "why": "A current, authoritative review of the two techniques with the largest and most replicated effects, including why learners underuse them. These two techniques drive the daily review in this app.",
-          "focus": "Focus on how spacing and retrieval practice work, and the section on why learners misjudge them. Skim the classroom-implementation details."
+          "why": "Reviews spacing and retrieval practice, the strongest techniques, and why learners underuse them; the basis of daily review.",
+          "focus": "Focus on how spacing and retrieval work and why learners misjudge them; skim classroom details."
         },
         {
           "id": "s00m01r03",
@@ -46,8 +46,8 @@
           "venue": "Psychological Science",
           "url": "https://doi.org/10.1111/j.1467-9280.2006.01693.x",
           "minutes": 20,
-          "why": "The landmark experiment showing that taking a test is not just measurement: it changes memory. It also shows how a short-term advantage for restudying can mislead you.",
-          "focus": "Compare the results at 5 minutes, 2 days and 1 week, and note what students predicted about their own learning."
+          "why": "Shows that testing changes memory, and that restudying's short-term advantage can mislead you.",
+          "focus": "Compare results at 5 minutes, 2 days and 1 week, and students' predictions about their learning."
         },
         {
           "id": "s00m01r04",
@@ -58,8 +58,8 @@
           "venue": "Psychological Science in the Public Interest",
           "url": "https://doi.org/10.1177/1529100612453266",
           "minutes": 45,
-          "why": "The most-cited evaluation of ten common study techniques. It rated each for utility across learners, materials and tasks. It is why rereading and highlighting are considered weak strategies.",
-          "focus": "Read the introduction, the summary table of utility ratings, and the sections on practice testing and distributed practice. Skim the others.",
+          "why": "Rates ten common study techniques for utility; the reason rereading and highlighting are considered weak.",
+          "focus": "Read the introduction, utility-ratings table, and sections on practice testing and distributed practice; skim others.",
           "optional": true
         },
         {
@@ -71,7 +71,7 @@
           "venue": "Science",
           "url": "https://doi.org/10.1126/science.1199327",
           "minutes": 15,
-          "why": "Free recall (writing down everything you remember) beat an active, elaborate study method, even on inference questions. This is the basis for the free-recall step after each source in this app.",
+          "why": "Free recall beat elaborate concept mapping, even on inference questions; the basis for this app's free-recall step.",
           "optional": true
         },
         {
@@ -83,8 +83,8 @@
           "venue": "Psychological Science in the Public Interest",
           "url": "https://doi.org/10.1111/j.1539-6053.2009.01038.x",
           "minutes": 30,
-          "why": "A careful look at the popular idea that teaching should match your 'learning style'. Useful both for your own studying and as a model of what evidence for a claim like this would need to look like.",
-          "focus": "Focus on the section describing the experimental design needed to support the meshing hypothesis.",
+          "why": "Tests the 'learning styles' idea and shows what evidence would be needed to support it.",
+          "focus": "Focus on the experimental design needed to support the meshing hypothesis.",
           "optional": true
         }
       ],
@@ -167,8 +167,8 @@
     {
       "id": "s00m02",
       "title": "The techniques built into this app",
-      "goal": "Explain the evidence for each learning feature in the app: prequestions, interpolated recall, confidence ratings, successive relearning, and spaced, interleaved review.",
-      "guide": "Each paper here backs one feature you will meet in the app. Prequestions are the 'Before you start' questions on each module (Pan & Carpenter): you commit to a guess before learning, and the answer is not shown until the check-in. Recall pauses at section breaks while listening follow Szpunar et al.'s interpolated tests. The confidence rating on every quiz answer uses the hypercorrection effect (Butterfield & Metcalfe): confident errors, once corrected, tend to stick. The daily review uses successive relearning (Rawson & Dunlosky): missed items come back in the same session until you get them right, then return over spaced sessions. Latimier et al.'s meta-analysis is why the schedule spaces retrieval out without fussing over the exact interval formula. Chi et al. is the evidence for the 'explain it in your own words' prompts. Terms: 'interpolated test' (a short quiz inserted partway through a lesson); 'criterion' (the number of correct recalls required before stopping practice on an item).",
+      "goal": "Explain the evidence behind the app's prequestions, interpolated recall, confidence ratings, successive relearning, and spaced, interleaved review.",
+      "guide": "Each paper backs one feature. Prequestions (Pan & Carpenter): guess before learning. Recall pauses while listening (Szpunar et al.). Confidence ratings (Butterfield & Metcalfe): corrected confident errors stick. Daily review (Rawson & Dunlosky): missed items repeat until correct, then return in spaced sessions. Spacing over exact intervals (Latimier et al.). Explain-it-yourself prompts (Chi et al.). Terms: 'interpolated test' (a quiz partway through a lesson); 'criterion' (correct recalls required before stopping).",
       "resources": [
         {
           "id": "s00m02r01",
@@ -179,7 +179,7 @@
           "venue": "PNAS",
           "url": "https://doi.org/10.1073/pnas.1221764110",
           "minutes": 20,
-          "why": "Short tests between segments of a recorded lecture kept learners on task and improved final performance. This is the basis for the recall pauses at section breaks while you listen to papers."
+          "why": "Short tests between lecture segments reduced mind wandering and improved learning; the basis for recall pauses."
         },
         {
           "id": "s00m02r02",
@@ -190,8 +190,8 @@
           "venue": "Educational Psychology Review",
           "url": "https://doi.org/10.1007/s10648-023-09814-5",
           "minutes": 35,
-          "why": "Answering questions before you have learned the material, even incorrectly, improves later learning of that material. This review covers when the effect holds, and it is why every module opens with prequestions.",
-          "focus": "Read the overview of findings, the section on what prequestions do and don't benefit, and the practical recommendations."
+          "why": "Answering questions before learning, even wrongly, improves later learning; why every module opens with prequestions.",
+          "focus": "Read the findings overview, what prequestions do and don't benefit, and the practical recommendations."
         },
         {
           "id": "s00m02r03",
@@ -202,7 +202,7 @@
           "venue": "Journal of Experimental Psychology: General",
           "url": "https://doi.org/10.1037/a0023956",
           "minutes": 30,
-          "why": "Introduces successive relearning: practice until you recall correctly, then relearn in later spaced sessions. This is the structure of the daily review.",
+          "why": "Introduces successive relearning (recall correctly, then relearn in spaced sessions), the structure of the daily review.",
           "focus": "Read the introduction and general discussion; skim the individual experiments."
         },
         {
@@ -214,7 +214,7 @@
           "venue": "Journal of Experimental Psychology: Learning, Memory, and Cognition",
           "url": "https://doi.org/10.1037/0278-7393.27.6.1491",
           "minutes": 20,
-          "why": "Explains why the app asks how sure you are before revealing an answer, and why it flags confident mistakes.",
+          "why": "Shows confident errors are the most likely to be corrected; why the app asks how sure you are.",
           "optional": true
         },
         {
@@ -226,7 +226,7 @@
           "venue": "Educational Psychology Review",
           "url": "https://doi.org/10.1007/s10648-020-09572-8",
           "minutes": 30,
-          "why": "Quantifies how much spacing adds to retrieval practice and tests whether expanding intervals beat equal ones. That matters for how the review scheduler is designed.",
+          "why": "Quantifies how much spacing adds to retrieval practice and whether expanding intervals beat equal ones.",
           "optional": true
         },
         {
@@ -238,7 +238,7 @@
           "venue": "Cognitive Science",
           "url": "https://doi.org/10.1207/s15516709cog1803_3",
           "minutes": 30,
-          "why": "Prompting learners to explain each line of a text to themselves improved understanding of a complex system. This is the basis for the explain-in-your-own-words prompts.",
+          "why": "Prompting learners to explain a text to themselves improved understanding; the basis for explain-it-yourself prompts.",
           "optional": true
         }
       ],

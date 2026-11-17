@@ -37,6 +37,7 @@ export async function extractResource(res, { includeAppendix = false, onStatus =
   const proxied = res.listen || res.url;
   if (proxied) {
     attempts.push(["Reader proxy (r.jina.ai)", () => fromJina(proxied, includeAppendix)]);
+    attempts.push(["Reader proxy, page structure (r.jina.ai)", () => fromJinaHTML(proxied)]);
   }
 
   const errors = [];
@@ -48,6 +49,7 @@ export async function extractResource(res, { includeAppendix = false, onStatus =
       const shown = raw.label || label;
       if (wordCount(blocks) < 150) { throw new Error("too little text"); }
       if (!looksLikeProse(blocks)) { throw new Error("text looks garbled"); }
+      if (blocks.some((b) => b.text.split(/\s+/).length > 2500)) { throw new Error("page structure lost"); }
       const out = { v: CACHE_VERSION, blocks, source: shown, ts: Date.now() };
       textCache.set(cacheKey, out);
       return out;
@@ -157,7 +159,7 @@ async function fromURL(url, includeAppendix) {
 
 function htmlBlocks(html) {
   const doc = new DOMParser().parseFromString(html, "text/html");
-  doc.querySelectorAll("script, style, noscript, nav, header, footer, aside, form, iframe, svg, figure, .footnotes, .comments, #comments, .sidebar, .share, .nav, .toc, #TOC, d-footnote-list, d-citation-list, d-appendix, d-bibliography, .post-nav, .related").forEach((n) => n.remove());
+  doc.querySelectorAll("script, style, noscript, nav, header, footer, aside, form, iframe, svg, figure, .footnotes, .comments, #comments, .sidebar, .share, .nav, .toc, #TOC, d-footnote-list, d-citation-list, d-appendix, d-bibliography, .post-nav, .related, [class*=purplenumber], [class^=toc-]").forEach((n) => n.remove());
   const candidates = ["d-article", "article", "main", "[role=main]", ".post-content", ".post", ".content", "#content", ".entry-content", "body"];
   let root = null;
   for (const sel of candidates) {
@@ -168,14 +170,19 @@ function htmlBlocks(html) {
 
   const taken = new Set();
   const blocks = [];
+  let ended = false;
   root.querySelectorAll("h1, h2, h3, h4, p, li, blockquote, dd").forEach((el) => {
+    if (ended) { return; }
     for (let p = el.parentElement; p && p !== root; p = p.parentElement) {
       if (taken.has(p)) { return; }
     }
     const text = norm(el.textContent);
     if (!text) { return; }
     const isHead = /^H\d$/.test(el.tagName);
-    if (isHead && REF_HEAD.test(text)) { return; }
+    if (isHead && (REF_HEAD.test(text) || /^(end|foot)?notes$/i.test(text))) {
+      ended = blocks.length > 20;
+      return;
+    }
     taken.add(el);
     blocks.push({ type: isHead ? "h" : "p", text });
   });
@@ -316,6 +323,12 @@ async function fromJina(url, includeAppendix) {
     blocks.push({ type: "p", text: t });
   }
   return blocks;
+}
+
+// Same proxy, but the page's own HTML. Helps when the markdown conversion scrambles the page order.
+async function fromJinaHTML(url) {
+  const r = await fetchOK(`https://r.jina.ai/${url}`, { headers: { "X-Return-Format": "html" } });
+  return htmlBlocks(await r.text());
 }
 
 // ---------- sentence splitting + speech cleanup ----------

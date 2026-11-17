@@ -3,13 +3,13 @@
   "number": 1,
   "title": "Orientation: What is Human-AI Interaction?",
   "subtitle": "Founding visions, agents vs. direct manipulation, guidelines, ML as a design material",
-  "overview": "This stage maps the territory: where the idea of people working with intelligent machines came from, the long-running debate between automating for people and empowering them, and how today's Human-AI Interaction (HAI) field frames its core design problems. The path from here alternates between technical foundations (how machine learning and language models actually work) and human-centered research (how people perceive, use, trust, and are affected by AI), so each half informs the other. Stage 11 on research methods stands on its own and can be started at any time, alongside any other stage.",
+  "overview": "The origins of human-AI partnership, the debate over automating versus empowering people, and how the HAI field frames its core design problems. Later stages alternate technical and human-centered topics; Stage 11 (research methods) can be started anytime.",
   "modules": [
     {
       "id": "s01m01",
       "title": "Founding visions",
-      "goal": "Explain the difference between machines that imitate or replace human intelligence and machines that augment it, using Turing, Licklider, Engelbart, and ELIZA as reference points.",
-      "guide": "Start with Licklider, the shortest and most direct statement of the 'partnership' vision, then read Engelbart's introduction to see augmentation framed as a whole system of people, tools, and practices. Turing gives the contrasting framing: can a machine pass as human in conversation? Finish with Weizenbaum's ELIZA paper, which shows how little machinery it takes for people to believe a program understands them — a theme that returns with modern chatbots. Terms to watch: 'symbiosis' (two different organisms living in close, mutually beneficial association), 'augmentation' (increasing a person's capability rather than replacing them), and the 'imitation game' (Turing's test where an interrogator tries to tell a machine from a person by text alone).",
+      "goal": "Distinguish machines that imitate or replace human intelligence from machines that augment it, using Turing, Licklider, Engelbart, and ELIZA.",
+      "guide": "Start with Licklider's short 'partnership' vision, then Engelbart's introduction, which frames augmentation as a system of people, tools, and practices. Turing gives the contrast: can a machine pass as human? Finish with Weizenbaum's ELIZA, showing how easily people believe a program understands them. Terms: 'symbiosis' (close, mutually beneficial partnership); 'augmentation' (increasing human capability, not replacing it); 'imitation game' (Turing's test of telling machine from person by text).",
       "resources": [
         {
           "id": "s01m01r01",
@@ -21,8 +21,8 @@
           "url": "https://doi.org/10.1109/THFE2.1960.4503259",
           "listen": "https://groups.csail.mit.edu/medg/people/psz/Licklider.html",
           "minutes": 35,
-          "why": "The founding statement of humans and computers as partners with complementary strengths — the intellectual ancestor of 'human-centered AI' and of most HAI design goals.",
-          "focus": "Read the whole thing; it is short. Pay attention to his account of how he actually spent his 'thinking' time and to his list of what humans versus computers should each do."
+          "why": "Frames humans and computers as partners with complementary strengths, the root of most HAI design goals.",
+          "focus": "Read it all; note how he spent his 'thinking' time and his human-versus-computer task list."
         },
         {
           "id": "s01m01r02",
@@ -34,8 +34,8 @@
           "url": "https://www.dougengelbart.org/content/view/138",
           "listen": "https://www.dougengelbart.org/content/view/138",
           "minutes": 45,
-          "why": "Defines augmentation as improving the whole system of a person plus their language, artifacts, methods, and training — a framing HAI still uses when it studies tools in context rather than in isolation.",
-          "focus": "Read Section I (Introduction) and the opening of Section II, where the H-LAM/T system is defined. Skim the rest; the long hypothetical walkthrough is optional."
+          "why": "Defines augmentation as improving a person plus their language, artifacts, methods, and training, studied in context.",
+          "focus": "Read Section I and the opening of Section II (the H-LAM/T system); skim the rest."
         },
         {
           "id": "s01m01r03",
@@ -46,8 +46,8 @@
           "venue": "Mind",
           "url": "https://doi.org/10.1093/mind/LIX.236.433",
           "minutes": 50,
-          "why": "Introduces the imitation game, which made 'behaving indistinguishably from a human' a benchmark for AI — a goal HAI researchers often question because it rewards deception over usefulness.",
-          "focus": "Read Sections 1–2 (the game), skim the objections in Section 6, and read Section 7 on 'learning machines', which anticipates machine learning."
+          "why": "Introduces the imitation game, a human-likeness benchmark HAI often questions for rewarding deception over usefulness.",
+          "focus": "Read Sections 1–2 (the game) and 7 (learning machines); skim the objections in Section 6."
         },
         {
           "id": "s01m01r04",
@@ -58,8 +58,8 @@
           "venue": "Communications of the ACM",
           "url": "https://doi.org/10.1145/365153.365168",
           "minutes": 30,
-          "why": "The first chatbot, and the first clear evidence that people readily attribute understanding to a simple program — the root of today's concerns about anthropomorphism and over-trust in conversational AI.",
-          "focus": "Read the introduction, the description of keywords and transformation rules, and the discussion at the end about the illusion of understanding. Skim the implementation details."
+          "why": "The first chatbot, and first clear evidence that people attribute understanding to simple programs.",
+          "focus": "Read the introduction, keywords and transformation rules, and the closing discussion on illusory understanding; skim implementation."
         }
       ],
       "quiz": [
@@ -140,8 +140,8 @@
     {
       "id": "s01m02",
       "title": "Agents vs. direct manipulation; mixed initiative",
-      "goal": "Explain the trade-off between delegating to an autonomous agent and acting through a direct-manipulation interface, and how mixed-initiative design tries to get the benefits of both.",
-      "guide": "Begin with Hutchins, Hollan & Norman to learn why direct manipulation (acting on visible objects with immediate feedback, like dragging a file) feels natural; their 'gulf of execution' (the gap between what you want and the actions the system offers) and 'gulf of evaluation' (the gap between the system's state and your ability to tell what happened) are vocabulary you will use for the rest of this path. Then read the Shneiderman & Maes debate, where each side argues for control versus delegation. Horvitz's mixed-initiative paper is the bridge: it treats when an assistant should act, ask, or stay quiet as a decision under uncertainty. Höök (optional) lists the usability problems intelligent interfaces must solve before they are worth deploying. Term: 'interface agent' means software that acts on the user's behalf, often proactively.",
+      "goal": "Explain the trade-off between delegating to an autonomous agent and using direct manipulation, and how mixed-initiative design combines both.",
+      "guide": "Start with Hutchins, Hollan & Norman on why direct manipulation (acting on visible objects with immediate feedback) feels natural. Then the Shneiderman & Maes control-versus-delegation debate, and Horvitz on when an assistant should act, ask, or wait. Höök (optional) lists problems intelligent interfaces must solve. Terms: 'gulf of execution' (intent versus available actions); 'gulf of evaluation' (system state versus what you can tell); 'interface agent' (software acting on your behalf).",
       "resources": [
         {
           "id": "s01m02r01",
@@ -152,8 +152,8 @@
           "venue": "Human–Computer Interaction",
           "url": "https://doi.org/10.1207/s15327051hci0104_2",
           "minutes": 60,
-          "why": "Gives the cognitive account of why directness matters; the gulfs of execution and evaluation are the standard lens for analyzing why AI systems can feel opaque or hard to steer.",
-          "focus": "Focus on the sections defining distance (semantic and articulatory) and engagement, and the gulfs of execution and evaluation. Skim the examples."
+          "why": "Explains why directness matters; the gulfs of execution and evaluation help analyze opaque, hard-to-steer AI.",
+          "focus": "Focus on semantic and articulatory distance, engagement, and the gulfs of execution and evaluation; skim examples."
         },
         {
           "id": "s01m02r02",
@@ -164,8 +164,8 @@
           "venue": "Interactions",
           "url": "https://doi.org/10.1145/267505.267514",
           "minutes": 30,
-          "why": "The classic debate on control versus delegation; almost every later argument about AI assistants, copilots, and autonomous agents restates one of these two positions.",
-          "focus": "Read both positions and note what each says about predictability, user control, and information overload."
+          "why": "The classic control-versus-delegation debate; most later arguments about AI assistants restate one side.",
+          "focus": "Read both positions; note what each says about predictability, user control, and information overload."
         },
         {
           "id": "s01m02r03",
@@ -176,8 +176,8 @@
           "venue": "CHI '99",
           "url": "https://doi.org/10.1145/302979.303030",
           "minutes": 40,
-          "why": "Frames when an AI assistant should act, ask, or wait as an expected-utility decision under uncertainty about the user's goals — still the clearest model for designing proactive assistance.",
-          "focus": "Read the list of critical factors (principles) and the sections on the Lookout system and on action thresholds based on the probability of the user's goal."
+          "why": "Treats whether an assistant should act, ask, or wait as an expected-utility decision under uncertainty about user goals.",
+          "focus": "Read the critical factors (principles), the Lookout system, and probability-based action thresholds."
         },
         {
           "id": "s01m02r04",
@@ -188,8 +188,8 @@
           "venue": "Interacting with Computers",
           "url": "https://doi.org/10.1016/S0953-5438(99)00006-5",
           "minutes": 35,
-          "why": "An early, sober critique arguing that intelligent interfaces fail more from usability and design problems (control, transparency, predictability, trust) than from weak AI.",
-          "focus": "Read the introduction and the sections listing the usability problems and proposed steps.",
+          "why": "Argues intelligent interfaces fail more from usability problems (control, transparency, predictability, trust) than weak AI.",
+          "focus": "Read the introduction and the sections listing usability problems and proposed steps.",
           "optional": true
         }
       ],
@@ -271,8 +271,8 @@
     {
       "id": "s01m03",
       "title": "The modern field",
-      "goal": "Describe what makes AI-powered products distinctively hard to design and name the major frameworks and guideline sets the field uses to address that.",
-      "guide": "Read Amershi et al. first: their 18 guidelines are the most widely cited checklist in HAI, and they are organized by when they apply (initially, during interaction, when wrong, over time). Then read Yang et al., who explain why such guidelines are hard to apply: designers face uncertainty about what the AI can do and outputs that are complex and variable. Shneiderman's HCAI paper and Heer's 'agency plus automation' both argue against the assumption that more automation must mean less human control. Browse the PAIR Guidebook to see how these ideas turn into practical worksheets. Term: an 'AI-infused system' is any product where some behavior comes from a learned model rather than hand-written rules.",
+      "goal": "Describe what makes AI products distinctively hard to design and name the field's major frameworks and guideline sets.",
+      "guide": "Read Amershi et al. first: 18 guidelines grouped by when they apply (initially, during interaction, when wrong, over time). Then Yang et al. on why they are hard to apply: uncertain AI capabilities and complex, variable outputs. Shneiderman's HCAI and Heer's 'agency plus automation' argue more automation needn't mean less control. Browse the PAIR Guidebook for practical worksheets. Term: 'AI-infused system' (a product with some behavior from a learned model).",
       "resources": [
         {
           "id": "s01m03r01",
@@ -283,8 +283,8 @@
           "venue": "CHI 2019",
           "url": "https://doi.org/10.1145/3290605.3300233",
           "minutes": 50,
-          "why": "The field's reference set of design guidelines, synthesized from two decades of recommendations and tested with practitioners; you will see it cited in nearly every HAI paper.",
-          "focus": "Read the guideline table carefully and the description of how the guidelines were validated. Skim the per-guideline evaluation results."
+          "why": "The field's standard 18 design guidelines, synthesized from two decades of recommendations and tested with practitioners.",
+          "focus": "Read the guideline table and how the guidelines were validated; skim per-guideline results."
         },
         {
           "id": "s01m03r02",
@@ -295,8 +295,8 @@
           "venue": "CHI 2020",
           "url": "https://doi.org/10.1145/3313831.3376301",
           "minutes": 45,
-          "why": "Gives a precise account of why AI breaks ordinary UX methods, organized around two sources of difficulty, and a framework for deciding which design methods fit which kinds of systems.",
-          "focus": "Focus on the two root causes and the levels-of-complexity framework. Skim the literature synthesis."
+          "why": "Explains why AI breaks ordinary UX methods and which design methods fit which kinds of systems.",
+          "focus": "Focus on the two root causes and the levels-of-complexity framework; skim the literature synthesis."
         },
         {
           "id": "s01m03r03",
@@ -308,8 +308,8 @@
           "url": "https://arxiv.org/abs/2002.04087",
           "arxiv": "2002.04087",
           "minutes": 45,
-          "why": "Proposes the two-dimensional HCAI framework, arguing that systems can offer high automation and high human control at the same time — a widely used counterpoint to one-dimensional 'levels of automation'.",
-          "focus": "Read the introduction and the section presenting the two-dimensional framework and its quadrants. Skim the examples."
+          "why": "Proposes a two-dimensional framework in which systems can have high automation and high human control together.",
+          "focus": "Read the introduction and the two-dimensional framework with its quadrants; skim the examples."
         },
         {
           "id": "s01m03r04",
@@ -320,8 +320,8 @@
           "venue": "PNAS",
           "url": "https://doi.org/10.1073/pnas.1807184115",
           "minutes": 40,
-          "why": "Shows through concrete systems (data wrangling, visualization, translation) how AI can augment people while preserving their agency, using shared representations that both the person and the model can act on.",
-          "focus": "Read the introduction and the three case studies; note the role of shared representations in each.",
+          "why": "Shows, via data wrangling, visualization, and translation systems, how shared representations let AI augment people while preserving agency.",
+          "focus": "Read the introduction and the three case studies; note the shared representations in each.",
           "listen": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6369770/"
         },
         {
@@ -333,7 +333,7 @@
           "venue": "pair.withgoogle.com",
           "url": "https://pair.withgoogle.com/guidebook",
           "minutes": 45,
-          "why": "A widely used practitioner guide that turns HAI research into design patterns and worksheets; useful for seeing what industry treats as best practice.",
+          "why": "A practitioner guide turning HAI research into design patterns and worksheets; shows industry best practice.",
           "focus": "Skim the chapter list, then read the chapters on mental models and on explainability and trust.",
           "optional": true
         }
@@ -416,8 +416,8 @@
     {
       "id": "s01m04",
       "title": "Designing with ML as a material",
-      "goal": "Explain why designers struggle to work with machine learning and what 'interactive machine learning' changes about the relationship between people and models.",
-      "guide": "Read Dove et al. and Yang et al. (2018) as a pair: the first documents the problems UX practitioners report when working with ML, the second studies experienced designers who manage to work with it well. Then switch to interactive machine learning (IML), where the user directly trains or corrects a model in a fast loop. Fails & Olsen is the short original paper; Amershi et al. (2014) is the essential review and its key lesson is that people are not just label-providing 'oracles'. Terms: a 'model' is the learned function that maps inputs to outputs; 'training' means adjusting the model using examples; a 'label' is the correct answer attached to a training example; a 'classifier' is a model that assigns inputs to categories.",
+      "goal": "Explain why designers struggle to work with machine learning and how interactive machine learning changes the relationship between people and models.",
+      "guide": "Pair Dove et al. (problems UX practitioners report with ML) with Yang et al. 2018 (how experienced designers succeed). Then interactive machine learning (IML), where users train or correct a model in a fast loop: Fails & Olsen's short original, then Amershi et al. 2014: people are more than label-providing 'oracles'. Terms: 'model' (learned input-to-output function); 'training' (adjusting it from examples); 'label' (an example's correct answer); 'classifier' (model assigning categories).",
       "resources": [
         {
           "id": "s01m04r01",
@@ -428,8 +428,8 @@
           "venue": "CHI 2017",
           "url": "https://doi.org/10.1145/3025453.3025739",
           "minutes": 40,
-          "why": "Coined the framing of ML as a 'design material' and documented the practical barriers designers face — the starting point for a whole research line on AI design practice.",
-          "focus": "Read the introduction, the survey findings on challenges, and the discussion of opportunities for design."
+          "why": "Framed ML as a 'design material' and documented designers' practical barriers, launching research on AI design practice.",
+          "focus": "Read the introduction, the survey findings on challenges, and the discussion of design opportunities."
         },
         {
           "id": "s01m04r02",
@@ -440,8 +440,8 @@
           "venue": "DIS 2018",
           "url": "https://doi.org/10.1145/3196709.3196730",
           "minutes": 40,
-          "why": "Studies designers who have succeeded with ML, revealing that they rely on practical, example-based understanding and close collaboration with data scientists rather than deep technical expertise.",
-          "focus": "Read the method briefly, then focus on the findings and implications for design education and tools."
+          "why": "Experienced designers succeed with ML through example-based understanding and close work with data scientists, not deep expertise.",
+          "focus": "Skim the method; focus on findings and implications for design education and tools."
         },
         {
           "id": "s01m04r03",
@@ -452,8 +452,8 @@
           "venue": "IUI 2003",
           "url": "https://doi.org/10.1145/604045.604056",
           "minutes": 25,
-          "why": "Introduced the term 'interactive machine learning': a person trains a classifier by giving examples, seeing results immediately, and correcting them — the template for many end-user ML tools.",
-          "focus": "Read about the Crayons system and why the authors care about very fast training. Skim the feature details."
+          "why": "Coined 'interactive machine learning': train a classifier by giving examples, seeing results immediately, and correcting them.",
+          "focus": "Read about the Crayons system and why very fast training matters; skim feature details."
         },
         {
           "id": "s01m04r04",
@@ -464,8 +464,8 @@
           "venue": "AI Magazine",
           "url": "https://doi.org/10.1609/aimag.v35i4.2513",
           "minutes": 45,
-          "why": "The standard review of IML; its case studies show that treating people as passive label-providers leads to poor experiences and worse models, and it sets out a research agenda.",
-          "focus": "Read the introduction and the case studies on how people behave when teaching machines; skim the closing agenda."
+          "why": "The standard IML review: treating people as passive label-providers yields poor experiences and worse models.",
+          "focus": "Read the introduction and case studies of people teaching machines; skim the closing agenda."
         }
       ],
       "quiz": [

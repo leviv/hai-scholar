@@ -3,13 +3,13 @@
   "number": 8,
   "title": "Interacting with Generative AI",
   "subtitle": "Prompting, co-writing, coding assistants, hallucination, simulated people",
-  "overview": "Stage 4 covered how LLMs are built and prompted; this stage studies what happens when people actually use them. You will see why prompting is hard for non-experts, how writing and coding assistants change both the work and the worker (including their opinions), why fluent but wrong answers are an HAI problem rather than just a model problem, and the debate over using LLMs to simulate human participants. The decision-making ideas from Stage 7 (overreliance, calibration, complementarity) reappear here in open-ended, generative tasks.",
+  "overview": "This stage studies how people use LLMs: why prompting is hard for non-experts, how writing and coding assistants change work and opinions, why fluent wrong answers are an HAI problem, and whether LLMs can simulate research participants. Overreliance and calibration return in open-ended tasks.",
   "modules": [
     {
       "id": "s08m01",
       "title": "Prompting as interaction",
-      "goal": "Explain why end-user prompt design is difficult, and how breaking work into chained prompt steps changes transparency and control.",
-      "guide": "Read 'Why Johnny Can't Prompt' first: it treats prompting as a form of end-user programming and documents how non-experts actually go about it. Then read AI Chains, which proposes a design answer: split a task into small LLM steps a person can inspect and edit. The Karpathy video is a practical, hands-on tour of using today's chat assistants and is worth watching in parts; the Liu et al. survey is a reference for the NLP view of prompting. Key terms: 'end-user programming' (non-programmers creating programs, e.g., spreadsheet formulas, an analogy the Johnny paper draws on); 'design probe' (a prototype built to study how people work, not to ship); 'prompt chaining' (feeding one LLM call's output into the next); 'primitive operation' (a small, reusable LLM step such as classify, rewrite, or generate ideas).",
+      "goal": "Explain why end-user prompt design is hard, and how chaining prompts into steps changes transparency and control.",
+      "guide": "Read 'Why Johnny Can't Prompt' first: it treats prompting as end-user programming. AI Chains splits tasks into small, editable LLM steps. Watch Karpathy's video in parts; use Liu et al. as a reference. Key terms: 'end-user programming' (non-programmers writing programs, e.g., spreadsheet formulas); 'design probe' (prototype for studying people, not shipping); 'prompt chaining' (one call's output feeds the next); 'primitive operation' (small reusable step like classify or rewrite).",
       "resources": [
         {
           "id": "s08m01r01",
@@ -20,8 +20,8 @@
           "venue": "CHI 2023",
           "url": "https://doi.org/10.1145/3544548.3581388",
           "minutes": 45,
-          "why": "The key empirical paper on end-user prompt engineering; it explains why natural-language control is not automatically easy control.",
-          "focus": "Read the description of the design probe (a chatbot design tool) and the findings on how participants explored, evaluated, and generalized from their prompts.",
+          "why": "The key empirical paper on end-user prompting; shows natural-language control isn't automatically easy control.",
+          "focus": "The design probe (a chatbot design tool) and how participants explored, evaluated and generalized prompts.",
           "optional": false
         },
         {
@@ -34,8 +34,8 @@
           "url": "https://arxiv.org/abs/2110.01691",
           "arxiv": "2110.01691",
           "minutes": 45,
-          "why": "Introduced prompt chaining as an interaction technique and showed it improves transparency, controllability, and sense of collaboration, ideas that underlie today's agent pipelines.",
-          "focus": "Read the set of primitive operations, the interface, and the user study results; note the new behaviors users developed, such as 'unit-testing' sub-steps.",
+          "why": "Introduced prompt chaining, improving transparency, control and sense of collaboration; it underlies today's agent pipelines.",
+          "focus": "Primitive operations, the interface, and user study results; note new behaviors like 'unit-testing' sub-steps.",
           "optional": false
         },
         {
@@ -48,8 +48,8 @@
           "url": "https://www.youtube.com/watch?v=EWvNQjAaOHw",
           "youtube": "EWvNQjAaOHw",
           "minutes": 131,
-          "why": "A practitioner's walkthrough of how an expert actually uses chat assistants day to day, useful as a contrast to the novice behaviors in the Johnny paper.",
-          "focus": "Watch the first hour for core usage patterns; skim the rest by chapter for tool use and other features.",
+          "why": "An expert's walkthrough of everyday chat assistant use, a contrast to the novices in the Johnny paper.",
+          "focus": "Watch the first hour for core usage; skim later chapters for tool use and other features.",
           "optional": true
         },
         {
@@ -62,8 +62,8 @@
           "url": "https://arxiv.org/abs/2107.13586",
           "arxiv": "2107.13586",
           "minutes": 40,
-          "why": "The standard NLP survey of 'prompt-based learning'; useful for vocabulary when reading technical prompting papers.",
-          "focus": "Read sections 1-3 for the paradigm and notation; use the rest as a reference.",
+          "why": "The standard NLP survey of prompt-based learning, useful for vocabulary in technical prompting papers.",
+          "focus": "Sections 1-3 for the paradigm and notation; use the rest as a reference.",
           "optional": true
         }
       ],
@@ -146,8 +146,8 @@
     {
       "id": "s08m02",
       "title": "Writing and creativity with LLMs",
-      "goal": "Describe how researchers study human-LLM co-writing, why interactive evaluation can disagree with static benchmarks, and how an opinionated assistant can shift users' views.",
-      "guide": "Begin with CoAuthor, which makes the case for studying LLMs through logged human interaction rather than benchmarks, and introduces a widely reused dataset. Then read Lee et al.'s HALIE, which formalizes what interactive evaluation measures that static evaluation misses. Jakesch et al. is the key warning: an assistant's built-in leaning can change both what people write and what they believe. Luminate (optional) shows a design response to the tendency of LLM tools to converge on a few ideas. Key terms: 'interaction trace' (a keystroke-level log of a session); 'non-interactive benchmark' (the model is scored on fixed inputs with no human in the loop); 'ownership' (how much the writer feels the text is theirs); 'latent persuasion' (influence that comes through an assistant's suggestions rather than explicit argument); 'design space' (the range of possible variations of an output).",
+      "goal": "Describe how researchers study human-LLM co-writing, why interactive and static evaluations can disagree, and how opinionated assistants shift users' views.",
+      "guide": "Begin with CoAuthor, which argues for studying logged interaction and offers a dataset. HALIE formalizes what static evaluation misses. Jakesch et al. show an assistant's leaning changes what people write and believe. Luminate (optional) counters convergence on few ideas. Key terms: 'interaction trace' (keystroke-level log); 'non-interactive benchmark' (fixed inputs, no human); 'ownership' (feeling the text is yours); 'latent persuasion' (influence via suggestions); 'design space' (range of possible outputs).",
       "resources": [
         {
           "id": "s08m02r01",
@@ -159,8 +159,8 @@
           "url": "https://arxiv.org/abs/2201.06796",
           "arxiv": "2201.06796",
           "minutes": 40,
-          "why": "Argues that curated interaction datasets let HCI researchers examine LLM capabilities rigorously, and provides one: 1,445 writing sessions with GPT-3.",
-          "focus": "Read the motivation, the data collection design (creative vs. argumentative writing), and the analyses of what 'good collaboration' could mean.",
+          "why": "Argues curated interaction datasets enable rigorous study of LLM capabilities, and offers 1,445 GPT-3 writing sessions.",
+          "focus": "Motivation, data collection design (creative vs. argumentative writing), and analyses of what good collaboration means.",
           "optional": false
         },
         {
@@ -173,8 +173,8 @@
           "url": "https://arxiv.org/abs/2212.09746",
           "arxiv": "2212.09746",
           "minutes": 50,
-          "why": "Provides the HALIE framework and concrete evidence that a model that scores better on static benchmarks is not always better to interact with.",
-          "focus": "Read the framework section and the three cases where interactive and non-interactive results diverge. Skim individual task details.",
+          "why": "Presents the HALIE framework and shows better static benchmark scores don't guarantee better interaction.",
+          "focus": "The framework section and three cases where interactive and non-interactive results diverge. Skim task details.",
           "optional": false
         },
         {
@@ -187,8 +187,8 @@
           "url": "https://arxiv.org/abs/2302.00560",
           "arxiv": "2302.00560",
           "minutes": 35,
-          "why": "A large experiment showing that an assistant's built-in opinions influence users' attitudes, raising questions about values in everyday AI tools.",
-          "focus": "Read the experimental design (N=1,506, social media topic, independent judges) and the effects on writing and on later attitudes.",
+          "why": "A large experiment showing an assistant's built-in opinions shift users' attitudes.",
+          "focus": "Design (N=1,506, social media topic, independent judges) and effects on writing and later attitudes.",
           "optional": false
         },
         {
@@ -201,8 +201,8 @@
           "url": "https://arxiv.org/abs/2310.12953",
           "arxiv": "2310.12953",
           "minutes": 35,
-          "why": "A system that counters the 'rapid convergence' of chat interfaces by generating a structured space of options; a good example of HCI design responding to an LLM limitation.",
-          "focus": "Read the problem framing and the system design; skim the user study with professional writers.",
+          "why": "Counters chat interfaces' rapid convergence by generating a structured space of options to explore.",
+          "focus": "The problem framing and system design; skim the user study with professional writers.",
           "optional": true
         }
       ],
@@ -285,8 +285,8 @@
     {
       "id": "s08m03",
       "title": "Programming with AI",
-      "goal": "Summarize how programmers interact with code assistants, what controlled experiments say about productivity, and where time goes in AI-assisted programming.",
-      "guide": "Start with Barke et al.'s grounded theory, which gives you the vocabulary of 'acceleration' and 'exploration'. Then read Vaithilingam et al., an early lab study where preference and performance diverged. Peng et al. is the widely cited controlled experiment on speed; read it alongside its narrow task. Mozannar et al. offer a fine-grained model of what programmers spend time on. Key terms: 'grounded theory' (a qualitative method that builds theory from observation data rather than testing a hypothesis); 'within-subjects design' (each participant tries every condition); 'treatment and control groups' (with and without the tool); 'taxonomy' (a structured classification of activities). Notice how different methods (qualitative, lab, field-like experiment, retrospective labeling) answer different questions.",
+      "goal": "Summarize how programmers use code assistants, what controlled experiments show about productivity, and where time goes in AI-assisted programming.",
+      "guide": "Start with Barke et al.'s grounded theory of 'acceleration' and 'exploration'. In Vaithilingam et al., preference and performance diverged. Peng et al. measure speed on a narrow task. Mozannar et al. model where programmers' time goes. Key terms: 'grounded theory' (theory built from qualitative data); 'within-subjects design' (everyone tries every condition); 'treatment and control groups' (with and without the tool); 'taxonomy' (classification of activities). Notice which questions each method answers.",
       "resources": [
         {
           "id": "s08m03r01",
@@ -298,8 +298,8 @@
           "url": "https://arxiv.org/abs/2206.15000",
           "arxiv": "2206.15000",
           "minutes": 45,
-          "why": "Its 'acceleration vs. exploration' distinction is the most widely used framing of how people use code assistants.",
-          "focus": "Read the method (20 participants, four languages) and the description of the two modes with examples; skim the recommendations.",
+          "why": "Its 'acceleration vs. exploration' distinction is the most widely used framing of code assistant use.",
+          "focus": "Method (20 participants, four languages) and the two modes with examples; skim the recommendations.",
           "optional": false
         },
         {
@@ -311,8 +311,8 @@
           "venue": "CHI 2022 Extended Abstracts",
           "url": "https://doi.org/10.1145/3491101.3519665",
           "minutes": 25,
-          "why": "A short, early study showing that people can prefer an AI tool even when it does not make them faster or more successful.",
-          "focus": "Read the whole paper; it is short. Focus on the gap between preference and measured performance.",
+          "why": "A short early study: people can prefer an AI tool that doesn't make them faster or more successful.",
+          "focus": "The whole paper (it is short); focus on the gap between preference and measured performance.",
           "optional": false
         },
         {
@@ -325,8 +325,8 @@
           "url": "https://arxiv.org/abs/2302.06590",
           "arxiv": "2302.06590",
           "minutes": 25,
-          "why": "The most cited controlled experiment on code assistant productivity; important to know both its headline number and its scope.",
-          "focus": "Read the task description, the main result, and the heterogeneous effects. Think about what the task does and does not represent.",
+          "why": "The most cited controlled experiment on code assistant productivity; know both its headline number and scope.",
+          "focus": "Task description, main result, and heterogeneous effects; consider what the task does and doesn't represent.",
           "optional": false
         },
         {
@@ -339,8 +339,8 @@
           "url": "https://arxiv.org/abs/2210.14306",
           "arxiv": "2210.14306",
           "minutes": 40,
-          "why": "Introduces CUPS, a taxonomy of programmer activities with Copilot, and shows how to find hidden time costs such as verifying suggestions.",
-          "focus": "Read the CUPS taxonomy, the retrospective labeling method, and the analysis of where time is spent.",
+          "why": "Introduces CUPS, a taxonomy of programmer activities with Copilot, revealing hidden time costs like verifying suggestions.",
+          "focus": "The CUPS taxonomy, the retrospective labeling method, and where time is spent.",
           "optional": false
         }
       ],
@@ -423,8 +423,8 @@
     {
       "id": "s08m04",
       "title": "Hallucination, uncertainty, and sycophancy",
-      "goal": "Explain why fluent but wrong LLM output is an interaction problem, and evaluate evidence on how uncertainty expressions, explanations, and sycophancy affect user reliance.",
-      "guide": "Start with Lilian Weng's essay for a clear definition of hallucination and an overview of causes and fixes. Sharma et al. show how training on human preferences can push models to tell users what they want to hear. The remaining papers are human-subject studies: Kim et al. test natural-language uncertainty phrases, Steyvers et al. measure the gap between what models 'know' and what people think they know, and Si et al. compare LLM explanations with search for fact-checking. Zhou et al. (optional) show models rarely express uncertainty and people rely on them regardless. Key terms: 'in-context vs. extrinsic hallucination' (contradicting the provided source vs. not being grounded in world knowledge); 'sycophancy' (matching the user's beliefs over the truth); 'preference model' (a model trained to predict which response humans prefer, used in RLHF); 'calibration gap' (difference between human confidence in an answer and the model's own confidence); 'discrimination' (telling correct from incorrect answers); 'contrastive explanation' (arguing both for and against a claim).",
+      "goal": "Explain why fluent but wrong LLM output is an interaction problem, and assess evidence on how uncertainty, explanations and sycophancy affect reliance.",
+      "guide": "Start with Weng's essay on hallucination. Sharma et al. link sycophancy to preference training. Then the user studies: Kim, Steyvers, Si, and optionally Zhou. Key terms: 'in-context vs. extrinsic hallucination' (contradicting the source vs. ungrounded in world knowledge); 'sycophancy' (agreeing over truth); 'preference model' (predicts preferred responses, used in RLHF); 'calibration gap' (human vs. model confidence); 'discrimination' (telling right from wrong answers); 'contrastive explanation' (arguing for and against).",
       "resources": [
         {
           "id": "s08m04r01",
@@ -435,8 +435,8 @@
           "venue": "Lil'Log",
           "url": "https://lilianweng.github.io/posts/2024-07-07-hallucination/",
           "minutes": 45,
-          "why": "A clear, well-referenced explainer on what hallucination is, why it arises in pretraining and fine-tuning, and how it is detected and reduced.",
-          "focus": "Read the definitions and 'What Causes Hallucinations?' carefully; skim detection and mitigation methods for the main ideas.",
+          "why": "A clear, well-referenced explainer on what hallucination is, why it arises, and how to detect and reduce it.",
+          "focus": "The definitions and 'What Causes Hallucinations?' carefully; skim detection and mitigation methods.",
           "optional": false
         },
         {
@@ -449,8 +449,8 @@
           "url": "https://arxiv.org/abs/2310.13548",
           "arxiv": "2310.13548",
           "minutes": 45,
-          "why": "Links a user-facing failure (agreeing with the user) to the human feedback used in training, connecting Stage 4's RLHF to HAI.",
-          "focus": "Read the introduction, the summary of sycophancy across tasks, and the analysis of human preference data.",
+          "why": "Links sycophancy to the human feedback used in training, connecting RLHF to HAI.",
+          "focus": "Introduction, the summary of sycophancy across tasks, and the human preference data analysis.",
           "optional": false
         },
         {
@@ -463,8 +463,8 @@
           "url": "https://arxiv.org/abs/2405.00623",
           "arxiv": "2405.00623",
           "minutes": 40,
-          "why": "A pre-registered experiment showing that the exact wording of uncertainty matters for overreliance.",
-          "focus": "Read the conditions (first-person vs. general-perspective uncertainty), the measures, and the main results.",
+          "why": "A pre-registered experiment showing the exact wording of uncertainty affects overreliance.",
+          "focus": "The conditions (first-person vs. general-perspective uncertainty), the measures, and main results.",
           "optional": false
         },
         {
@@ -477,8 +477,8 @@
           "url": "https://arxiv.org/abs/2401.13835",
           "arxiv": "2401.13835",
           "minutes": 40,
-          "why": "Defines the calibration and discrimination gaps between model confidence and human perception, and shows explanation length alone inflates trust.",
-          "focus": "Read the definitions of the two gaps, the explanation-length results, and the intervention aligning explanations with model confidence.",
+          "why": "Defines calibration and discrimination gaps between model confidence and human perception; longer explanations alone inflate trust.",
+          "focus": "The two gap definitions, explanation-length results, and the intervention aligning explanations with model confidence.",
           "optional": false
         },
         {
@@ -491,8 +491,8 @@
           "url": "https://arxiv.org/abs/2310.12558",
           "arxiv": "2310.12558",
           "minutes": 35,
-          "why": "Compares LLM explanations with search engines for fact-checking and tests contrastive explanations as an overreliance fix.",
-          "focus": "Read the conditions and results; note efficiency vs. accuracy and the failure when explanations are wrong.",
+          "why": "Compares LLM explanations with search for fact-checking and tests contrastive explanations against overreliance.",
+          "focus": "Conditions and results; note efficiency vs. accuracy and the failure when explanations are wrong.",
           "optional": false
         },
         {
@@ -505,8 +505,8 @@
           "url": "https://arxiv.org/abs/2401.06730",
           "arxiv": "2401.06730",
           "minutes": 35,
-          "why": "Connects model behavior (rarely expressing uncertainty), user behavior (relying anyway), and training data (annotators disfavor uncertain text).",
-          "focus": "Read the analysis of deployed models, the human experiment, and the preference-data analysis.",
+          "why": "Links models rarely expressing uncertainty, users relying anyway, and annotators disfavoring uncertain text.",
+          "focus": "The analysis of deployed models, the human experiment, and the preference-data analysis.",
           "optional": true
         }
       ],
@@ -601,8 +601,8 @@
     {
       "id": "s08m05",
       "title": "LLMs as simulated people and agents",
-      "goal": "Explain how LLM-based agents and 'silicon samples' simulate human behavior, and evaluate the arguments for and against using them in place of human participants.",
-      "guide": "Read Generative Agents first for the architecture (memory, reflection, planning) that made believable simulated characters possible. Then read Argyle et al., the main case for using LLMs to simulate survey respondents, followed by Park et al. 2024, which grounds agents in real interviews with over a thousand people. Read Wang et al. and Agnew et al. (optional) as the critical counterweight. Key terms: 'memory stream' (a log of an agent's experiences in natural language); 'reflection' (periodically summarizing memories into higher-level insights); 'algorithmic fidelity' (how well a model reproduces a subgroup's response patterns); 'silicon sample' (simulated respondents produced by conditioning a model on backstories); 'test-retest consistency' (how consistently a real person answers the same questions two weeks apart, used as a ceiling); 'flattening' (representing a group as more uniform than it is); 'positionality' (how a person's social identity shapes their perspective).",
+      "goal": "Explain how LLM agents and 'silicon samples' simulate human behavior, and weigh arguments for and against using them in place of human participants.",
+      "guide": "Start with Generative Agents (memory, reflection, planning). Argyle et al. advocate simulated survey respondents; Park et al. 2024 model 1,000+ interviewed people. Wang et al. and Agnew et al. (optional) object. Key terms: 'memory stream' (experience log); 'reflection' (memories distilled into insights); 'algorithmic fidelity' (matching a subgroup's responses); 'silicon sample' (backstory-conditioned respondents); 'test-retest consistency' (how consistently people re-answer; the ceiling); 'flattening' (groups shown too uniform); 'positionality' (identity shaping perspective).",
       "resources": [
         {
           "id": "s08m05r01",
@@ -614,8 +614,8 @@
           "url": "https://arxiv.org/abs/2304.03442",
           "arxiv": "2304.03442",
           "minutes": 55,
-          "why": "A landmark HCI paper showing how an LLM plus memory, reflection, and planning can produce believable individual and social behavior.",
-          "focus": "Read the architecture section and the Valentine's Day party example; read the evaluation and the ablation of observation, planning, and reflection.",
+          "why": "Shows an LLM plus memory, reflection and planning can produce believable individual and social behavior.",
+          "focus": "Architecture, the Valentine's Day party example, the evaluation, and the observation/planning/reflection ablation.",
           "optional": false
         },
         {
@@ -628,8 +628,8 @@
           "url": "https://arxiv.org/abs/2209.06899",
           "arxiv": "2209.06899",
           "minutes": 45,
-          "why": "Introduced 'algorithmic fidelity' and 'silicon samples', starting the debate over LLMs as stand-ins for survey respondents.",
-          "focus": "Read the definition of algorithmic fidelity and its criteria, and one of the studies comparing silicon and human samples.",
+          "why": "Introduced 'algorithmic fidelity' and 'silicon samples', starting the debate over LLMs as survey respondents.",
+          "focus": "The algorithmic fidelity definition and criteria, and one study comparing silicon and human samples.",
           "optional": false
         },
         {
@@ -642,8 +642,8 @@
           "url": "https://arxiv.org/abs/2411.10109",
           "arxiv": "2411.10109",
           "minutes": 45,
-          "why": "Builds agents of 1,052 real people from interviews and surveys and benchmarks them against people's own test-retest consistency; earlier versions were titled 'Generative Agent Simulations of 1,000 People'.",
-          "focus": "Read how agents were built from interviews and surveys, why accuracy is normalized by test-retest consistency, and the results on group disparities.",
+          "why": "Agents of 1,052 real people, benchmarked against their test-retest consistency (earlier title: 'Generative Agent Simulations of 1,000 People').",
+          "focus": "Building agents from interviews and surveys, normalizing accuracy by test-retest consistency, and group-disparity results.",
           "optional": false
         },
         {
@@ -656,8 +656,8 @@
           "url": "https://arxiv.org/abs/2402.01908",
           "arxiv": "2402.01908",
           "minutes": 45,
-          "why": "Argues analytically and shows empirically why LLMs misrepresent and flatten demographic groups, and what that means for research that replaces participants.",
-          "focus": "Read the two inherent limitations, the human study comparing LLM and human responses, and the discussion of when supplementation might be acceptable.",
+          "why": "Argues and shows empirically that LLMs misportray and flatten identity groups, and what that means for replacing participants.",
+          "focus": "The two inherent limitations, the LLM-versus-human response study, and when supplementation might be acceptable.",
           "optional": false
         },
         {
@@ -670,8 +670,8 @@
           "url": "https://arxiv.org/abs/2401.08572",
           "arxiv": "2401.08572",
           "minutes": 35,
-          "why": "A scoping review of proposals to substitute AI for human participants, arguing they conflict with the core values of participatory research.",
-          "focus": "Read the summary of substitution proposals and the discussion of representation, inclusion, and understanding.",
+          "why": "A scoping review arguing that substituting AI for human participants conflicts with participatory research's core values.",
+          "focus": "The summary of substitution proposals and the discussion of representation, inclusion, and understanding.",
           "optional": true
         }
       ],

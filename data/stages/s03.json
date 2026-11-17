@@ -3,13 +3,13 @@
   "number": 3,
   "title": "Language Models and Transformers",
   "subtitle": "Word vectors, sequence models, attention, and building a GPT",
-  "overview": "Building on Stage 2's picture of networks trained by gradient descent, this stage explains how today's large language models (LLMs) work: words become vectors, sequence models learn to read and write text, attention lets a model look back at relevant context, and the Transformer combines these into the architecture behind GPT-style chatbots. It ends with you building a small GPT in code. Understanding these mechanics is what lets an HAI researcher reason about why chatbots sound fluent yet can be confidently wrong, why outputs vary from run to run, and where explanations of model behavior can and cannot come from.",
+  "overview": "How large language models work: word vectors, sequence models, attention and the Transformer, ending with a small GPT you build. For HAI research, these mechanics explain why chatbots can be fluent yet wrong, why outputs vary, and what explanations of model behavior can show.",
   "modules": [
     {
       "id": "s03m01",
       "title": "Words as vectors",
-      "goal": "Explain how language models represent words as vectors of numbers, why similar words end up with similar vectors, and what 'predicting the next word' means.",
-      "guide": "Start with Lee & Trott, written for non-specialists, which walks through the whole pipeline of an LLM in plain language; then watch 3Blue1Brown's short overview. Next, read Alammar's word2vec essay to see in detail how word vectors are learned from raw text, and finally skim Mikolov et al., the paper that introduced word2vec. Key terms: a 'vector' is a list of numbers that can be treated as a point in a high-dimensional space; an 'embedding' is a learned vector representing an item such as a word, placed so that related items are close together; a 'token' is the unit of text a model processes (a word or a piece of a word); a 'language model' assigns probabilities to the next token given the preceding text.",
+      "goal": "Explain how language models represent words as vectors, why similar words get similar vectors, and what 'predicting the next word' means.",
+      "guide": "Start with Lee & Trott, then 3Blue1Brown's short overview. Next read Alammar's word2vec essay, then skim Mikolov et al., the original word2vec paper. Key terms: 'vector' (a list of numbers, treated as a point in space); 'embedding' (a learned vector for an item like a word, near related items); 'token' (a word or word piece the model processes); 'language model' (assigns probabilities to the next token).",
       "resources": [
         {
           "id": "s03m01r01",
@@ -21,8 +21,8 @@
           "url": "https://www.understandingai.org/p/large-language-models-explained-with",
           "listen": "https://www.understandingai.org/p/large-language-models-explained-with",
           "minutes": 40,
-          "why": "A careful, jargon-free tour of how an LLM works end to end, co-written by a cognitive scientist; it gives you a mental model to hang the rest of this stage on.",
-          "focus": "Read the whole essay. Note the sections on word vectors, attention as information-sharing between words, and the feed-forward step."
+          "why": "A jargon-free, end-to-end tour of how an LLM works, giving you a mental model for this stage.",
+          "focus": "Read it all. Note the sections on word vectors, attention as information-sharing, and the feed-forward step."
         },
         {
           "id": "s03m01r02",
@@ -34,8 +34,8 @@
           "url": "https://www.youtube.com/watch?v=LPZh9BOjkQs",
           "youtube": "LPZh9BOjkQs",
           "minutes": 8,
-          "why": "A short visual overview of next-word prediction, pretraining, and the extra training that turns a model into a chatbot.",
-          "focus": "Watch for how the model's output is a probability distribution over next words, and why a chatbot's response can differ each time."
+          "why": "A short visual overview of next-word prediction, pretraining, and the extra training that makes a chatbot.",
+          "focus": "Note that output is a probability distribution over next words, and why responses vary each time."
         },
         {
           "id": "s03m01r03",
@@ -47,8 +47,8 @@
           "url": "https://jalammar.github.io/illustrated-word2vec/",
           "listen": "https://jalammar.github.io/illustrated-word2vec/",
           "minutes": 35,
-          "why": "Shows step by step how word embeddings are learned from text, building intuition for the vectors every later model uses.",
-          "focus": "Read the personality-embedding analogy, the word-analogy examples, and the sections on skipgram and negative sampling."
+          "why": "Shows step by step how word embeddings are learned from text.",
+          "focus": "Read the personality-embedding analogy, word-analogy examples, and the skipgram and negative sampling sections."
         },
         {
           "id": "s03m01r04",
@@ -60,8 +60,8 @@
           "url": "https://arxiv.org/abs/1301.3781",
           "arxiv": "1301.3781",
           "minutes": 30,
-          "why": "The original word2vec paper; its finding that vector arithmetic captures relationships between words shaped how the field thinks about meaning in models.",
-          "focus": "Read the abstract, the descriptions of the CBOW and Skip-gram architectures, and the word-analogy results. Skim complexity analysis.",
+          "why": "The original word2vec paper, showing that vector arithmetic captures relationships between words.",
+          "focus": "Read the abstract, CBOW and Skip-gram architectures, and word-analogy results. Skim the complexity analysis.",
           "optional": true
         }
       ],
@@ -143,8 +143,8 @@
     {
       "id": "s03m02",
       "title": "Sequences and attention",
-      "goal": "Explain how recurrent networks process sequences, why squeezing a whole sentence into one vector is a bottleneck, and how attention solves it.",
-      "guide": "Read Olah's LSTM essay first to see how a network can carry information along a sequence, then Alammar's seq2seq essay for the encoder-decoder idea and the arrival of attention. Then skim the two primary papers: Sutskever et al. (sequence-to-sequence translation) and Bahdanau et al. (attention). Weng's survey is an optional map of the many attention variants. Key terms: a 'recurrent neural network' (RNN) processes a sequence one item at a time, passing a 'hidden state' (a vector summarizing what it has seen so far) to the next step; an 'LSTM' is an RNN with gates that control what to keep or forget; an 'encoder' turns the input into vectors and a 'decoder' generates the output from them; 'softmax' turns a list of scores into probabilities that are positive and sum to 1; 'attention' computes a weighted average of a set of vectors, with weights (from a softmax) that say how relevant each one is to the current step.",
+      "goal": "Explain how recurrent networks process sequences, why compressing a sentence into one vector is a bottleneck, and how attention fixes it.",
+      "guide": "Read Olah's LSTM essay, then Alammar's seq2seq essay. Skim Sutskever et al. (sequence-to-sequence) and Bahdanau et al. (attention). Weng's survey is optional. Key terms: 'RNN' (reads a sequence step by step, passing a 'hidden state' summary forward); 'LSTM' (an RNN with gates to keep or forget); 'encoder'/'decoder' (turns input into vectors / generates output from them); 'softmax' (turns scores into probabilities summing to 1); 'attention' (a relevance-weighted average of vectors).",
       "resources": [
         {
           "id": "s03m02r01",
@@ -156,8 +156,8 @@
           "url": "https://colah.github.io/posts/2015-08-Understanding-LSTMs/",
           "listen": "https://colah.github.io/posts/2015-08-Understanding-LSTMs/",
           "minutes": 30,
-          "why": "The classic visual explanation of recurrent networks and LSTMs — the dominant sequence models before Transformers, and the context for why attention mattered.",
-          "focus": "Read the sections on RNNs, the problem of long-term dependencies, and the step-by-step LSTM walkthrough. Skim the variants at the end."
+          "why": "A visual explanation of RNNs and LSTMs, the main sequence models before Transformers.",
+          "focus": "Read the RNN, long-term dependency, and step-by-step LSTM sections. Skim the variants at the end."
         },
         {
           "id": "s03m02r02",
@@ -169,8 +169,8 @@
           "url": "https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/",
           "listen": "https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/",
           "minutes": 25,
-          "why": "Animates the encoder-decoder architecture and shows exactly what attention adds — the conceptual bridge to the Transformer.",
-          "focus": "Read the whole essay; pause on the animations of the context vector and of attention scoring."
+          "why": "Animates the encoder-decoder architecture and shows what attention adds, bridging to the Transformer.",
+          "focus": "Read it all; pause on the context-vector and attention-scoring animations."
         },
         {
           "id": "s03m02r03",
@@ -182,7 +182,7 @@
           "url": "https://arxiv.org/abs/1409.3215",
           "arxiv": "1409.3215",
           "minutes": 30,
-          "why": "Showed that a general encoder-decoder network could learn translation end to end, establishing the sequence-to-sequence approach.",
+          "why": "Showed an encoder-decoder network could learn translation end to end, establishing sequence-to-sequence learning.",
           "focus": "Read the abstract, introduction, and model section; note the trick of reversing the source sentence."
         },
         {
@@ -195,8 +195,8 @@
           "url": "https://arxiv.org/abs/1409.0473",
           "arxiv": "1409.0473",
           "minutes": 35,
-          "why": "Introduced the attention mechanism for translation; its alignment visualizations were also an early form of model explanation, later debated in HAI work on explainability.",
-          "focus": "Read the abstract, introduction, and the section describing the model's alignment (attention). Look at the alignment figures."
+          "why": "Introduced attention for translation; its alignment plots were an early, later debated, form of model explanation.",
+          "focus": "Read the abstract, introduction, and the alignment (attention) model section. Look at the alignment figures."
         },
         {
           "id": "s03m02r05",
@@ -208,8 +208,8 @@
           "url": "https://lilianweng.github.io/posts/2018-06-24-attention/",
           "listen": "https://lilianweng.github.io/posts/2018-06-24-attention/",
           "minutes": 40,
-          "why": "A clear survey of attention variants with consistent notation; a handy reference when papers mention different kinds of attention.",
-          "focus": "Read the opening sections on why attention was invented and the summary of attention mechanisms; skim the rest as reference.",
+          "why": "A clear survey of attention variants with consistent notation, useful as a reference.",
+          "focus": "Read the opening on why attention was invented and the summary of mechanisms; skim the rest.",
           "optional": true
         }
       ],
@@ -291,8 +291,8 @@
     {
       "id": "s03m03",
       "title": "The Transformer",
-      "goal": "Explain the main components of a Transformer — token embeddings, self-attention with queries, keys and values, multi-head attention, and feed-forward layers — and why the architecture replaced RNNs.",
-      "guide": "Watch the two 3Blue1Brown chapters first, then read Alammar's Illustrated Transformer, which covers the same machinery with diagrams of the original encoder-decoder model. Only then open Vaswani et al.; with this preparation the paper's Section 3 should be readable. The optional chapter 7 video looks at where facts might be stored in the network. Key terms: 'self-attention' is attention in which every token in a sequence attends to the other tokens in the same sequence; each token produces a 'query' (what it's looking for), a 'key' (what it offers), and a 'value' (the information it passes on); 'multi-head attention' runs several attention operations in parallel so different heads can capture different relationships; 'positional encoding' adds information about word order, since attention by itself ignores order; 'logits' are the raw scores the model outputs before softmax turns them into probabilities; 'temperature' rescales the logits to make sampling more or less random.",
+      "goal": "Explain the Transformer's main parts (embeddings, self-attention with queries, keys and values, multi-head attention, feed-forward layers) and why it replaced RNNs.",
+      "guide": "Watch the two 3Blue1Brown chapters, then read Alammar's Illustrated Transformer, then Vaswani et al. (Section 3). Optional: the chapter 7 video on where facts are stored. Key terms: 'self-attention' (tokens attend to others in their sequence); 'query', 'key', 'value' (what a token seeks, offers, passes on); 'multi-head attention' (parallel attention operations); 'positional encoding' (adds word order); 'logits' (raw scores before softmax); 'temperature' (rescales logits to tune sampling randomness).",
       "resources": [
         {
           "id": "s03m03r01",
@@ -304,8 +304,8 @@
           "url": "https://www.youtube.com/watch?v=wjZofJX0v4M",
           "youtube": "wjZofJX0v4M",
           "minutes": 27,
-          "why": "Builds a concrete picture of the data flow in a GPT-style model — tokens to embeddings, through attention and MLP blocks, to a probability distribution over the next token.",
-          "focus": "Focus on the embedding matrix, the unembedding step, and the explanation of softmax and temperature."
+          "why": "Traces data flow in a GPT-style model: tokens to embeddings, through attention and MLPs, to next-token probabilities.",
+          "focus": "Focus on the embedding matrix, the unembedding step, and softmax with temperature."
         },
         {
           "id": "s03m03r02",
@@ -317,8 +317,8 @@
           "url": "https://www.youtube.com/watch?v=eMlx5fFNoYc",
           "youtube": "eMlx5fFNoYc",
           "minutes": 26,
-          "why": "The clearest visual walkthrough of queries, keys, values, and masking — essential for understanding claims about what models 'pay attention to'.",
-          "focus": "Follow the adjective-noun example for queries and keys, then the explanation of masking and multiple heads."
+          "why": "Visually walks through queries, keys, values and masking, needed to judge claims about what models 'attend to'.",
+          "focus": "Follow the adjective-noun example for queries and keys, then masking and multiple heads."
         },
         {
           "id": "s03m03r03",
@@ -330,7 +330,7 @@
           "url": "https://jalammar.github.io/illustrated-transformer/",
           "listen": "https://jalammar.github.io/illustrated-transformer/",
           "minutes": 40,
-          "why": "The most widely used illustrated guide to the original Transformer; many researchers learned the architecture from it.",
+          "why": "The most widely used illustrated guide to the original Transformer.",
           "focus": "Read all sections through 'The Decoder Side'; skim the training section."
         },
         {
@@ -344,7 +344,7 @@
           "arxiv": "1706.03762",
           "minutes": 50,
           "why": "Introduced the Transformer, the architecture underlying essentially every modern LLM.",
-          "focus": "Read the abstract, introduction, Section 3 (model architecture, especially 3.2 on attention), and Section 4 (why self-attention). Skim results."
+          "focus": "Read the abstract, introduction, Section 3 (especially 3.2, attention), and Section 4 (why self-attention). Skim results."
         },
         {
           "id": "s03m03r05",
@@ -356,8 +356,8 @@
           "url": "https://www.youtube.com/watch?v=9-Jl0dxWQs8",
           "youtube": "9-Jl0dxWQs8",
           "minutes": 23,
-          "why": "Explores how the feed-forward (MLP) layers could store factual associations, and introduces superposition — background for interpretability research in later stages.",
-          "focus": "Follow the worked example of a fact being retrieved, and the closing discussion of superposition.",
+          "why": "Explores how MLP layers might store facts and introduces superposition, background for later interpretability stages.",
+          "focus": "Follow the worked example of retrieving a fact and the closing discussion of superposition.",
           "optional": true
         }
       ],
@@ -439,8 +439,8 @@
     {
       "id": "s03m04",
       "title": "Build a GPT",
-      "goal": "Build and explain a small decoder-only Transformer language model, including how text is turned into tokens, and contrast it with encoder models like BERT.",
-      "guide": "This is the capstone of the technical half so far. Code along with Karpathy's 'Let's build GPT' (it builds on the micrograd video from Stage 2), reading Alammar's Illustrated GPT-2 alongside it for diagrams. Then watch the tokenizer video, which explains many surprising LLM failures. The GPT-2 and BERT papers are optional primary sources that show the two main ways Transformers were used before chat assistants. Key terms: 'tokenization' splits text into tokens from a fixed vocabulary; 'byte-pair encoding' (BPE) builds that vocabulary by repeatedly merging the most frequent adjacent pair of symbols; 'decoder-only' means the model uses only masked self-attention blocks and generates text left to right; 'autoregressive' means each new token is generated conditioned on all previous ones and then fed back in; the 'context window' is the maximum number of tokens the model can attend to at once.",
+      "goal": "Build and explain a small decoder-only Transformer, including tokenization, and contrast it with encoder models like BERT.",
+      "guide": "Code along with Karpathy's 'Let's build GPT' (builds on Stage 2's micrograd), using Alammar's Illustrated GPT-2 for diagrams. Then watch the tokenizer video. GPT-2 and BERT papers are optional. Key terms: 'tokenization' (splitting text into vocabulary tokens); 'byte-pair encoding' (BPE, builds the vocabulary by merging frequent symbol pairs); 'decoder-only' (masked self-attention, generating left to right); 'autoregressive' (each token conditioned on all previous ones); 'context window' (max tokens attended at once).",
       "resources": [
         {
           "id": "s03m04r01",
@@ -452,8 +452,8 @@
           "url": "https://www.youtube.com/watch?v=kCc8FmEb1nY",
           "youtube": "kCc8FmEb1nY",
           "minutes": 120,
-          "why": "Writing a GPT yourself makes the Transformer concrete and demystifies what a 'language model' is — the object HAI researchers study in every later stage.",
-          "focus": "Code along. Make sure you understand the bigram baseline, how self-attention is built with a triangular mask, and why scores are scaled before softmax."
+          "why": "Writing a GPT yourself demystifies what a language model is, the object HAI researchers study later.",
+          "focus": "Code along: understand the bigram baseline, the triangular mask, and why scores are scaled before softmax."
         },
         {
           "id": "s03m04r02",
@@ -478,8 +478,8 @@
           "url": "https://www.youtube.com/watch?v=zduSFxRajkE",
           "youtube": "zduSFxRajkE",
           "minutes": 130,
-          "why": "Tokenization explains many odd LLM behaviors users encounter (trouble with spelling, arithmetic, or some languages) — useful for interpreting failures in user studies.",
-          "focus": "Watch the opening on why tokenization matters, the BPE implementation, and the closing discussion of tokenization-related oddities. Skim the middle on specific libraries."
+          "why": "Tokenization explains odd LLM failures (spelling, arithmetic, some languages), useful for interpreting user-study failures.",
+          "focus": "Watch the opening, the BPE implementation, and the closing on tokenization oddities. Skim the library-specific middle."
         },
         {
           "id": "s03m04r04",
@@ -491,8 +491,8 @@
           "url": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf",
           "listen": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf",
           "minutes": 45,
-          "why": "The GPT-2 paper showed that a large language model trained only to predict the next word could attempt many tasks without task-specific training — the seed of prompting.",
-          "focus": "Read the abstract, introduction, and Section 2 on the approach and the WebText dataset. Skim individual task results.",
+          "why": "Showed a next-word predictor could attempt many tasks without task-specific training, the seed of prompting.",
+          "focus": "Read the abstract, introduction, and Section 2 (approach, WebText dataset). Skim task results.",
           "optional": true
         },
         {
@@ -505,8 +505,8 @@
           "url": "https://arxiv.org/abs/1810.04805",
           "arxiv": "1810.04805",
           "minutes": 40,
-          "why": "The influential encoder-only counterpart to GPT; understanding the contrast clarifies why chat assistants are built on decoder-only models.",
-          "focus": "Read the abstract, introduction, and Section 3 on the pre-training tasks (masked language modeling and next sentence prediction).",
+          "why": "The encoder-only counterpart to GPT; the contrast clarifies why chat assistants use decoder-only models.",
+          "focus": "Read the abstract, introduction, and Section 3 on pre-training (masked language modeling, next sentence prediction).",
           "optional": true
         }
       ],

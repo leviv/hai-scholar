@@ -3,13 +3,13 @@
   "number": 6,
   "title": "Explainability and Interpretability",
   "subtitle": "What explanations are, how they are made, and when they mislead",
-  "overview": "Stage 5 showed that people need to calibrate their trust in automation; explanations are the most common proposed fix. This stage shows that 'explanation' means different things to ML researchers, social scientists and end users, that popular explanation methods can mislead, and that an LLM's account of its own reasoning is not guaranteed to reflect what it computed. It ends with mechanistic interpretability, which tries to reverse-engineer the Transformers you studied in Stage 3.",
+  "overview": "Explanations are the usual proposed fix for miscalibrated trust. This stage covers what 'explanation' means to different groups, how popular methods mislead, why an LLM's account of its reasoning may not match its computation, and mechanistic interpretability. You need this to judge explanation studies.",
   "modules": [
     {
       "id": "s06m01",
       "title": "What is an explanation?",
-      "goal": "Explain what social science says about human explanation, the different goals of interpretability, and how interpretability should be evaluated.",
-      "guide": "Read Miller first: it is long, so focus on its four main findings about how people explain. Lipton then takes apart the word 'interpretability' and shows it covers several different goals and properties. Doshi-Velez and Kim propose how to evaluate interpretability scientifically. Key terms: interpretability (the degree to which a person can understand why a model did what it did); transparency (understanding how the model works internally) versus post-hoc explanation (explaining a model's output after the fact without opening it up); contrastive explanation (answering 'why P rather than Q?'); explainee (the person receiving the explanation).",
+      "goal": "Explain what social science says about how people explain, the different goals of interpretability, and how to evaluate it.",
+      "guide": "Read Miller first, focusing on his four main findings. Then read Lipton, who shows 'interpretability' covers several goals, and Doshi-Velez and Kim on evaluating it. Key terms: interpretability (how well a person can understand why a model acted); transparency (understanding the model's internals); post-hoc explanation (explaining an output without opening the model); contrastive explanation (answering 'why P rather than Q?'); explainee (who receives the explanation).",
       "resources": [
         {
           "id": "s06m01r01",
@@ -21,8 +21,8 @@
           "url": "https://arxiv.org/abs/1706.07269",
           "arxiv": "1706.07269",
           "minutes": 60,
-          "why": "The most cited bridge between XAI and the social science of explanation; it argues XAI should be built on how people actually explain.",
-          "focus": "Sections 1 and 2 including the four major findings; skim the remaining sections and read the conclusion.",
+          "why": "Grounds XAI in social science research on how people actually explain things.",
+          "focus": "Sections 1 and 2, including the four major findings; skim the rest and read the conclusion.",
           "optional": false
         },
         {
@@ -35,7 +35,7 @@
           "url": "https://arxiv.org/abs/1606.03490",
           "arxiv": "1606.03490",
           "minutes": 30,
-          "why": "Shows that 'interpretable' is used for several different goals and properties, so you should always ask which one a paper means.",
+          "why": "Shows 'interpretable' names several different goals, so always ask which one a paper means.",
           "optional": false
         },
         {
@@ -48,7 +48,7 @@
           "url": "https://arxiv.org/abs/1702.08608",
           "arxiv": "1702.08608",
           "minutes": 30,
-          "why": "Gives the standard three-level taxonomy for evaluating interpretability, which HAI studies use to describe their own designs.",
+          "why": "Gives the standard three-level taxonomy for evaluating interpretability, which HAI studies use to describe their designs.",
           "focus": "Sections 1-3, especially the taxonomy of evaluation approaches.",
           "optional": false
         }
@@ -144,8 +144,8 @@
     {
       "id": "s06m02",
       "title": "Explanation techniques and their limits",
-      "goal": "Explain how LIME, SHAP and Integrated Gradients produce explanations, how sanity checks reveal misleading ones, and Rudin's case for interpretable models.",
-      "guide": "Use Molnar's book chapters as the gentle introduction, then read the LIME and SHAP papers. Integrated Gradients introduces the idea of 'axioms' an attribution method should satisfy. Adebayo et al. show that some popular saliency maps barely depend on the model at all. Rudin argues that for high-stakes decisions you should not be explaining black boxes at all. Key terms: feature attribution (assigning each input feature a share of credit for the output); local explanation (explaining one prediction, not the whole model); surrogate model (a simple model that imitates a complex one near an input); Shapley value (a method from game theory for fairly dividing a payoff among players); saliency map (an image highlighting which pixels mattered); baseline (a reference input, such as a black image, to compare against).",
+      "goal": "Explain how LIME, SHAP and Integrated Gradients work, how sanity checks expose misleading explanations, and Rudin's case for interpretable models.",
+      "guide": "Start with Molnar's chapters, then LIME and SHAP. Integrated Gradients adds axioms attribution should satisfy. Adebayo et al. show some saliency maps barely depend on the model. Rudin opposes explaining black boxes in high-stakes decisions. Key terms: feature attribution (credit per input feature); local explanation (one prediction); surrogate model (simple local imitator); Shapley value (game-theory payoff split); saliency map (pixels that mattered); baseline (reference input, e.g., a black image).",
       "resources": [
         {
           "id": "s06m02r01",
@@ -157,8 +157,8 @@
           "url": "https://christophm.github.io/interpretable-ml-book/lime.html",
           "listen": "https://christophm.github.io/interpretable-ml-book/lime.html",
           "minutes": 40,
-          "why": "The standard free textbook on explanation methods, with clear, non-mathematical chapters on each technique.",
-          "focus": "The linked LIME chapter, then the SHAP and Saliency Maps chapters in the same book.",
+          "why": "A free textbook with clear, non-mathematical chapters on each explanation method.",
+          "focus": "The linked LIME chapter, then the SHAP and Saliency Maps chapters.",
           "optional": false
         },
         {
@@ -171,8 +171,8 @@
           "url": "https://arxiv.org/abs/1602.04938",
           "arxiv": "1602.04938",
           "minutes": 35,
-          "why": "LIME is one of the most used explanation methods, and the paper includes user studies of whether explanations help people judge a model.",
-          "focus": "Sections 1-3 (the method) and the user experiments, including the husky-versus-wolf study.",
+          "why": "Introduces LIME, a widely used method, with user studies on whether explanations help people judge models.",
+          "focus": "Sections 1-3 (the method) and the user experiments, including husky versus wolf.",
           "optional": false
         },
         {
@@ -185,8 +185,8 @@
           "url": "https://arxiv.org/abs/1705.07874",
           "arxiv": "1705.07874",
           "minutes": 35,
-          "why": "SHAP is the most widely deployed attribution method in industry; this paper explains what it guarantees.",
-          "focus": "Sections 1-3: the class of additive feature attribution methods and the three properties. Skim the estimation methods.",
+          "why": "Explains what SHAP, the most widely deployed attribution method in industry, guarantees.",
+          "focus": "Sections 1-3: additive feature attribution methods and the three properties. Skim estimation methods.",
           "optional": false
         },
         {
@@ -199,7 +199,7 @@
           "url": "https://arxiv.org/abs/1703.01365",
           "arxiv": "1703.01365",
           "minutes": 30,
-          "why": "Introduces Integrated Gradients and the idea of judging attribution methods by axioms rather than by whether their output looks plausible.",
+          "why": "Introduces Integrated Gradients and judging attribution methods by axioms, not by plausible-looking output.",
           "focus": "Sections 1-3 (the two axioms and the method).",
           "optional": false
         },
@@ -213,7 +213,7 @@
           "url": "https://arxiv.org/abs/1810.03292",
           "arxiv": "1810.03292",
           "minutes": 35,
-          "why": "Shows that an explanation can look convincing while telling you almost nothing about the model, a central caution for any user study of explanations.",
+          "why": "Shows a convincing-looking explanation can reveal almost nothing about the model, a key caution for user studies.",
           "focus": "Sections 1-3 and the randomization test figures.",
           "optional": false
         },
@@ -227,7 +227,7 @@
           "url": "https://arxiv.org/abs/1811.10154",
           "arxiv": "1811.10154",
           "minutes": 35,
-          "why": "An influential argument against post-hoc explanation in high-stakes settings such as criminal justice and healthcare.",
+          "why": "Argues against post-hoc explanation in high-stakes settings such as criminal justice and healthcare.",
           "optional": false
         }
       ],
@@ -323,7 +323,7 @@
       "id": "s06m03",
       "title": "Human-centered XAI",
       "goal": "Explain how HCI researchers design and evaluate explanations around users' questions, and why faithfulness differs from plausibility.",
-      "guide": "Liao, Gruen and Miller start from what practitioners and users actually ask about AI. Wang et al. connect theories of human reasoning to specific XAI techniques. Kulesza et al. show explanations as part of a two-way interaction where users also correct the model. Jacovi and Goldberg give the crucial distinction between an explanation being convincing and being accurate. Ehsan and Riedl (optional) widen the view to social context. Key terms: XAI question bank (a list of typical user questions, such as 'why' or 'what if'); counterfactual explanation (what would have to change for a different outcome); faithfulness (how accurately an explanation reflects the model's real reasoning); plausibility (how convincing an explanation is to people); sociotechnical (involving both technology and the people and institutions around it).",
+      "guide": "Liao, Gruen and Miller start from what users ask. Wang et al. link human reasoning theories to XAI techniques. Kulesza et al. let users correct the model. Jacovi and Goldberg separate convincing from accurate. Ehsan and Riedl (optional) add social context. Key terms: XAI question bank (typical user questions); counterfactual explanation (what change flips the outcome); faithfulness (matches the model's real reasoning); plausibility (seems convincing); sociotechnical (technology plus people, institutions).",
       "resources": [
         {
           "id": "s06m03r01",
@@ -335,8 +335,8 @@
           "url": "https://arxiv.org/abs/2001.02478",
           "arxiv": "2001.02478",
           "minutes": 40,
-          "why": "The XAI question bank is a widely used tool for designing explanations around user needs.",
-          "focus": "The method (interviews with practitioners), the question bank table, and the design implications.",
+          "why": "Provides the XAI question bank, a widely used tool for designing explanations around user needs.",
+          "focus": "The method (practitioner interviews), the question bank table, and the design implications.",
           "optional": false
         },
         {
@@ -348,7 +348,7 @@
           "venue": "CHI",
           "url": "https://doi.org/10.1145/3290605.3300831",
           "minutes": 40,
-          "why": "Links theories of human reasoning and cognitive biases to XAI techniques, and applies them in a clinical tool.",
+          "why": "Links theories of human reasoning and cognitive biases to XAI techniques, applied in a clinical tool.",
           "focus": "The conceptual framework figure, the section on mitigating cognitive biases, and the clinical case study.",
           "optional": false
         },
@@ -361,8 +361,8 @@
           "venue": "IUI",
           "url": "https://doi.org/10.1145/2678025.2701399",
           "minutes": 35,
-          "why": "Treats explanation as a two-way loop: the system explains itself and the user corrects it, which is central to interactive ML.",
-          "focus": "The principles of explainability and correctability, the EluciDebug prototype, and the main results.",
+          "why": "Treats explanation as a two-way loop: the system explains itself and the user corrects it.",
+          "focus": "The explainability and correctability principles, the EluciDebug prototype, and the main results.",
           "optional": false
         },
         {
@@ -389,7 +389,7 @@
           "url": "https://arxiv.org/abs/2002.01092",
           "arxiv": "2002.01092",
           "minutes": 30,
-          "why": "Argues that understanding 'who' the human is, including values and social context, is essential to XAI.",
+          "why": "Argues XAI must understand who the human is, including their values and social context.",
           "optional": true
         }
       ],
@@ -484,8 +484,8 @@
     {
       "id": "s06m04",
       "title": "Do LLMs explain themselves faithfully?",
-      "goal": "Explain the evidence that chain-of-thought explanations can be unfaithful, how faithfulness is tested, and what this means for users who read them.",
-      "guide": "Recall chain-of-thought from Stage 4: the model writes its reasoning before answering. Turpin et al. show that those written steps can leave out what actually drove the answer. Lanham et al. test faithfulness by tampering with the reasoning and seeing whether the answer changes. Chen et al. extend the question to recent 'reasoning models'. Kadavath et al. (optional) ask a related question: can models tell when they know the answer? Key terms: unfaithful explanation (a plausible account that does not reflect the actual cause of the output); biasing feature (a cue added to the prompt that pushes the model toward an answer); post-hoc rationalization (an explanation built to justify an answer already chosen); calibration (whether stated confidence matches actual accuracy).",
+      "goal": "Explain the evidence that chain-of-thought explanations can be unfaithful, how faithfulness is tested, and what it means for users.",
+      "guide": "In chain-of-thought, the model reasons before answering. Turpin et al. show it can omit what drove the answer. Lanham et al. tamper with the reasoning to test faithfulness. Chen et al. test reasoning models. Kadavath et al. (optional) study model self-knowledge. Key terms: unfaithful explanation (plausible but not the real cause); biasing feature (prompt cue pushing an answer); post-hoc rationalization (justifying a chosen answer); calibration (confidence matching accuracy).",
       "resources": [
         {
           "id": "s06m04r01",
@@ -511,7 +511,7 @@
           "url": "https://arxiv.org/abs/2307.13702",
           "arxiv": "2307.13702",
           "minutes": 35,
-          "why": "Introduces intervention tests for chain-of-thought faithfulness and finds that it varies with task and model size.",
+          "why": "Introduces intervention tests for chain-of-thought faithfulness and finds it varies with task and model size.",
           "focus": "Sections 1-2 (the interventions) and the results on model size.",
           "optional": false
         },
@@ -525,7 +525,7 @@
           "url": "https://arxiv.org/abs/2505.05410",
           "arxiv": "2505.05410",
           "minutes": 35,
-          "why": "Tests whether the visible reasoning of current reasoning models reveals when they used a hint, which matters for anyone relying on reasoning traces for oversight.",
+          "why": "Tests whether reasoning models' visible reasoning reveals hint use, which matters for oversight via reasoning traces.",
           "focus": "Abstract, introduction and main results on how often hint use is verbalized.",
           "optional": false
         },
@@ -635,8 +635,8 @@
     {
       "id": "s06m05",
       "title": "Mechanistic interpretability",
-      "goal": "Explain the core ideas of mechanistic interpretability (features, circuits, superposition, sparse dictionary learning) and what they have revealed about language models.",
-      "guide": "This module goes inside the model. Start with 'Zoom In', which sets out the research program on image models. The 'Mathematical Framework' paper applies it to Transformers; read it slowly with your Stage 3 notes. 'Toy Models of Superposition' explains why single neurons are often hard to interpret, and the two Monosemanticity papers show how sparse autoencoders get around this, first on a tiny model and then on a production model. 'Biology of a Large Language Model' (optional) traces whole computations. Key terms: feature (a property of the input that the network represents, like 'curve' or 'Golden Gate Bridge'); circuit (features connected by weights that implement a computation); polysemantic neuron (one neuron responding to several unrelated things); superposition (representing more features than there are dimensions); residual stream (the running vector each Transformer layer reads from and adds to); sparse autoencoder (a network trained to rewrite activations as a few active features out of many).",
+      "goal": "Explain the core ideas of mechanistic interpretability (features, circuits, superposition, sparse dictionary learning) and what they reveal about language models.",
+      "guide": "Start with 'Zoom In', then 'Mathematical Framework' using Stage 3 notes. 'Toy Models of Superposition' explains uninterpretable neurons; Monosemanticity papers fix this with sparse autoencoders. 'Biology of a Large Language Model' is optional. Key terms: feature (represented input property); circuit (features linked into a computation); polysemantic neuron (fires for unrelated things); superposition (more features than dimensions); residual stream (running vector all layers update); sparse autoencoder (rewrites activations as few features).",
       "resources": [
         {
           "id": "s06m05r01",
@@ -648,7 +648,7 @@
           "url": "https://distill.pub/2020/circuits/zoom-in/",
           "listen": "https://distill.pub/2020/circuits/zoom-in/",
           "minutes": 35,
-          "why": "The manifesto of mechanistic interpretability, written accessibly and full of concrete examples.",
+          "why": "Sets out the mechanistic interpretability program accessibly, with many concrete examples.",
           "optional": false
         },
         {
@@ -661,8 +661,8 @@
           "url": "https://transformer-circuits.pub/2021/framework/index.html",
           "listen": "https://transformer-circuits.pub/2021/framework/index.html",
           "minutes": 75,
-          "why": "Gives the conceptual tools (residual stream, attention-head circuits, induction heads) used in most later work on Transformers.",
-          "focus": "The summary, the residual stream section, one-layer models, and the two-layer induction head section. Skip the detailed math on a first pass.",
+          "why": "Gives the core tools (residual stream, attention-head circuits, induction heads) used in later Transformer work.",
+          "focus": "Summary, residual stream, one-layer models, and two-layer induction heads. Skip detailed math at first.",
           "optional": false
         },
         {
@@ -675,8 +675,8 @@
           "url": "https://arxiv.org/abs/2209.10652",
           "arxiv": "2209.10652",
           "minutes": 45,
-          "why": "Explains why individual neurons are often uninterpretable, which motivates the dictionary-learning methods below.",
-          "focus": "The introduction and key results summary, plus the first demonstration of superposition. Skim the geometry sections.",
+          "why": "Explains why individual neurons are often uninterpretable, motivating the dictionary-learning methods below.",
+          "focus": "Introduction, key results summary, and the first superposition demonstration. Skim the geometry sections.",
           "optional": false
         },
         {
@@ -689,8 +689,8 @@
           "url": "https://transformer-circuits.pub/2023/monosemantic-features/index.html",
           "listen": "https://transformer-circuits.pub/2023/monosemantic-features/index.html",
           "minutes": 45,
-          "why": "Shows that sparse autoencoders can split a small model's activations into far more interpretable features than its neurons.",
-          "focus": "The summary of results, the problem setup, and the detailed investigations of a few features.",
+          "why": "Shows sparse autoencoders split a small model's activations into features far more interpretable than neurons.",
+          "focus": "The results summary, the problem setup, and the detailed investigations of a few features.",
           "optional": false
         },
         {
@@ -703,8 +703,8 @@
           "url": "https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html",
           "listen": "https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html",
           "minutes": 45,
-          "why": "Scales dictionary learning to a production model and finds abstract and safety-relevant features that can be used to steer behavior.",
-          "focus": "The key results, the feature examples (including the Golden Gate Bridge feature), feature steering, and the safety-relevant features section.",
+          "why": "Scales dictionary learning to a production model, finding abstract, safety-relevant features usable for steering behavior.",
+          "focus": "Key results, feature examples (including Golden Gate Bridge), feature steering, and safety-relevant features.",
           "optional": false
         },
         {
@@ -717,8 +717,8 @@
           "url": "https://transformer-circuits.pub/2025/attribution-graphs/biology.html",
           "listen": "https://transformer-circuits.pub/2025/attribution-graphs/biology.html",
           "minutes": 60,
-          "why": "Traces specific computations inside a production model, including a case study on chain-of-thought faithfulness that links back to module 4.",
-          "focus": "The introduction, then the case studies on multi-step reasoning, planning in poems, and chain-of-thought faithfulness.",
+          "why": "Traces specific computations in a production model, including a chain-of-thought faithfulness case linked to module 4.",
+          "focus": "Introduction, then case studies on multi-step reasoning, planning in poems, and chain-of-thought faithfulness.",
           "optional": true
         }
       ],

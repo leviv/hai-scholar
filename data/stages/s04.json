@@ -3,13 +3,13 @@
   "number": 4,
   "title": "From Language Models to Assistants",
   "subtitle": "Pretraining, scale, RLHF, prompting, tools",
-  "overview": "Stage 3 showed you how a Transformer predicts the next token. This stage follows that next-token predictor as it becomes a chat assistant: pretraining at scale, fine-tuning on human preferences, prompting, retrieval and tool use, and the debate over what these systems really are. For an HAI researcher the key point is that human judgment is built into modern assistants: the people who write demonstrations and rank outputs are themselves part of a human-AI interaction.",
+  "overview": "How a next-token predictor becomes a chat assistant: pretraining, tuning on human preferences, prompting, retrieval, tool use, and debates over what LLMs are. For HAI, human judgment is built in: the people who write demonstrations and rank outputs are part of a human-AI interaction.",
   "modules": [
     {
       "id": "s04m01",
       "title": "Pretraining and scale",
       "goal": "Explain how a base model is pretrained, what scaling laws predict, and how in-context learning differs from fine-tuning.",
-      "guide": "Start with Karpathy's one-hour talk for the big picture, then read the GPT-3 paper's introduction for in-context learning. Read Kaplan et al. and Chinchilla as a pair: the second revises the first's advice on how to spend a compute budget. Key terms: pretraining (training on a huge text corpus to predict the next token); base model (the result, a document completer rather than an assistant); tokens (the chunks of text the model reads and predicts); compute (total arithmetic spent on training, measured in FLOPs); scaling law (an empirical formula, here a power law, relating loss to model size, data and compute); in-context learning (the model picks up a task from examples in the prompt, with no weight updates).",
+      "guide": "Start with Karpathy's one-hour talk, then the GPT-3 introduction. Pair Kaplan et al. with Chinchilla, which revises Kaplan's compute advice. Key terms: pretraining (next-token training on huge corpora); base model (a document completer, not an assistant); tokens (text chunks); compute (total training arithmetic, in FLOPs); scaling law (a power law linking loss to size, data and compute); in-context learning (learning a task from prompt examples, no weight updates).",
       "resources": [
         {
           "id": "s04m01r01",
@@ -21,8 +21,8 @@
           "url": "https://www.youtube.com/watch?v=zjkBMFhNj_g",
           "youtube": "zjkBMFhNj_g",
           "minutes": 60,
-          "why": "The clearest non-technical map of how a chat assistant is built (pretraining, fine-tuning, preference tuning) and of its security problems, from someone who built them.",
-          "focus": "Whole talk. Note the two-stage pipeline (base model, then assistant) and the closing section on jailbreaks and prompt injection.",
+          "why": "A non-technical map of how chat assistants are built and their security problems, by someone who built them.",
+          "focus": "Whole talk. Note the base-model-then-assistant pipeline and the closing section on jailbreaks and prompt injection.",
           "optional": false
         },
         {
@@ -35,8 +35,8 @@
           "url": "https://arxiv.org/abs/2005.14165",
           "arxiv": "2005.14165",
           "minutes": 60,
-          "why": "GPT-3 showed that one large model could perform many tasks from a prompt alone, which changed how people interact with AI: you instruct it in language instead of training it.",
-          "focus": "Abstract, Section 1 (including the zero-, one- and few-shot figure), Section 2 intro; skim Section 3 results; read the opening of Section 6 (Broader Impacts).",
+          "why": "GPT-3 showed one model could do many tasks from a prompt alone, shifting interaction from training to instructing.",
+          "focus": "Abstract, Section 1 (zero/one/few-shot figure), Section 2 intro; skim Section 3; Section 6 opening (Broader Impacts).",
           "optional": false
         },
         {
@@ -63,8 +63,8 @@
           "url": "https://arxiv.org/abs/2203.15556",
           "arxiv": "2203.15556",
           "minutes": 35,
-          "why": "The 'Chinchilla' paper corrected the field's scaling recipe, showing that data matters as much as parameter count.",
-          "focus": "Abstract, Section 1, Figure 1, and the comparison of Chinchilla with Gopher. Skim the three estimation approaches in Section 3.",
+          "why": "The 'Chinchilla' paper corrected the scaling recipe, showing data matters as much as parameter count.",
+          "focus": "Abstract, Section 1, Figure 1, and Chinchilla vs. Gopher. Skim Section 3's three estimation approaches.",
           "optional": false
         },
         {
@@ -77,7 +77,7 @@
           "url": "https://www.youtube.com/watch?v=7xTGNNLPyMI",
           "youtube": "7xTGNNLPyMI",
           "minutes": 210,
-          "why": "A long, general-audience walk through the whole pipeline, including the 'psychology' of LLMs (hallucinations, knowing what they don't know), which bears directly on user trust.",
+          "why": "A general-audience walk through the pipeline, including hallucinations and model self-knowledge, which affect user trust.",
           "focus": "Watch in chunks. The sections on hallucination and on post-training are most relevant to HAI.",
           "optional": true
         },
@@ -91,8 +91,8 @@
           "url": "https://arxiv.org/abs/2108.07258",
           "arxiv": "2108.07258",
           "minutes": 45,
-          "why": "Coined 'foundation model' and laid out the societal stakes of building many applications on a few huge models.",
-          "focus": "Section 1 (Introduction) only, especially the discussion of emergence and homogenization. The full report is over 200 pages.",
+          "why": "Coined 'foundation model' and laid out the societal stakes of building many applications on a few models.",
+          "focus": "Section 1 (Introduction) only, especially emergence and homogenization. The full report exceeds 200 pages.",
           "optional": true
         }
       ],
@@ -187,7 +187,7 @@
       "id": "s04m02",
       "title": "Learning from human feedback",
       "goal": "Explain the RLHF pipeline (demonstrations, reward model, RL fine-tuning) and identify where human judgments enter it.",
-      "guide": "Begin with the Hugging Face or Chip Huyen explainer for the overall pipeline. Then go back to the origin, Christiano et al. 2017, which learned a reward from human comparisons of robot and game behavior. Stiennon et al. apply the idea to summarization, and InstructGPT is the recipe behind ChatGPT. Key terms: SFT (supervised fine-tuning on human-written demonstrations); reward model (a network trained to predict which of two outputs a person would prefer, producing a score); policy (the model being trained to act, here the language model); PPO (a reinforcement learning algorithm that updates the policy in small, stable steps); KL penalty (a term that keeps the tuned model close to its starting point so it does not exploit quirks of the reward model). As you read, note who the labelers were and what instructions they followed.",
+      "guide": "Begin with the Hugging Face or Chip Huyen explainer. Then Christiano et al. 2017 (rewards from human comparisons), Stiennon et al. (summarization), and InstructGPT (ChatGPT's recipe). Key terms: SFT (fine-tuning on human demonstrations); reward model (predicts which output people prefer); policy (the model being trained); PPO (an RL algorithm with small, stable updates); KL penalty (keeps the model near its start, limiting reward exploits). Note who the labelers were.",
       "resources": [
         {
           "id": "s04m02r01",
@@ -211,7 +211,7 @@
           "url": "https://huyenchip.com/2023/05/02/rlhf.html",
           "listen": "https://huyenchip.com/2023/05/02/rlhf.html",
           "minutes": 35,
-          "why": "A longer explainer that walks through pretraining, SFT and RLHF with the data each phase needs, and discusses why RLHF seems to work.",
+          "why": "A longer explainer of pretraining, SFT and RLHF, the data each needs, and why RLHF seems to work.",
           "optional": false
         },
         {
@@ -225,7 +225,7 @@
           "arxiv": "1706.03741",
           "minutes": 30,
           "why": "The origin of learning a reward function from human comparisons: the core idea behind RLHF.",
-          "focus": "Sections 1 and 2 (the method and Figure 1). Skim the experiments; note how little human feedback was needed.",
+          "focus": "Sections 1-2 (method, Figure 1). Skim experiments; note how little human feedback was needed.",
           "optional": false
         },
         {
@@ -238,8 +238,8 @@
           "url": "https://arxiv.org/abs/2009.01325",
           "arxiv": "2009.01325",
           "minutes": 40,
-          "why": "The first large-scale application of RLHF to language, with a clear demonstration of what happens when you optimize too hard against a learned reward.",
-          "focus": "Sections 1 and 3 (method overview figure). In the results, find the analysis of optimizing against the reward model.",
+          "why": "The first large-scale RLHF for language, showing what happens when you over-optimize a learned reward.",
+          "focus": "Sections 1 and 3 (method overview figure), plus the results on optimizing against the reward model.",
           "optional": false
         },
         {
@@ -252,8 +252,8 @@
           "url": "https://arxiv.org/abs/2203.02155",
           "arxiv": "2203.02155",
           "minutes": 60,
-          "why": "InstructGPT is the direct precursor of ChatGPT, and its discussion of whose preferences the model is aligned to is essential HAI reading.",
-          "focus": "Sections 1 and 3 (methods, including the labelers), then Section 5 (Discussion), especially 'Who are we aligning to?'. Skim results.",
+          "why": "InstructGPT, ChatGPT's direct precursor, discusses whose preferences the model is aligned to, a core HAI question.",
+          "focus": "Sections 1 and 3 (methods, labelers), Section 5, especially 'Who are we aligning to?'. Skim results.",
           "optional": false
         }
       ],
@@ -349,7 +349,7 @@
       "id": "s04m03",
       "title": "Beyond RLHF",
       "goal": "Compare RLHF with Constitutional AI and DPO, and list fundamental limits of learning from human feedback.",
-      "guide": "Read the Helpful & Harmless paper first; it shows RLHF at scale and the tension between being helpful and being harmless. Constitutional AI then replaces most human harmlessness labels with AI feedback guided by written principles. DPO shows the same preference data can train a model without a separate reward model or RL loop. Finish with Casper et al.'s survey of what can go wrong. Key terms: preference model (another name for a reward model); red teaming (people deliberately trying to make a model misbehave); RLAIF (RL from AI feedback, where a model rather than a person labels which output is better); constitution (a short list of natural-language principles the AI uses to judge outputs). Keep in mind that raters, red-teamers and constitution writers are all humans shaping the system.",
+      "guide": "Start with Helpful & Harmless (RLHF at scale; helpful vs. harmless tension). Then Constitutional AI (principle-guided AI feedback replaces most human harmlessness labels), DPO (preference training without a reward model or RL), and Casper et al.'s failure survey. Key terms: preference model (a reward model); red teaming (deliberately provoking misbehavior); RLAIF (RL from AI feedback); constitution (written principles for judging outputs). Raters, red-teamers and constitution writers are humans shaping it.",
       "resources": [
         {
           "id": "s04m03r01",
@@ -361,8 +361,8 @@
           "url": "https://arxiv.org/abs/2204.05862",
           "arxiv": "2204.05862",
           "minutes": 45,
-          "why": "Documents RLHF for a general assistant, including how crowdworkers were recruited and instructed and the trade-off between helpfulness and harmlessness.",
-          "focus": "Section 1 (contributions and summary), Section 2 (data collection and crowdworker interface). Skim later sections.",
+          "why": "Documents RLHF for a general assistant, including crowdworker recruitment and the helpfulness-harmlessness trade-off.",
+          "focus": "Section 1 (contributions, summary), Section 2 (data collection, crowdworker interface). Skim later sections.",
           "optional": false
         },
         {
@@ -375,8 +375,8 @@
           "url": "https://arxiv.org/abs/2212.08073",
           "arxiv": "2212.08073",
           "minutes": 45,
-          "why": "Shows how written principles plus AI feedback can replace many human labels, which shifts where human judgment enters the system.",
-          "focus": "Section 1 (motivation and Figure 1), Section 3 (supervised critique-and-revision), Section 4 (RL from AI feedback).",
+          "why": "Shows written principles plus AI feedback replacing many human labels, shifting where human judgment enters.",
+          "focus": "Section 1 (motivation, Figure 1), Section 3 (supervised critique-and-revision), Section 4 (RL from AI feedback).",
           "optional": false
         },
         {
@@ -389,8 +389,8 @@
           "url": "https://arxiv.org/abs/2305.18290",
           "arxiv": "2305.18290",
           "minutes": 30,
-          "why": "DPO became a widely used, simpler alternative to PPO-based RLHF; knowing it helps you read current alignment papers.",
-          "focus": "Abstract, Section 1 and Figure 1. Skim the derivation in Section 4; focus on the idea, not the math.",
+          "why": "A widely used, simpler alternative to PPO-based RLHF; it helps you read current alignment papers.",
+          "focus": "Abstract, Section 1 and Figure 1. Skim Section 4's derivation; focus on the idea.",
           "optional": false
         },
         {
@@ -403,8 +403,8 @@
           "url": "https://arxiv.org/abs/2307.15217",
           "arxiv": "2307.15217",
           "minutes": 45,
-          "why": "A structured catalogue of RLHF's problems; the section on human feedback is a research agenda for HAI.",
-          "focus": "Section 1, Figure 1 (taxonomy), and Section 3.1 on challenges with obtaining human feedback. Skim the rest.",
+          "why": "A structured catalogue of RLHF's problems; its human-feedback section is a research agenda for HAI.",
+          "focus": "Section 1, Figure 1 (taxonomy), and Section 3.1 on obtaining human feedback. Skim the rest.",
           "optional": false
         }
       ],
@@ -499,8 +499,8 @@
     {
       "id": "s04m04",
       "title": "Prompting, reasoning and tools",
-      "goal": "Explain chain-of-thought prompting, retrieval-augmented generation and tool-using agents, and how each changes what the user sees and controls.",
-      "guide": "Read Lilian Weng's prompt engineering survey first for vocabulary. Then read chain-of-thought (CoT) and RAG, the two building blocks. ReAct combines reasoning with actions, and Weng's agents post shows how these pieces assemble into autonomous agents. Key terms: chain of thought (the model writes intermediate reasoning steps before answering); self-consistency (sample several reasoning paths and take the majority answer); RAG (retrieve documents and condition generation on them); parametric memory (knowledge stored in the weights) versus non-parametric memory (an external index that can be searched); agent (an LLM that plans and calls tools in a loop). For HAI, watch where reasoning traces are visible and editable by people.",
+      "goal": "Explain chain-of-thought prompting, retrieval-augmented generation and tool-using agents, and how each changes what users see and control.",
+      "guide": "Read Weng's prompting survey, then chain-of-thought (CoT) and RAG. ReAct adds actions to reasoning; Weng's agents post shows full agents. Key terms: chain of thought (reasoning steps before answering); self-consistency (majority vote over sampled reasoning); RAG (generation conditioned on retrieved documents); parametric vs. non-parametric memory (knowledge in weights vs. a searchable index); agent (an LLM calling tools in a loop). For HAI, note where people can see and edit reasoning.",
       "resources": [
         {
           "id": "s04m04r01",
@@ -525,7 +525,7 @@
           "url": "https://arxiv.org/abs/2201.11903",
           "arxiv": "2201.11903",
           "minutes": 30,
-          "why": "Chain-of-thought made model 'reasoning' visible to users; Stage 6 asks whether that visible reasoning is faithful.",
+          "why": "Made model 'reasoning' visible to users; Stage 6 asks whether that reasoning is faithful.",
           "focus": "Sections 1-3 and Figures 1-4. Note where the benefit appears with model scale.",
           "optional": false
         },
@@ -539,7 +539,7 @@
           "url": "https://arxiv.org/abs/2005.11401",
           "arxiv": "2005.11401",
           "minutes": 35,
-          "why": "RAG grounds answers in retrievable documents, the basis of citation features that let users check sources.",
+          "why": "RAG grounds answers in retrieved documents, the basis of citation features that let users check sources.",
           "focus": "Sections 1 and 2 (the two RAG variants), and the discussion of updating the index.",
           "optional": false
         },
@@ -553,7 +553,7 @@
           "url": "https://arxiv.org/abs/2210.03629",
           "arxiv": "2210.03629",
           "minutes": 40,
-          "why": "The template for most LLM agents, and it explicitly argues for interpretability and human correction of the agent's reasoning trace.",
+          "why": "The template for most LLM agents; it argues for interpretability and human correction of reasoning traces.",
           "focus": "Sections 1-3 and Figure 1; find the experiment where humans edit the model's thoughts.",
           "optional": false
         },
@@ -676,8 +676,8 @@
     {
       "id": "s04m05",
       "title": "What are LLMs, really?",
-      "goal": "Explain the main positions on whether LLMs 'understand', why role-play is a useful framing, and how the 'emergent abilities' debate turns on measurement.",
-      "guide": "Start with Shanahan's 'Talking About Large Language Models', which asks us to describe these systems without loaded words. Bender and Koller argue from first principles that a system trained only on text form cannot learn meaning. Shanahan, McDonell and Reynolds offer role-play as a middle path for describing dialogue agents. Then read Wei et al. on emergent abilities and Schaeffer et al.'s rebuttal as a pair. Key terms: anthropomorphism (attributing human traits to non-humans); form versus meaning (the text itself versus what it is about or intended to communicate); simulacrum (a character the model plays); emergent ability (one absent in smaller models but present in larger ones). These framings shape how users and researchers talk about AI, a theme Stage 5 picks up.",
+      "goal": "Explain the main positions on whether LLMs 'understand', why role-play is a useful framing, and how measurement drives the 'emergent abilities' debate.",
+      "guide": "Start with Shanahan's 'Talking About Large Language Models' on avoiding loaded words. Then Bender and Koller (form alone cannot yield meaning) and Shanahan, McDonell and Reynolds (role-play as middle path). Read Wei et al. on emergent abilities with Schaeffer et al.'s rebuttal. Key terms: anthropomorphism (giving non-humans human traits); form vs. meaning (text vs. what it communicates); simulacrum (a character the model plays); emergent ability (appears only in larger models).",
       "resources": [
         {
           "id": "s04m05r01",
@@ -689,7 +689,7 @@
           "url": "https://arxiv.org/abs/2212.03551",
           "arxiv": "2212.03551",
           "minutes": 35,
-          "why": "A careful argument against anthropomorphic language about LLMs, and a model of how to describe AI precisely.",
+          "why": "Argues against anthropomorphic language about LLMs and models how to describe AI precisely.",
           "optional": false
         },
         {
@@ -701,7 +701,7 @@
           "venue": "ACL",
           "url": "https://doi.org/10.18653/v1/2020.acl-main.463",
           "minutes": 35,
-          "why": "The 'octopus test' paper, the most cited argument that language models trained on form alone cannot learn meaning.",
+          "why": "The 'octopus test' paper, the most cited argument that models trained on form alone cannot learn meaning.",
           "focus": "Sections 1-4, including the octopus thought experiment.",
           "optional": false,
           "listen": "https://aclanthology.org/2020.acl-main.463.pdf"
@@ -716,7 +716,7 @@
           "url": "https://arxiv.org/abs/2305.16367",
           "arxiv": "2305.16367",
           "minutes": 30,
-          "why": "Gives HAI researchers vocabulary for chatbot behavior such as apparent deception or self-preservation, without claiming the model has those human traits.",
+          "why": "Gives vocabulary for chatbot behavior like apparent deception or self-preservation without attributing human traits.",
           "optional": false
         },
         {
@@ -729,7 +729,7 @@
           "url": "https://arxiv.org/abs/2206.07682",
           "arxiv": "2206.07682",
           "minutes": 25,
-          "why": "The influential claim that some abilities appear suddenly at scale, which drives both excitement and worry about unpredictable AI.",
+          "why": "The influential claim that some abilities appear suddenly at scale, fueling excitement and worry about unpredictability.",
           "focus": "Sections 1-3 and Figure 2.",
           "optional": false
         },
@@ -743,7 +743,7 @@
           "url": "https://arxiv.org/abs/2304.15004",
           "arxiv": "2304.15004",
           "minutes": 30,
-          "why": "A lesson in how the choice of metric shapes scientific conclusions, which applies directly to HAI evaluation.",
+          "why": "Shows how the choice of metric shapes scientific conclusions, a lesson for HAI evaluation.",
           "focus": "Sections 1-3 and Figure 2.",
           "optional": false
         },
@@ -757,8 +757,8 @@
           "url": "https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/",
           "listen": "https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/",
           "minutes": 90,
-          "why": "A long, intuitive essay on next-word generation, sampling temperature and why language turns out to be learnable.",
-          "focus": "The opening sections on adding one word at a time and on temperature are the most useful.",
+          "why": "An intuitive essay on next-word generation, sampling temperature and why language turns out to be learnable.",
+          "focus": "The opening sections on adding one word at a time and on temperature.",
           "optional": true
         }
       ],
