@@ -20,7 +20,7 @@ the app under **Settings → Voice**. The difference is large.
 
 ## How it works
 
-- **Path:** Stage 0 (how to learn) plus 11 stages of modules and sources. Each module has a short *Guide*, 3–6 core
+- **Path:** 11 stages of modules and sources. Each module has a short *Guide*, 3–6 core
   sources plus optional "go deeper" ones, a check-in (pass with 80%), and in later stages a *research exercise*.
 - **Navigation:** *Today* (your plan for the day: due reviews → next lesson → check-in, plus what's coming up and the
   whole path grouped by stage) → *module* (guide, prequestions, lessons, check-in) → *lesson* (why it matters, the
@@ -54,7 +54,7 @@ the app under **Settings → Voice**. The difference is large.
 ## How it helps you learn (and remember)
 
 Listening alone is close to rereading, which is a low-utility study technique. So the app wraps every source in the techniques with the
-strongest evidence from cognitive psychology. Stage 0 teaches the research, with sources:
+strongest evidence from cognitive psychology. The research behind each feature:
 
 | Feature | Technique | Evidence |
 |---|---|---|
@@ -75,7 +75,6 @@ binge a whole stage in one day. The gaps between sessions are where spacing does
 
 | # | Stage |
 |---|-------|
-| 0 | Learning how to learn (the science behind the app) |
 | 1 | Orientation: what is Human-AI Interaction? |
 | 2 | Machine learning from zero |
 | 3 | Language models and Transformers |

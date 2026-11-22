@@ -1,6 +1,6 @@
 // Spaced-repetition scheduling for quiz questions and free-recall prompts.
 //
-// Evidence base (see Stage 0):
+// Evidence base:
 //  - Spaced retrieval beats massed retrieval; expanding vs. equal intervals matters little
 //    (Latimier, Peyre & Ramus 2021), so this uses simple SM-2-style growing intervals.
 //  - Successive relearning (Rawson & Dunlosky 2011): items you miss are re-asked later in the
