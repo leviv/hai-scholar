@@ -31,7 +31,7 @@ class Natural extends EventTarget {
   // Real-time factor so far (generation time / audio time); < 1 means faster than real time.
   get rtf() { return this.stats.audio ? this.stats.ms / 1000 / this.stats.audio : null; }
 
-  load() {
+  load(prefer = "auto") {
     if (this.state === "ready" || this.state === "loading") { return this.ready; }
     this.state = "loading";
     this.emit();
@@ -76,12 +76,36 @@ class Natural extends EventTarget {
       this.worker.onerror = (e) => {
         this.state = "error";
         this.error = e.message || "Worker failed";
+        this.failPending();
         this.emit();
         reject(new Error(this.error));
       };
-      this.worker.postMessage({ type: "load" });
+      this.worker.postMessage({ type: "load", prefer });
     });
     return this.ready;
+  }
+
+  failPending() {
+    for (const p of this.pending.values()) { p.reject(new Error("cancelled")); }
+    this.pending.clear();
+  }
+
+  // Called when generation hangs (e.g. iOS killed the worker or WebGPU stalled).
+  // First retry on CPU; if that also hangs, give up on the natural voice for this session.
+  recover() {
+    if (this.state === "loading") { return; }
+    const wasGPU = this.device === "gpu";
+    if (this.worker) { this.worker.terminate(); this.worker = null; }
+    this.failPending();
+    this.stats = { audio: 0, ms: 0 };
+    if (wasGPU) {
+      this.state = "idle";
+      this.load("cpu").catch(() => {});
+    } else {
+      this.state = "error";
+      this.error = "it stopped responding";
+      this.emit();
+    }
   }
 
   synth(text, voice) {
