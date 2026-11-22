@@ -2,6 +2,7 @@ import { store, textCache } from "./store.js";
 import { extractResource } from "./extract.js";
 import { player, englishVoices, pickVoice } from "./player.js";
 import { natural, NATURAL_VOICES } from "./natural.js";
+import { pack, doneIds, totalBytes, clearAll } from "./audiopack.js";
 import { grade as srsGrade, outcomeFrom, dueKeys, forecast, cardCount, matureCount } from "./srs.js";
 import { loadSavedIndex, isSaved, markSaved, downloadable, savedCount, downloadAll, storageEstimate, importLibrary } from "./offline.js";
 
@@ -487,6 +488,61 @@ function introBlocks(r) {
   return out;
 }
 
+// The blocks the player reads for a lesson (intro + text), so pre-generated audio matches playback.
+async function lessonBlocks(r) {
+  const out = await extractResource(r, { includeAppendix: store.settings().includeAppendix });
+  markSaved(r);
+  return [...introBlocks(r), ...out.blocks];
+}
+
+// Settings: pre-generate natural-voice audio per stage or for everything.
+function wireAudioPack() {
+  const status = $("#apack-status");
+  const stopBtn = $("#apack-stop");
+  const stageRes = (st) => st.modules.flatMap((m) => m.resources).filter((r) => r.kind !== "video");
+  const render = async () => {
+    if (!status.isConnected) { pack.removeEventListener("change", render); natural.removeEventListener("change", render); return; }
+    const done = await doneIds();
+    for (const st of C.stages) {
+      const list = stageRes(st);
+      const n = list.filter((r) => done.has(r.id)).length;
+      const el = view.querySelector(`[data-apack-count="${st.id}"]`);
+      if (el) { el.textContent = `${n}/${list.length} sources saved${n === list.length ? " ✓" : ""}`; }
+    }
+    const busy = pack.running;
+    view.querySelectorAll("[data-apack], #apack-all, #apack-clear").forEach((b) => { b.disabled = busy; });
+    stopBtn.hidden = !busy;
+    const p = pack.state;
+    if (busy && p) {
+      status.textContent = pack.stopping ? "Stopping after this sentence…"
+        : natural.state === "loading" ? `Downloading natural voice… ${Math.round(natural.progress * 100)}%`
+        : `${p.label}: source ${Math.min(p.done + 1, p.total)} of ${p.total} · sentence ${p.sentence}/${p.sentences} · ${p.current}`;
+    } else if (p) {
+      status.textContent = p.error ? `Stopped: ${p.error}` : p.stopped ? `Paused. Saved ${p.done - p.failed.length} of ${p.total} sources; tap Generate to continue. ${fmtMB(await totalBytes())} used.` : `${p.label}: saved ${p.done - p.failed.length} of ${p.total} sources${p.failed.length ? ` · ${p.failed.length} couldn't be loaded` : ""}. ${fmtMB(await totalBytes())} used.`;
+    } else {
+      status.textContent = `${done.size} sources saved · ${fmtMB(await totalBytes())} used.`;
+    }
+  };
+  const fmtMB = (b) => `${Math.round(b / 1e6)} MB`;
+  const run = (list, label) => {
+    natural.unlock();
+    pack.generate(list, lessonBlocks, label).then(() => toast("Natural voice audio saved")).catch(() => {});
+  };
+  pack.addEventListener("change", render);
+  natural.addEventListener("change", render);
+  $("#apack-all").onclick = () => run(C.stages.flatMap(stageRes), "All stages");
+  view.querySelectorAll("[data-apack]").forEach((b) => {
+    b.onclick = () => { const st = C.stages.find((x) => x.id === b.dataset.apack); run(stageRes(st), `Stage ${st.number}`); };
+  });
+  stopBtn.onclick = () => pack.stop();
+  $("#apack-clear").onclick = async () => {
+    if (!confirm("Delete all saved natural-voice audio?")) { return; }
+    await clearAll();
+    render();
+  };
+  render();
+}
+
 // ---- lesson: overview + read-along player (or video) on one page
 let listenCleanup = null;
 
@@ -602,9 +658,9 @@ function viewLesson(id) {
   const vstat = $("#vstat", controls);
   const voiceStatus = () => {
     let msg = "";
-    if (player.wantsNatural && natural.state === "loading") { msg = `Downloading natural voice… ${Math.round(natural.progress * 100)}% · one time · using iPhone voice meanwhile`; }
-    else if (player.wantsNatural && natural.state === "error") { msg = "Natural voice couldn't load on this device, so using the iPhone voice."; }
-    else if (player.wantsNatural && player.naturalTooSlow) { msg = "Natural voice is too slow on this device, so using the iPhone voice."; }
+    if (player.wantsNatural && !player.packed && natural.state === "loading") { msg = `Downloading natural voice… ${Math.round(natural.progress * 100)}% · one time · using iPhone voice meanwhile`; }
+    else if (player.wantsNatural && !player.packed && natural.state === "error") { msg = "Natural voice couldn't load on this device, so using the iPhone voice."; }
+    else if (player.wantsNatural && !player.packed && player.naturalTooSlow) { msg = "Natural voice is too slow on this device, so using the iPhone voice."; }
     else if (player.playing && player.buffering) { msg = "Preparing audio…"; }
     vstat.hidden = !msg;
     vstat.textContent = msg;
@@ -1137,6 +1193,16 @@ async function viewSettings() {
       ${sw("includeAppendix", "Include appendices", "Papers stop at the references by default.")}
       ${sw("keepAwake", "Keep screen on while listening", "iOS pauses speech when a web app's screen locks, so this keeps it awake.")}
     </div>
+    ${s.voiceEngine === "natural" ? `<div class="section-label">Natural voice audio on this phone</div>
+    <div class="list" id="apack">
+      <div class="setting" style="flex-direction:column;align-items:stretch">
+        <div class="tiny muted">Generates the natural-voice audio ahead of time and saves it on your phone, so lessons start instantly and play offline. Keep the app open with the screen on while it works. It's slow: roughly as long as the audio itself on GPU phones, and longer on others. About 14 MB per hour of audio (the whole path is ~${Math.round(downloadable(allRes).reduce((n, r) => n + (r.minutes || 0), 0) / 60)} h).</div>
+        <div class="small" id="apack-status"></div>
+        <div class="btn-row" style="margin:4px 0 0"><button class="btn secondary" id="apack-all">Generate all</button><button class="btn ghost" id="apack-stop" hidden>Stop</button></div>
+      </div>
+      ${C.stages.map((st) => `<div class="setting"><label>Stage ${st.number} · ${esc(st.title)}<div class="tiny muted" data-apack-count="${st.id}"></div></label><button class="btn secondary" data-apack="${st.id}" style="width:auto">Generate</button></div>`).join("")}
+      <div class="setting"><button class="btn ghost" id="apack-clear">Delete saved audio</button></div>
+    </div>` : ""}
     <div class="section-label">Offline</div>
     <div class="list">
       <div class="setting" style="flex-direction:column;align-items:stretch">
@@ -1157,10 +1223,11 @@ async function viewSettings() {
     <div class="section-label">About</div>
     <div class="card small">
       <p style="margin-top:0"><b>What's here.</b> Every source in HAI Scholar is a real, published work: peer-reviewed papers, canonical preprints, textbooks, university-level courses, and widely respected explainers and lectures. Titles, authors and links were checked against arXiv, Crossref and YouTube records. The app writes only the short guides that say what to look for, the check-in questions and the exercises.</p>
-      <p><b>How listening works.</b> Text comes live from the original source (arXiv's HTML or PDF, the author's site, or a public reader service for pages that block other apps), and your iPhone's built-in voice reads it aloud.</p>
+      <p><b>How listening works.</b> Most texts are bundled with the app. The rest come live from the original source (arXiv, the author's site, or a public reader service). The natural voice runs on your phone, and its audio can be generated ahead of time and saved (Settings → Natural voice audio).</p>
       <p style="margin-bottom:0"><b>Curriculum:</b> ${C.stages.length} stages · ${C.order.length} modules · ${C.resources.size} sources · ${C.order.reduce((n, m) => n + m.quiz.length, 0)} questions.</p>
     </div>`;
 
+  if ($("#apack")) { wireAudioPack(); }
   for (const key of ["recallFirst", "recallPauses", "freeRecall", "skipCitations", "includeAppendix", "keepAwake"]) {
     $(`#sw-${key}`).onchange = (e) => store.setSetting(key, e.target.checked);
   }

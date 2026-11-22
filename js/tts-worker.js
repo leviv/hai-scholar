@@ -36,6 +36,22 @@ async function loadModel(prefer) {
   return { model, device: "cpu" };
 }
 
+// Compact storage for pre-generated audio: 32 kbps mono MP3 (~14 MB per hour of speech).
+let lame = null;
+async function toMp3(f32, rate) {
+  lame = lame || await import("https://cdn.jsdelivr.net/npm/@breezystack/lamejs@1.2.7/+esm");
+  const pcm = new Int16Array(f32.length);
+  for (let i = 0; i < f32.length; i++) { pcm[i] = Math.max(-1, Math.min(1, f32[i])) * 32767; }
+  const enc = new lame.Mp3Encoder(1, rate, 32);
+  const parts = [];
+  for (let i = 0; i < pcm.length; i += 1152) {
+    const b = enc.encodeBuffer(pcm.subarray(i, i + 1152));
+    if (b.length) { parts.push(b); }
+  }
+  parts.push(enc.flush());
+  return new Blob(parts, { type: "audio/mpeg" });
+}
+
 self.onmessage = (e) => {
   const msg = e.data;
   if (msg.type === "load") {
@@ -51,7 +67,7 @@ self.onmessage = (e) => {
       try {
         const t0 = performance.now();
         const audio = await withTimeout(tts.generate(msg.text, { voice: msg.voice }), 60000);
-        const blob = audio.toBlob();
+        const blob = msg.mp3 ? await toMp3(audio.audio, audio.sampling_rate) : audio.toBlob();
         self.postMessage({ type: "audio", id: msg.id, blob, seconds: audio.audio.length / audio.sampling_rate, ms: performance.now() - t0 });
       } catch (err) {
         self.postMessage({ type: "audio-error", id: msg.id, error: String(err && err.message || err) });
