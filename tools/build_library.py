@@ -3,10 +3,8 @@
 
 Input:  <lib>/raw/<id>.json   (from tools/collect_server.py + the in-browser collector)
         <lib>/licenses.json   (from tools/licenses.py)
-Output: data/texts/<id>.json + data/texts/index.json  -> openly licensed (Creative Commons / public
-                                                         domain) texts, published with the app
-        <lib>/hai-scholar-personal-library.json      -> everything else, for the owner's own device
-                                                         only (Settings -> Import personal library)
+Output: data/texts/<id>.json + data/texts/index.json  -> every text, bundled with the app (private repo).
+        Adds to what is already there; existing bundled texts are kept.
 Usage: python3 tools/build_library.py <lib>
 """
 import glob
@@ -95,18 +93,14 @@ def main():
             "id": rid, "title": r["title"], "authors": r["authors"], "year": r.get("year"), "url": r["url"],
             "license": lic or None, "source": d["source"], "blocks": blocks,
         }
-        if open_lic:
-            public[rid] = entry
-        else:
-            personal[rid] = entry
+        public[rid] = entry  # the repo is private, so every text is bundled with the app
 
-    for old in glob.glob("data/texts/*.json"):
-        os.remove(old)
     for rid, e in public.items():
         with open(f"data/texts/{rid}.json", "w") as fh:
             json.dump(e, fh, ensure_ascii=False, separators=(",", ":"))
     with open("data/texts/index.json", "w") as fh:
-        json.dump({"ids": sorted(public)}, fh, indent=0)
+        old = set(json.load(open("data/texts/index.json"))["ids"]) if os.path.exists("data/texts/index.json") else set()
+        json.dump({"ids": sorted(old | set(public))}, fh, indent=0)
     pack = {"kind": "hai-scholar-library", "built": time.strftime("%Y-%m-%d"),
             "note": "Personal study copies of papers whose licenses don't allow public redistribution. Do not publish.",
             "texts": {rid: {"blocks": e["blocks"], "source": e["source"]} for rid, e in personal.items()}}

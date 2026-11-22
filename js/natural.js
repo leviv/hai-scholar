@@ -67,7 +67,7 @@ class Natural extends EventTarget {
           if (m.type === "audio") {
             this.stats.audio += m.seconds;
             this.stats.ms += m.ms;
-            p.resolve({ url: URL.createObjectURL(m.blob), seconds: m.seconds });
+            p.resolve(p.raw ? m.blob : { url: URL.createObjectURL(m.blob), seconds: m.seconds });
           } else {
             p.reject(new Error(m.error));
           }
@@ -111,8 +111,19 @@ class Natural extends EventTarget {
   synth(text, voice) {
     const id = this.nextId++;
     return new Promise((resolve, reject) => {
+      if (!this.worker) { reject(new Error("model not loaded")); return; }
       this.pending.set(id, { resolve, reject });
       this.worker.postMessage({ type: "gen", id, text, voice });
+    });
+  }
+
+  // Returns the audio Blob itself (MP3 with mp3: true), for storing on the device.
+  synthBlob(text, voice, { mp3 = false } = {}) {
+    const id = this.nextId++;
+    return new Promise((resolve, reject) => {
+      if (!this.worker) { reject(new Error("model not loaded")); return; }
+      this.pending.set(id, { resolve, reject, raw: true });
+      this.worker.postMessage({ type: "gen", id, text, voice, mp3 });
     });
   }
 

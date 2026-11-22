@@ -3,6 +3,7 @@
 import { sentences, speakable } from "./extract.js";
 import { store } from "./store.js";
 import { natural } from "./natural.js";
+import { getClip, isDone } from "./audiopack.js";
 
 const synth = window.speechSynthesis;
 
@@ -71,6 +72,9 @@ class Player extends EventTarget {
     this.lastCheck = Math.max(this.i, firstReading);
     this.noPauses = false;
     this.blocks = blocks;
+    // Pre-generated audio for this source lets the natural voice play without loading the model.
+    this.packed = false;
+    isDone(res.id).then((v) => { if (this.res === res) { this.packed = v; this.emit(); } });
     this.updateMediaMetadata();
     this.emit();
   }
@@ -80,13 +84,13 @@ class Player extends EventTarget {
   get wantsNatural() { return store.settings().voiceEngine === "natural"; }
   // Falls back to the iPhone voice if the neural model can't keep up with real time on this device.
   get naturalTooSlow() { return natural.stats.audio >= 20 && natural.rtf > 1.15; }
-  get usingNatural() { return this.wantsNatural && natural.state === "ready" && !this.naturalTooSlow; }
+  get usingNatural() { return this.wantsNatural && (this.packed || (natural.state === "ready" && !this.naturalTooSlow)); }
 
   play(i = this.i) {
     if (!this.items.length) { return; }
     if (this.wantsNatural) {
       natural.unlock(); // must happen synchronously inside the tap
-      if (natural.state === "idle") {
+      if (natural.state === "idle" && !this.packed) {
         natural.load().then(() => this.emit()).catch(() => this.emit());
       }
     }
@@ -124,7 +128,11 @@ class Player extends EventTarget {
     if (this.clipVoice !== store.settings().naturalVoice) { this.resetClips(); }
     if (!this.clips.has(i) && this.items[i]) {
       const text = speakable(this.items[i].text, { skipCitations: store.settings().skipCitations }) || ".";
-      const p = natural.synth(text, store.settings().naturalVoice);
+      const voice = store.settings().naturalVoice;
+      // Stored clip first; otherwise generate live (if the model is loaded).
+      const p = getClip(text, voice).then((blob) => blob
+        ? { url: URL.createObjectURL(blob) }
+        : natural.state === "ready" ? natural.synth(text, voice) : Promise.reject(new Error("not stored")));
       p.catch(() => {});
       this.clips.set(i, p);
     }
@@ -150,7 +158,7 @@ class Player extends EventTarget {
       if (gen !== this.gen || !this.playing || !this.buffering) { return; }
       this.buffering = false;
       this.resetClips();
-      natural.recover();
+      if (natural.state === "ready") { natural.recover(); }
       this.speakSystem(gen);
     }, limit);
     p.then(({ url }) => {

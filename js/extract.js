@@ -4,7 +4,7 @@
 //   2. resource.listen URL (open HTML or PDF that allows cross-origin reads)
 //   3. the canonical URL directly (works when the site allows cross-origin reads)
 //   4. r.jina.ai reader proxy (public page -> plain text), for sites that block cross-origin reads
-// Nothing is bundled: text is always fetched from the original source at read time.
+// Bundled texts (data/texts) are used first; the rest are fetched from the original source at read time.
 
 import { textCache } from "./store.js";
 import { cleanBlocks } from "./clean.js";
@@ -71,12 +71,12 @@ export function looksLikeProse(blocks) {
   return alpha > 0.6 && avg > 3 && avg < 9;
 }
 
-// Texts bundled with the app (openly licensed works only; see tools/build_library.py).
+// Texts bundled with the app (see tools/build_library.py; the repo is private).
 async function fromHosted(res) {
   const data = await (await fetchOK(`data/texts/${res.textId || res.id}.json`)).json();
   const lic = (data.license || "").match(/licenses\/([a-z-]+)\/([\d.]+)/);
   const blocks = data.blocks;
-  blocks.label = `Bundled with the app · ${lic ? `CC ${lic[1].toUpperCase()} ${lic[2]}` : "open license"} · © the authors`;
+  blocks.label = `Bundled with the app${lic ? ` · CC ${lic[1].toUpperCase()} ${lic[2]}` : ""} · © the authors`;
   return blocks;
 }
 
