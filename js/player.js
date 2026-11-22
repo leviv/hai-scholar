@@ -144,7 +144,17 @@ class Player extends EventTarget {
     this.prefetch(i);
     this.buffering = true;
     this.emit();
+    // Never wait forever: if a sentence takes too long, speak it with the iPhone voice and reset the model.
+    const limit = Math.max(15000, this.items[i].text.length * 150);
+    const timer = setTimeout(() => {
+      if (gen !== this.gen || !this.playing || !this.buffering) { return; }
+      this.buffering = false;
+      this.resetClips();
+      natural.recover();
+      this.speakSystem(gen);
+    }, limit);
     p.then(({ url }) => {
+      clearTimeout(timer);
       if (gen !== this.gen || !this.playing) { return; }
       this.buffering = false;
       const el = natural.el;
@@ -156,8 +166,10 @@ class Player extends EventTarget {
       el.play().catch(() => { if (gen === this.gen && this.playing) { this.speakSystem(gen); } });
       this.emit();
     }).catch(() => {
+      clearTimeout(timer);
+      if (gen !== this.gen || !this.playing || !this.buffering) { return; }
       this.buffering = false;
-      if (gen === this.gen && this.playing) { this.speakSystem(gen); }
+      this.speakSystem(gen);
     });
   }
 

@@ -10,6 +10,10 @@ async function hasGPU() {
   try { return !!(self.navigator.gpu && await self.navigator.gpu.requestAdapter()); } catch { return false; }
 }
 
+function withTimeout(p, ms) {
+  return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timed out")), ms))]);
+}
+
 // GPU (WebGPU, fp32 weights ~326 MB) is many times faster than real time; CPU (WASM, q8 ~92 MB) is the fallback.
 async function loadModel(prefer) {
   const files = {};
@@ -22,6 +26,9 @@ async function loadModel(prefer) {
   if (prefer !== "cpu" && await hasGPU()) {
     try {
       const model = await KokoroTTS.from_pretrained(MODEL, { dtype: "fp32", device: "webgpu", progress_callback });
+      // Mobile WebGPU can load fine but then hang or return nothing; prove it works before using it.
+      const test = await withTimeout(model.generate("Hello.", { voice: "af_heart" }), 20000);
+      if (!test || !test.audio || !test.audio.length) { throw new Error("GPU produced no audio"); }
       return { model, device: "gpu" };
     } catch { /* fall back to CPU */ }
   }
@@ -43,7 +50,7 @@ self.onmessage = (e) => {
       if (msg.stale) { return; }
       try {
         const t0 = performance.now();
-        const audio = await tts.generate(msg.text, { voice: msg.voice });
+        const audio = await withTimeout(tts.generate(msg.text, { voice: msg.voice }), 60000);
         const blob = audio.toBlob();
         self.postMessage({ type: "audio", id: msg.id, blob, seconds: audio.audio.length / audio.sampling_rate, ms: performance.now() - t0 });
       } catch (err) {
