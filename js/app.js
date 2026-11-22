@@ -1116,7 +1116,6 @@ async function viewSettings() {
       ${sw("freeRecall", "Free recall after each source", "A 2-minute brain dump when you finish a source, then scheduled for review (retrieval practice).")}
       <div class="setting"><label for="limit">Max cards per review session</label><select id="limit" style="width:auto">${[15, 20, 30, 50, 100].map((n) => `<option ${n === s.dailyLimit ? "selected" : ""}>${n}</option>`).join("")}</select></div>
     </div>
-    <a class="card stage-card" href="#/module/s00m02" style="display:block"><b>The science behind these features</b><div class="small muted">Stage 0 covers the research on retrieval practice, spacing, prequestions, hypercorrection and successive relearning, with sources.</div></a>
     <div class="section-label">Listening</div>
     <div class="list">
       <div class="setting" style="flex-direction:column;align-items:stretch">
