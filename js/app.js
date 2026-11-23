@@ -2,7 +2,7 @@ import { store, textCache } from "./store.js";
 import { extractResource } from "./extract.js";
 import { player, englishVoices, pickVoice } from "./player.js";
 import { natural, NATURAL_VOICES } from "./natural.js";
-import { pack, doneIds, totalBytes, clearAll, exportAudio, importAudio } from "./audiopack.js";
+import { pack, doneIds, totalBytes, clearAll, exportAudio, importAudio, spokenTexts, hash } from "./audiopack.js";
 import { grade as srsGrade, outcomeFrom, dueKeys, forecast, cardCount, matureCount } from "./srs.js";
 import { loadSavedIndex, isSaved, markSaved, downloadable, savedCount, downloadAll, storageEstimate, importLibrary } from "./offline.js";
 
@@ -494,6 +494,18 @@ async function lessonBlocks(r) {
   markSaved(r);
   return [...introBlocks(r), ...out.blocks];
 }
+
+// Used by tools/make_audio.mjs: every sentence the player will speak in core (non-optional) lessons
+// whose text ships with the app, with default settings. Returns [{ id, clips: [[hash, text], ...] }].
+window.haiAudioPlan = async () => {
+  while (!C.stages.length) { await new Promise((r) => setTimeout(r, 100)); }
+  const out = [];
+  for (const r of C.resources.values()) {
+    if (r.optional || r.kind === "video" || !r.hosted) { continue; }
+    out.push({ id: r.id, clips: spokenTexts(await lessonBlocks(r)).map((t) => [hash(t), t]) });
+  }
+  return out;
+};
 
 // Settings: pre-generate natural-voice audio per stage or for everything.
 function wireAudioPack() {

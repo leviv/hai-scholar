@@ -355,12 +355,20 @@ export function sentences(text) {
   return out.flatMap((s) => (s.length > 420 ? s.split(/(?<=;)\s+/) : [s])).map((s) => s.trim()).filter(Boolean);
 }
 
+// "(Rosen, 1981; Autor et al., 1998; e.g.)" -> true. Every ;-separated part must look like a citation.
+function isCitation(inner) {
+  const body = inner.trim().replace(/^(?:see|e\.g\.|cf\.)\s*,?\s*/i, "").replace(/,?\s*(?:e\.g|i\.e|among others)\.?$/i, "");
+  const parts = body.split(";").map((x) => x.trim()).filter(Boolean);
+  return parts.length > 0 && parts.every((x) => x.length < 200 && /(?:19|20)\d{2}[a-z]?$/.test(x)
+    && (/\bet al\b|&|\band\b/.test(x) || /^[A-Z][A-Za-z'’-]+,?\s+(?:19|20)\d{2}[a-z]?$/.test(x)));
+}
+
 export function speakable(text, { skipCitations = true } = {}) {
   let t = text;
   if (skipCitations) {
-    t = t.replace(/\[(\d+[\s,–-]*)+\]/g, "")
-      .replace(/\((?:[^()]*?(?:et al\.?|&|and)[^()]*?,?\s*(?:19|20)\d{2}[a-z]?(?:[;,]\s*)?)+\)/g, "")
-      .replace(/\((?:[A-Z][A-Za-z'’-]+,?\s+(?:19|20)\d{2}[a-z]?(?:[;,]\s*)?)+\)/g, "");
+    // Simple, linear-time patterns only: nested quantifiers here used to freeze the app on long citation lists.
+    t = t.replace(/\[\d[\d\s,–-]*\]/g, "")
+      .replace(/\(([^()]*)\)/g, (m, inner) => (isCitation(inner) ? "" : m));
   }
   return t.replace(/https?:\/\/\S+/g, "link")
     .replace(/\[equation\]/g, "equation")

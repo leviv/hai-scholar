@@ -1,0 +1,7 @@
+{
+  "name": "hai-scholar-tools",
+  "private": true,
+  "type": "module",
+  "scripts": { "audio": "node make_audio.mjs" },
+  "dependencies": { "kokoro-js": "1.2.1", "@breezystack/lamejs": "1.2.7" }
+}

@@ -33,7 +33,7 @@ async function op(storeName, mode, fn) {
   });
 }
 
-function hash(s) {
+export function hash(s) {
   let h = 0x811c9dc5;
   for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); }
   return `${(h >>> 0).toString(36)}${s.length.toString(36)}`;
@@ -41,8 +41,31 @@ function hash(s) {
 
 const clipKey = (text, voice) => `${voice}|${hash(text)}`;
 
+// ---------- audio shipped with the app ----------
+// Core lessons have pre-made audio in data/audio/<voice>/ (made on a computer with tools/make_audio.mjs).
+// The phone downloads each sentence as it plays; the service worker keeps it for offline use.
+const hosted = new Map(); // voice -> Promise<Set of resource ids>
+function hostedIds(voice) {
+  if (!hosted.has(voice)) {
+    hosted.set(voice, fetch(`data/audio/${voice}/index.json`)
+      .then((r) => (r.ok ? r.json() : { ids: [] }))
+      .then((j) => new Set(j.ids || []))
+      .catch(() => new Set()));
+  }
+  return hosted.get(voice);
+}
+
+async function hostedClip(text, voice) {
+  try {
+    const r = await fetch(`data/audio/${voice}/${hash(text)}.mp3`);
+    return r.ok ? await r.blob() : null;
+  } catch { return null; }
+}
+
 export async function getClip(text, voice) {
-  try { return (await op("clips", "readonly", (s) => s.get(clipKey(text, voice)))) || null; } catch { return null; }
+  let blob = null;
+  try { blob = (await op("clips", "readonly", (s) => s.get(clipKey(text, voice)))) || null; } catch { /* no db */ }
+  return blob || hostedClip(text, voice);
 }
 
 async function hasClip(text, voice) {
@@ -58,6 +81,7 @@ export async function doneIds(voice = store.settings().naturalVoice) {
 }
 
 export async function isDone(resId, voice = store.settings().naturalVoice) {
+  if ((await hostedIds(voice)).has(resId)) { return true; }
   try { return (await op("done", "readonly", (s) => s.count(`${voice}|${resId}`))) > 0; } catch { return false; }
 }
 
