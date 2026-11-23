@@ -163,3 +163,46 @@ class Pack extends EventTarget {
 }
 
 export const pack = new Pack();
+
+// ---------- move audio between devices ----------
+// Generate on a computer (fast), export one file, AirDrop it to the phone, import. The phone never runs the model.
+// File layout: "HAIA1" + 4-byte header length + JSON header + clip bytes back to back.
+const MAGIC = "HAIA1";
+
+export async function exportAudio() {
+  const d = await db();
+  const entries = (name) => new Promise((resolve, reject) => {
+    const out = [];
+    const req = d.transaction(name).objectStore(name).openCursor();
+    req.onsuccess = () => { const c = req.result; if (!c) { resolve(out); return; } out.push([c.key, c.value]); c.continue(); };
+    req.onerror = () => reject(req.error);
+  });
+  const clips = await entries("clips");
+  const done = await entries("done");
+  const head = new TextEncoder().encode(JSON.stringify({ clips: clips.map(([k, b]) => [k, b.size]), done }));
+  const len = new Uint8Array(4);
+  new DataView(len.buffer).setUint32(0, head.length);
+  return new Blob([MAGIC, len, head, ...clips.map(([, b]) => b)], { type: "application/octet-stream" });
+}
+
+export async function importAudio(file, onProgress = () => {}) {
+  const magic = await file.slice(0, 5).text();
+  if (magic !== MAGIC) { throw new Error("That isn't an HAI Scholar audio file"); }
+  const len = new DataView(await file.slice(5, 9).arrayBuffer()).getUint32(0);
+  const head = JSON.parse(await file.slice(9, 9 + len).text());
+  let pos = 9 + len;
+  const total = head.clips.length;
+  for (let i = 0; i < total; i += 200) {
+    const batch = head.clips.slice(i, i + 200).map(([k, size]) => {
+      const b = file.slice(pos, pos + size, "audio/mpeg");
+      pos += size;
+      return [k, b];
+    });
+    // Read bytes before the transaction: iOS can't store a Blob that still points into a picked file.
+    const bufs = await Promise.all(batch.map(async ([k, b]) => [k, new Blob([await b.arrayBuffer()], { type: "audio/mpeg" })]));
+    await op("clips", "readwrite", (s) => { for (const [k, b] of bufs) { s.put(b, k); } });
+    onProgress(Math.min(i + 200, total), total);
+  }
+  await op("done", "readwrite", (s) => { for (const [k, v] of head.done) { s.put(v, k); } });
+  return { clips: total, sources: head.done.length };
+}

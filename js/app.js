@@ -2,7 +2,7 @@ import { store, textCache } from "./store.js";
 import { extractResource } from "./extract.js";
 import { player, englishVoices, pickVoice } from "./player.js";
 import { natural, NATURAL_VOICES } from "./natural.js";
-import { pack, doneIds, totalBytes, clearAll } from "./audiopack.js";
+import { pack, doneIds, totalBytes, clearAll, exportAudio, importAudio } from "./audiopack.js";
 import { grade as srsGrade, outcomeFrom, dueKeys, forecast, cardCount, matureCount } from "./srs.js";
 import { loadSavedIndex, isSaved, markSaved, downloadable, savedCount, downloadAll, storageEstimate, importLibrary } from "./offline.js";
 
@@ -535,6 +535,29 @@ function wireAudioPack() {
     b.onclick = () => { const st = C.stages.find((x) => x.id === b.dataset.apack); run(stageRes(st), `Stage ${st.number}`); };
   });
   stopBtn.onclick = () => pack.stop();
+  $("#apack-export").onclick = async () => {
+    status.textContent = "Packing audio…";
+    const blob = await exportAudio();
+    const file = new File([blob], `hai-scholar-audio-${new Date().toLocaleDateString("en-CA")}.haia`, { type: "application/octet-stream" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: "HAI Scholar audio" }); render(); return; } catch { /* cancelled */ }
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = file.name;
+    a.click();
+    render();
+  };
+  $("#apack-import").onchange = async (e) => {
+    const f = e.target.files[0];
+    if (!f) { return; }
+    try {
+      const r = await importAudio(f, (n, t) => { status.textContent = `Importing… ${n} of ${t} clips`; });
+      toast(`Imported audio for ${r.sources} sources`);
+    } catch (err) { toast(err.message); }
+    e.target.value = "";
+    render();
+  };
   $("#apack-clear").onclick = async () => {
     if (!confirm("Delete all saved natural-voice audio?")) { return; }
     await clearAll();
@@ -1201,6 +1224,10 @@ async function viewSettings() {
         <div class="btn-row" style="margin:4px 0 0"><button class="btn secondary" id="apack-all">Generate all</button><button class="btn ghost" id="apack-stop" hidden>Stop</button></div>
       </div>
       ${C.stages.map((st) => `<div class="setting"><label>Stage ${st.number} · ${esc(st.title)}<div class="tiny muted" data-apack-count="${st.id}"></div></label><button class="btn secondary" data-apack="${st.id}" style="width:auto">Generate</button></div>`).join("")}
+      <div class="setting" style="flex-direction:column;align-items:stretch">
+        <div class="tiny muted"><b>Phone can't run the natural voice?</b> Open this app on a computer (Chrome or Safari), tap Generate there, then Export audio file. AirDrop the file to your phone and tap Import audio file. Use the same voice and citation settings on both.</div>
+        <div class="btn-row" style="margin:4px 0 0"><button class="btn secondary" id="apack-export">Export audio file</button><label class="btn secondary" style="cursor:pointer">Import audio file<input type="file" id="apack-import" hidden></label></div>
+      </div>
       <div class="setting"><button class="btn ghost" id="apack-clear">Delete saved audio</button></div>
     </div>` : ""}
     <div class="section-label">Offline</div>
