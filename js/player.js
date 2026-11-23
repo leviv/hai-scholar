@@ -2,7 +2,7 @@
 
 import { sentences, speakable } from "./extract.js";
 import { store } from "./store.js";
-import { natural } from "./natural.js";
+import { natural, SILENT } from "./natural.js";
 import { getClip, isDone } from "./audiopack.js";
 
 const synth = window.speechSynthesis;
@@ -46,7 +46,10 @@ class Player extends EventTarget {
       synth.addEventListener("voiceschanged", () => this.emit());
     }
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible" && this.playing) { this.acquireWake(); }
+      if (document.visibilityState !== "visible" || !this.playing) { return; }
+      this.acquireWake();
+      // iOS stops the system voice when the screen locks; pick up where it left off.
+      if (!this.usingNatural && synth && !synth.speaking && !synth.pending) { this.play(this.i); }
     });
     this.setupMediaSession();
   }
@@ -151,6 +154,7 @@ class Player extends EventTarget {
     const p = this.clip(i);
     this.prefetch(i);
     this.buffering = true;
+    this.holdAudio();
     this.emit();
     // Never wait forever: if a sentence takes too long, speak it with the iPhone voice and reset the model.
     const limit = Math.max(15000, this.items[i].text.length * 150);
@@ -166,6 +170,7 @@ class Player extends EventTarget {
       if (gen !== this.gen || !this.playing) { return; }
       this.buffering = false;
       const el = natural.el;
+      el.loop = false;
       el.src = url;
       el.playbackRate = store.settings().rate;
       this.elIndex = i;
@@ -179,6 +184,19 @@ class Player extends EventTarget {
       this.buffering = false;
       this.speakSystem(gen);
     });
+  }
+
+  // While the next sentence is still being prepared on a locked screen, keep the audio element
+  // playing silence so iOS doesn't end the audio session (which would stop playback for good).
+  holdAudio() {
+    const el = natural.el;
+    if (document.visibilityState !== "hidden" || !el.paused && !el.ended) { return; }
+    el.onended = null;
+    el.onerror = null;
+    el.loop = true;
+    el.src = SILENT;
+    this.elIndex = -1;
+    el.play().catch(() => {});
   }
 
   speakCurrent(gen) {
@@ -224,6 +242,8 @@ class Player extends EventTarget {
   // stretch of listening, pause and ask the listener to recall the section before moving on.
   shouldCheckpoint() {
     if (!store.settings().recallPauses || this.noPauses) { return false; }
+    // Nobody can answer a recall prompt on a locked screen, so keep reading.
+    if (document.visibilityState === "hidden") { return false; }
     if (this.items[this.i - 1]?.intro) { this.lastCheck = this.i; return false; }
     const it = this.items[this.i];
     return !!it && it.h && this.i - this.lastCheck >= 12;
@@ -256,6 +276,7 @@ class Player extends EventTarget {
     this.buffering = false;
     if (synth) { synth.cancel(); }
     natural.el.pause();
+    natural.el.loop = false;
     if (this.res) { store.setPos(this.res.id, this.i, this.items.length); }
     this.releaseWake();
     this.setPlaybackState();

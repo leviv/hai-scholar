@@ -1191,7 +1191,7 @@ async function viewSettings() {
       ${s.voiceEngine === "system" ? `<div class="setting"><button class="btn secondary" id="test-voice">Test voice</button></div>` : ""}
       ${sw("skipCitations", "Skip citations when speaking", "Silences “[12]” and “(Smith et al., 2019)” in audio; they stay visible in the text.")}
       ${sw("includeAppendix", "Include appendices", "Papers stop at the references by default.")}
-      ${sw("keepAwake", "Keep screen on while listening", "iOS pauses speech when a web app's screen locks, so this keeps it awake.")}
+      ${sw("keepAwake", "Keep screen on while listening", "The natural voice keeps playing when the screen locks. iPhone voices stop when locked, so this keeps the screen awake for them.")}
     </div>
     ${s.voiceEngine === "natural" ? `<div class="section-label">Natural voice audio on this phone</div>
     <div class="list" id="apack">

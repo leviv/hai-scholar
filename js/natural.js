@@ -10,7 +10,7 @@ export const NATURAL_VOICES = [
 ];
 
 // A tiny silent WAV used to "unlock" audio playback inside a user tap (iOS requires a gesture).
-const SILENT = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=";
+export const SILENT = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=";
 
 class Natural extends EventTarget {
   constructor() {
